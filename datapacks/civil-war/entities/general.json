@@ -1,0 +1,7 @@
+{
+  "name": "General",
+  "max_health": 100,
+  "combat": {
+      "damage": 100
+  }
+}

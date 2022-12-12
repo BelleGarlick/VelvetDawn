@@ -1,0 +1,7 @@
+{
+  "name": "Medics",
+  "max_health": 50,
+  "combat": {
+      "damage": 10
+  }
+}

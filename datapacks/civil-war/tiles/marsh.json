@@ -1,0 +1,10 @@
+{
+  "name": "Marsh",
+  "neighbours": {
+    "civil-war:marsh": 1,
+    "civil-war:grass": 2
+  },
+  "blocks_movment": [
+    "tag:heavy"
+  ]
+}

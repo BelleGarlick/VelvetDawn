@@ -1,0 +1,62 @@
+{
+  "name": "velvet-dawn",
+  "version": "0.1.0",
+  "private": true,
+  "main": "public/main.js",
+  "scripts": {
+    "build": "npm run magic",
+    "magic": "webpack",
+    "test": "jest",
+    "electron-dev": "electron ."
+  },
+  "dependencies": {
+    "@date-io/date-fns": "^2.14.0",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@material-ui/core": "*",
+    "@mui/icons-material": "^5.6.1",
+    "@types/react": "^17.0.40",
+    "@types/react-dom": "^17.0.13",
+    "axios": "^0.27.2",
+    "date-fns": "^2.28.0",
+    "electron": "^20.1.3",
+    "magic": "2.3.5-alpha.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-query": "^3.34.19",
+    "react-scripts": "5.0.0",
+    "ts-loader": "^9.2.8",
+    "web-vitals": "^2.1.4",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-typescript": "^7.17.12",
+    "@types/google-map-react": "^2.1.7",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.4",
+    "@testing-library/user-event": "^13.5.0",
+    "jest": "29.0.0",
+    "@types/jest": "29.0.0",
+    "ts-node": "^10.8.0"
+  }
+}

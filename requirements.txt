@@ -1,0 +1,3 @@
+Flask
+pathlib
+flask_sqlalchemy

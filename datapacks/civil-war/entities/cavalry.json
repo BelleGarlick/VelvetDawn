@@ -1,0 +1,12 @@
+{
+  "name": "Cavalry",
+  "movement": {
+    "range": 4
+  },
+  "combat": {
+      "damage": 25
+  },
+  "tags": [
+    "tag:heavy"
+  ]
+}

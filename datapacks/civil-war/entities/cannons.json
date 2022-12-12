@@ -1,0 +1,28 @@
+{
+  "name": "Cannons",
+  "max_health": 50,
+  "movement": {
+    "range": 1
+  },
+  "combat": {
+      "damage": "200",
+      "range": 10,
+      "radius": 2
+  },
+  "tags": [
+    "tag:heavy"
+  ],
+  "updgrades": [
+    {
+      "name": "Range Increase 1",
+      "modifies": "movement.range",
+      "modifier": { "add": 1 }
+    },
+    {
+      "name": "Range Increase 2",
+      "requires": "Range Increase 1",
+      "modifies": "movement.range",
+      "modifier": { "add": 1 }
+    }
+  ]
+}

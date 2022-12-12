@@ -1,0 +1,10 @@
+{
+  "name": "Musketeers",
+  "movement": {
+    "range": 2
+  },
+  "combat": {
+      "damage": 25,
+      "range": 2
+  }
+}

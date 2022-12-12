@@ -1,0 +1,10 @@
+{
+  "name": "Commander",
+  "max_health": 200,
+  "movement": {
+    "range": 3
+  },
+  "combat": {
+      "damage": 100
+  }
+}

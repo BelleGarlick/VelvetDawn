@@ -1,0 +1,12 @@
+{
+  "name": "Workers",
+  "max_health": 50,
+  "can_build": [
+    "roads",
+    "bridges",
+    "barracks"
+  ],
+  "combat": {
+      "damage": 5
+  }
+}

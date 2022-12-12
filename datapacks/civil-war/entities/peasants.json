@@ -1,0 +1,10 @@
+{
+  "name": "Peasants",
+  "max_health": 25,
+  "movement": {
+    "range": 2
+  },
+  "combat": {
+      "damage": 5
+  }
+}

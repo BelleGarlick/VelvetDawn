@@ -1,0 +1,11 @@
+{
+  "name": "Pikemen",
+  "max_health": 50,
+  "buffs_against": "cavalry",
+  "movement": {
+    "range": 2
+  },
+  "combat": {
+      "damage": 25
+  }
+}

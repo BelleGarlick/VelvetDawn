@@ -1,0 +1,10 @@
+{
+  "name": "Grass",
+  "neighbours": {
+    "civil-war:grass": 8,
+    "civil-war:shallow_water": 1,
+    "civil-war:town": 1,
+    "civil-war:marsh": 2,
+    "civil-war:woods": 1
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "port": 666,
+  "password": "bananana",
+  "turn_time": "60",
+  "datapacks": ["velvet-dawn", "civil-war"]
+}

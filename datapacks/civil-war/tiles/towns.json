@@ -1,0 +1,13 @@
+{
+  "name": "Town",
+  "neighbours": {
+    "civil-war:town": 1,
+    "civil-war:grass": 2
+  },
+  "spawns": [
+    {
+      "entity": "civil-war:peasants",
+      "probability": 0.05
+    }
+  ]
+}
