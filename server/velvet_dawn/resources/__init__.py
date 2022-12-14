@@ -25,15 +25,19 @@ def initialise(config: Config):
         resource_files = os.listdir(resource_path)
 
         for file in resource_files:
+            if file == ".DS_Store":
+                continue
+
             print(f" - {datapack}/{file}")
             path = Path(resource_path / file)
-            resource_id = f"{datapack}/{path.stem}"
+            resource_id = f"{datapack}:{file}"
 
             file_type, resource_type = path.suffix[1:], ResourceType.Audio
             if file_type in {"mp3"}: resource_type = ResourceType.Audio
+            elif file_type in {"woff"}: resource_type = ResourceType.Font
             elif file_type in {"jpg", "png"}: resource_type = ResourceType.Image
             else:
-                raise Exception(f"Resource '{path}' is invalid. File types may only be mp3, jpg or png")
+                raise Exception(f"Resource '{path}' is invalid. File types may only be mp3, woff, jpg or png")
 
             resources[resource_id] = Resource(
                 id=resource_id,

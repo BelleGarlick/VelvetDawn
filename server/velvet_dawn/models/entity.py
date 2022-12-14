@@ -40,6 +40,7 @@ class Entity:
         self.id = id
         self.name = name
         self.max_health = 100
+        self.commander = False
 
         self.combat = EntityCombat()
         self.movement = EntityMovement()
@@ -48,6 +49,7 @@ class Entity:
         return {
             "id": self.id,
             "name": self.name,
+            "commander": self.commander,
             "health": {
                 "max": self.max_health
             },
@@ -67,6 +69,7 @@ class Entity:
                 id=f"{file_path.parent.parent.stem}:{file_path.stem}",
                 name=data['name']
             )
+            entity.commander = data.get("commander", False)
             entity.combat.update(data.get('combat', {}))
             entity.movement.update(data.get('movement', {}))
 

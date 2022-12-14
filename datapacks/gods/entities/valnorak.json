@@ -1,0 +1,7 @@
+{
+  "name": "Valnorak (God of Fire)",
+  "max_health": 500,
+  "movement": {
+    "range": 4
+  }
+}

@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, send_file
 from functools import wraps
 
 import errors
@@ -74,9 +74,16 @@ def get_resources():
     ]
 
 
+@app.route("/resources/<resource_id>/")
+def get_resource(resource_id):
+    resource = velvet_dawn.resources.get_resources().get(resource_id)
+    if not resource:
+        return "File not found", 404
+    return send_file(resource.path)
+
+
 @app.route("/entities/")
 def get_entities():
-    print(velvet_dawn.entities.get_entities())
     return [
         entity.json()
         for entity in
@@ -92,10 +99,9 @@ def get_entity_setup():
 @app.route("/game-state/")
 def get_game_state():
     return {
-        "mode": velvet_dawn.game.game_mode(),
-        "phase": velvet_dawn.phase.phase(),
-        "turn": velvet_dawn.phase.turn(),
-        "activeTurn": velvet_dawn.phase.active_turn(),
+        "phase": velvet_dawn.game.phase(),
+        "turn": velvet_dawn.game.turn(),
+        "activeTurn": velvet_dawn.game.active_turn(),
         "teams": [
             team.json()
             for team in velvet_dawn.teams.list()
@@ -105,8 +111,13 @@ def get_game_state():
 
 @app.route("/join/", methods=["POST"])
 def join_game():
-    velvet_dawn.players.join(request.form.get("name", None))
-    return get_game_state()
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    if not username and not password:
+        return "Missing keys in request", 400
+
+    return velvet_dawn.players.join(username, password).json()
 
 
 if __name__ == "__main__":

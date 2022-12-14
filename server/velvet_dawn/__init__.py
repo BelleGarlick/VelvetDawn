@@ -1,1 +1,1 @@
-from . import map, players, phase, teams, game, entities, resources
+from . import map, players, teams, game, entities, resources

@@ -1,7 +1,6 @@
 
 
 export interface LoginDetails {
-    serverAddress: string,
-    serverPassword: string,
-    userName: string
+    username: string,
+    password: string
 }

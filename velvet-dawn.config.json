@@ -2,5 +2,5 @@
   "port": 666,
   "password": "bananana",
   "turn_time": "60",
-  "datapacks": ["velvet-dawn", "civil-war"]
+  "datapacks": ["velvet-dawn", "civil-war", "gods"]
 }

@@ -1,5 +1,6 @@
 {
   "name": "Commander",
+  "commander": true,
   "max_health": 200,
   "movement": {
     "range": 3

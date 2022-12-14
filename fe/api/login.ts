@@ -1,10 +1,10 @@
-import axios from "axios";
 import {LoginDetails} from "models/login-details";
+import {post} from "./utils"
 
 
-export function joinServer(loginDetails: LoginDetails) {
-    return axios.post("http://localhost:666/join/", {
-        password: loginDetails.serverPassword,
-        name: loginDetails.userName
-    }, { headers: { "Content-Type": "multipart/form-data" }})
+export function joinServer(loginDetails: LoginDetails): Promise<any> {
+    return post("join/",{
+        username: loginDetails.username,
+        password: loginDetails.password,
+    })
 }

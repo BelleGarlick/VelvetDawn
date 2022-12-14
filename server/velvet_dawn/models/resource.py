@@ -5,9 +5,10 @@ from pathlib import Path
 from typing import Dict
 
 
-class ResourceType(enum.Enum):
+class ResourceType(str, enum.Enum):
     Image = 'image'
     Audio = 'audio'
+    Font = 'font'
 
 
 @dataclasses.dataclass

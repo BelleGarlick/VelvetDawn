@@ -1,0 +1,7 @@
+{
+  "name": "Baledun (God of Ice)",
+  "max_health": 500,
+  "movement": {
+    "range": 4
+  }
+}
