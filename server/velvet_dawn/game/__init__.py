@@ -48,3 +48,8 @@ def active_turn():
     # Stores a players name of team::team_name
 
     return None
+
+
+def start_setup_phase():
+    # TODO Check game setup is valid before people start placing
+    pass

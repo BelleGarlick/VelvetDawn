@@ -5,7 +5,7 @@ from config import Config
 from velvet_dawn.models.entity import Entity
 
 
-ENTITY_PATH = Path("../../datapacks/")
+ENTITY_PATH = Path(__file__).parent.parent.parent.parent / "datapacks"
 
 entities: Dict[str, Entity] = {}
 

@@ -1,5 +1,6 @@
 {
   "name": "Shallow Water",
+  "texture": "civil-war:shallow_water.png",
   "neighbours": {
     "civil-war:grass": 2,
     "civil-war:shallow_water": 1,

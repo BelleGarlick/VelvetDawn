@@ -1,11 +1,20 @@
 {
   "name": "Pikemen",
   "max_health": 50,
-  "buffs_against": "cavalry",
   "movement": {
     "range": 2
   },
   "combat": {
       "damage": 25
-  }
+  },
+  "triggers": [
+    {
+      "on": "attack",
+      "effects": {
+        "modifier": "target[civil-war:cavalry].health",
+        "sub": 10
+      },
+      "notes": "Allows for a stronger attack to cavalry"
+    }
+  ]
 }

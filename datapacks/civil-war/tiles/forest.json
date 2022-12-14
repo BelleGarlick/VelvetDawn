@@ -1,10 +1,9 @@
 {
   "name": "Forest",
+  "texture": "civil-war:forest.png",
+  "traversable": false,
   "neighbours": {
     "civil-war:woods": 1,
     "civil-war:forest": 1
-  },
-  "blocks_movment": [
-    "tag:heavy"
-  ]
+  }
 }

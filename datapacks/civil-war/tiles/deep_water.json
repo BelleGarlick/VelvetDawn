@@ -1,10 +1,9 @@
 {
   "name": "Deep Water",
+  "texture": "civil-war:deep_water.png",
+  "traversable": false,
   "neighbours": {
     "civil-war:shallow_water": 1,
     "civil-war:deep_water": 1
-  },
-  "blocks_movment": [
-    "entities:_all"
-  ]
+  }
 }

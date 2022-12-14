@@ -1,13 +1,18 @@
 {
   "name": "Town",
+  "texture": "civil-war:towns.png",
   "neighbours": {
     "civil-war:town": 1,
     "civil-war:grass": 2
   },
-  "spawns": [
+  "triggers": [
     {
-      "entity": "civil-war:peasants",
-      "probability": 0.05
+      "on": "turn",
+      "condition": [
+        { "target": "random", "greaterThan": 0.95 },
+        { "target": "self.entity", "equals": null }
+      ],
+      "spawns": "civil-war:peasants"
     }
   ]
 }

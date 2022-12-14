@@ -1,6 +1,6 @@
 from config import Config
 from dao.initialisation import db
-from dao.models import KeyValues, Keys
+from dao.models import KeyValues, Keys, Tile as DbTile
 
 import os
 from pathlib import Path
@@ -9,10 +9,9 @@ from typing import Dict
 from velvet_dawn.models.tile import Tile
 
 
-TILE_PATH = Path("../../datapacks")
+TILE_PATH = Path(__file__).parent.parent.parent.parent / "datapacks"
 
 tiles: Dict[str, Tile] = {}
-
 
 
 def initialise(config: Config):
@@ -40,18 +39,7 @@ def get_tiles() -> Dict[str, Tile]:
     return tiles
 
 
-def get():
-    return tiles
-    # width = db.session.query(KeyValues).where(KeyValues.key == Keys.MAP_WIDTH).one_or_none()
-    # height = db.session.query(KeyValues).where(KeyValues.key == Keys.MAP_HEIGHT).one_or_none()
-    # width, height = int(width.value), int(height.value)
-    #
-    # tiles_array = [
-    #     [0 for _ in range(height)]
-    #     for _ in range(width)
-    # ]
-    #
-    # for tile in db.session.query(Tile).all():
-    #     tiles_array[tile.x][tile.y] = tile.tile_id
-    #
-    # return tiles_array
+def get(x, y):
+    return db.session.query(DbTile)\
+        .where(DbTile.x == x, DbTile.y == y)\
+        .one_or_none()

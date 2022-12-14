@@ -7,5 +7,30 @@
   },
   "combat": {
       "damage": 100
-  }
+  },
+  "influence": [
+    {
+      "notes": "This would mean local enemies within range 10 have less health",
+      "range": 10,
+      "target": "local-enemies.health",
+      "effects": { "sub": 10 },
+      "example_Targets_for_Developers": [
+        "self",
+        "local",
+        "local-friendlies",
+        "local-enemies",
+        "closest",
+        "closest-friendly",
+        "closest-enemy",
+        "tile",
+        "target  - only used when targeting in a fight someone",
+        "target-tile  - only used when moving",
+
+        "Adding filters after target like such",
+        "tile[tile:grass]",
+        "tile[tag:swapland]",
+        "closest[tag:heavy-fighter]"
+      ]
+    }
+  ]
 }

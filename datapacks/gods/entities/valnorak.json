@@ -1,5 +1,6 @@
 {
   "name": "Valnorak (God of Fire)",
+  "commander": true,
   "max_health": 500,
   "movement": {
     "range": 4

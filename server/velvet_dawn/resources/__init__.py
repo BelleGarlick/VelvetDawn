@@ -4,7 +4,7 @@ from pathlib import Path
 from config import Config
 from velvet_dawn.models.resource import Resource, ResourceType
 
-DATA_PATH = Path("../../datapacks/")
+DATA_PATH = Path(__file__).parent.parent.parent.parent / "datapacks"
 
 resources: Dict[str, Resource] = {}
 

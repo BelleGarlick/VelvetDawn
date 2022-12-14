@@ -2,6 +2,8 @@ import json
 import dataclasses
 from typing import List
 
+from pathlib import Path
+
 
 @dataclasses.dataclass
 class Config:
@@ -15,7 +17,8 @@ class Config:
     def load():
         config = Config()
 
-        with open("../../velvet-dawn.config.json") as file:
+        config_path = Path(__file__).parent.parent / "velvet-dawn.config.json"
+        with open(config_path) as file:
             data = json.load(file)
 
             for key in data:

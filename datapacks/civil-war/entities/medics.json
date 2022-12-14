@@ -3,5 +3,17 @@
   "max_health": 50,
   "combat": {
       "damage": 10
-  }
+  },
+  "triggers": [
+    {
+      "on": "turn",
+      "condition": { "target": "self.health", "greaterThan": 10 },
+      "modifies": { "add": 10 }
+    },
+    {
+      "on": "turn",
+      "condition": { "target": "self.health", "lessThan": 11 },
+      "modifies": { "add": 20 }
+    }
+  ]
 }

@@ -1,5 +1,6 @@
 {
-  "name": "Baledun (God of Ice)",
+  "name": "Baledung (God of Ice)",
+  "commander": true,
   "max_health": 500,
   "movement": {
     "range": 4

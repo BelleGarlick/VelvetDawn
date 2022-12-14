@@ -15,13 +15,13 @@
   "updgrades": [
     {
       "name": "Range Increase 1",
-      "modifies": "movement.range",
+      "modifies": "self.movement.range",
       "modifier": { "add": 1 }
     },
     {
       "name": "Range Increase 2",
       "requires": "Range Increase 1",
-      "modifies": "movement.range",
+      "modifies": "self.movement.range",
       "modifier": { "add": 1 }
     }
   ]

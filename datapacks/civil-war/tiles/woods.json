@@ -1,5 +1,6 @@
 {
   "name": "Woods",
+  "texture": "civil-war:woods.png",
   "neighbours": {
     "civil-war:woods": 1,
     "civil-war:grass": 1,
