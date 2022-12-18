@@ -1,19 +1,14 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { Login } from "ui/Login";
+import {Login} from "ui/Login";
 import {LoginDetails} from "models/login-details";
-import {createTheme, ThemeProvider} from "@material-ui/core";
-import { InitialResourceLoadingScreen } from "ui/ResourceLoaders/InitialResourceLoadingScreen";
+import {InitialResourceLoadingScreen} from "ui/ResourceLoaders/InitialResourceLoadingScreen";
 import {ServerResourceLoadingScreen} from "ui/ResourceLoaders/ServerResourceLoadingScreen";
 import {Lobby} from "ui/Lobby";
 import {ViewContainer} from "ui/ViewContainer";
-
-const theme = createTheme({
-    typography: {
-        fontFamily: "'Velvet Dawn', sans-serif",
-    }
-});
-
+import {ViewState} from "models/view-state";
+import {Text} from "ui/Text"
+import * as ReactDOM from 'react-dom';
+import {GameView} from "ui/GameView";
 
 
 export default function App() {
@@ -21,18 +16,21 @@ export default function App() {
         username: 'sam',
         password: 'bananana',
     })
-    const [connected, setConnected] = React.useState(false)
+    const [view, setView] = React.useState(ViewState.Login);
 
-    return <ThemeProvider theme={theme}>
-        <InitialResourceLoadingScreen>
-            <ViewContainer>
-                {!connected && <Login setConnected={setConnected} loginDetails={loginDetails} setLoginDetails={setLoginDetails}/>}
-                {connected && <ServerResourceLoadingScreen>
-                    <Lobby />
-                </ServerResourceLoadingScreen>}
-            </ViewContainer>
-        </InitialResourceLoadingScreen>
-    </ThemeProvider>;
+    return <InitialResourceLoadingScreen>
+        <>
+            {view == ViewState.Login && <ViewContainer>
+                <Login setView={setView} loginDetails={loginDetails} setLoginDetails={setLoginDetails}/>
+            </ViewContainer>}
+            {view == ViewState.Lobby && <ViewContainer>
+                <ServerResourceLoadingScreen>
+                    <Lobby setView={setView} />
+                </ServerResourceLoadingScreen>
+            </ViewContainer>}
+            {view == ViewState.Game && <GameView />}
+        </>
+    </InitialResourceLoadingScreen>
 }
 
 

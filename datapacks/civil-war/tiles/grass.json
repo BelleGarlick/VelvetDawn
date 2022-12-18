@@ -3,9 +3,8 @@
   "texture": "civil-war:grass.png",
   "neighbours": {
     "civil-war:grass": 8,
-    "civil-war:shallow_water": 1,
-    "civil-war:town": 1,
-    "civil-war:marsh": 2,
-    "civil-war:woods": 1
+    "civil-war:shallow-water": 1,
+    "civil-war:towns": 1,
+    "civil-war:marsh": 2
   }
 }

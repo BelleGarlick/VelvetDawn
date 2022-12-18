@@ -5,16 +5,14 @@ from velvet_dawn.map.tiles import get_tiles, get as get_tile
 
 
 def get():
-    width, height = int(KeyValues.get(Keys.MAP_WIDTH)), int(KeyValues.get(Keys.MAP_HEIGHT))
+    width = int(db.session.query(KeyValues).get(Keys.MAP_WIDTH).value)
+    height = int(db.session.query(KeyValues).get(Keys.MAP_HEIGHT).value)
+
     return {
         "width": width,
         "height": height,
-        "layout": [
-            [
-                db.session.query(Tile).query(Tile.x == c, Tile.y == r).one_or_none().json()
-                for r in range(height)
-            ]
-            for c in range(width)
+        "tiles": [
+            x.json() for x in db.session.query(Tile).all()
         ]
     }
 

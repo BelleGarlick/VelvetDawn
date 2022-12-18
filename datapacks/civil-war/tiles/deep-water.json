@@ -1,0 +1,9 @@
+{
+  "name": "Deep Water",
+  "texture": "civil-war:deep-water.png",
+  "traversable": false,
+  "neighbours": {
+    "civil-war:shallow-water": 1,
+    "civil-war:deep-water": 1
+  }
+}

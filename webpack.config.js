@@ -20,8 +20,11 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
       api: path.resolve(__dirname, './fe/api/'),
+      'velvet-dawn': path.resolve(__dirname, './fe/velvet-dawn/'),
       models: path.resolve(__dirname, './fe/models/'),
       ui: path.resolve(__dirname, './fe/ui/'),
+      renderer: path.resolve(__dirname, './fe/renderer/'),
+      entity: path.resolve(__dirname, './fe/entity/'),
     }
   },
   output: {

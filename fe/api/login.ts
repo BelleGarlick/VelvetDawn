@@ -3,7 +3,7 @@ import {post} from "./utils"
 
 
 export function joinServer(loginDetails: LoginDetails): Promise<any> {
-    return post("join/",{
+    return post("/join/",{
         username: loginDetails.username,
         password: loginDetails.password,
     })

@@ -3,5 +3,5 @@ import {Resource} from "models/resource";
 
 
 export function getResources(): Promise<Resource[]> {
-    return get("resources/")
+    return get("/resources/")
 }

@@ -1,16 +1,17 @@
-import {Button, TextField, Typography} from "@material-ui/core";
 import * as React from "react";
 import * as Api from 'api'
 import {LoginDetails} from "models/login-details";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
+import {ViewState} from "models/view-state";
+import {Text} from "ui/Text"
 
-export function Login({ loginDetails, setLoginDetails, setConnected }: { loginDetails: LoginDetails, setLoginDetails: (x: LoginDetails) => void, setConnected: (x: boolean) => void }) {
+export function Login({ loginDetails, setLoginDetails, setView }: { loginDetails: LoginDetails, setLoginDetails: (x: LoginDetails) => void, setView: (x: ViewState) => void }) {
     const join = () => {
         Api.login.joinServer(loginDetails)
             .then(x => {
-                VelvetDawn.audioPlayers["velvet-dawn:menu.mp3"].play()
+                // VelvetDawn.audioPlayers["velvet-dawn:menu.mp3"].play()
                 console.log(x)
-                setConnected(true)
+                setView(ViewState.Lobby)
                 VelvetDawn.loginDetails = loginDetails
             })
             .catch((err) => {
@@ -21,12 +22,10 @@ export function Login({ loginDetails, setLoginDetails, setConnected }: { loginDe
 
     // join()
 
-    // @ts-ignore
-    // @ts-ignore
     return <>
-        <Typography variant='h5'>Welcome to Velvet Dawn</Typography>
-        <TextField
-            label='Name'
+        <Text>Welcome to Velvet Dawn</Text>
+        <input
+            type={'text'}
             value={loginDetails.username}
             onInput={(event) => {
                 // @ts-ignore
@@ -37,10 +36,9 @@ export function Login({ loginDetails, setLoginDetails, setConnected }: { loginDe
                     username: v
                 })
             } }
-            variant='outlined'
         />
-        <TextField
-            label='Server Password'
+        <input
+            type={'password'}
             value={loginDetails.password}
             onInput={(event) => {
                 // @ts-ignore
@@ -50,12 +48,11 @@ export function Login({ loginDetails, setLoginDetails, setConnected }: { loginDe
                     ...loginDetails,
                     password: v
                 })
-            } }
-            variant='outlined'
+            }}
         />
 
-        <Button onClick={() => {
+        <button onClick={() => {
             join()
-        }}>Join</Button>
+        }}>Join</button>
     </>
 }

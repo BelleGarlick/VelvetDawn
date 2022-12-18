@@ -1,9 +1,10 @@
 {
   "name": "Town",
-  "texture": "civil-war:towns.png",
+  "texture": "civil-war:towns.jpg",
   "neighbours": {
-    "civil-war:town": 1,
-    "civil-war:grass": 2
+    "civil-war:woods": 1,
+    "civil-war:towns": 1,
+    "civil-war:grass": 1
   },
   "triggers": [
     {

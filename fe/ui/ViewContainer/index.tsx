@@ -30,7 +30,9 @@ export function ViewContainer({ children }: { children: React.ReactElement | Rea
             borderRadius: '10px',
             gap: '16px',
             width: '500px',
-            boxShadow: '0px 0px 10px black'
+            boxShadow: '0px 0px 10px black',
+            maxHeight: 'calc(100vh - 100px)',
+            overflow: 'auto'
         }}>
             {children}
         </div>

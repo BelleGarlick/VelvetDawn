@@ -4,5 +4,7 @@ import { EntityInstance } from "./entityInstance";
 export interface Player {
     name: string,
     spectating: boolean,
-    entities: EntityInstance[]
+    admin: boolean,
+    entities: EntityInstance[],
+    team: string
 }

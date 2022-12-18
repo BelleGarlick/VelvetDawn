@@ -1,5 +1,6 @@
 
 
 export interface Tile {
-    id: string
+    id: string,
+    texture: string
 }

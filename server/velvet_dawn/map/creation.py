@@ -57,25 +57,26 @@ def new(cols: int, rows: int):
         [{tile.id for tile in tiles} for _ in range(rows)]
         for _ in range(cols)
     ]
+    unchecked_cells = set()
+    for x in range(cols):
+        for y in range(rows):
+            unchecked_cells.add(Coordinate(x, y))
 
-    next_cell = get_next_tile(map)
+    next_cell = get_next_tile(unchecked_cells)
     i = 0
     while next_cell:
         print(f"\r{i + 1}/{cols*rows}", end="")
         i += 1
         collapse_cell(map, next_cell, cols, rows)
-        next_cell = get_next_tile(map)
+        next_cell = get_next_tile(unchecked_cells)
     print("\rCompleted.")
 
-    for tile in db.session.query(DbTile).all():
-        db.session.delete(tile)
-        db.session.commit()
+    db.session.query(DbTile).delete()
 
-    for col in range(len(map[0])):
-        for row in range(len(map)):
-            item = map[row][col].pop()
+    for col in range(len(map)):
+        for row in range(len(map[0])):
+            item = map[col][row].pop()
             db.session.add(DbTile(x=col, y=row, tile_id=item))
-            db.session.commit()
             print(item[10] + " ", end="")
         print()
 
@@ -84,24 +85,13 @@ def new(cols: int, rows: int):
     db.session.commit()
 
 
-def get_next_tile(map):
-    # TODO Could use last cell to find the next one
-    next_tiles, next_tile_size = [], math.inf
+def get_next_tile(unchecked_cells: Set[Coordinate]):
+    if not unchecked_cells:
+        return None
 
-    for col_i, row in enumerate(map):
-        for row_i, cell in enumerate(row):
-            if 1 < len(cell):
-                if len(cell) < next_tile_size:
-                    next_tiles = []
-                    next_tile_size = len(cell)
-
-                if len(cell) <= next_tile_size:
-                    next_tiles.append(Coordinate(x=col_i, y=row_i))
-
-    if len(next_tiles):
-        return random.choice(next_tiles)
-
-    return None
+    cell = random.choice(list(unchecked_cells))
+    unchecked_cells.remove(cell)
+    return cell
 
 
 def get_possible_neighbours(cell_options: Set[str], tile_map: dict):
@@ -120,7 +110,8 @@ def collapse_cell(map: List[List[Set[str]]], cell: Coordinate, map_width, map_he
     for key in cell_probabilites:
         callapsed_cell_probs += [key] * cell_probabilites[key]
 
-    map[cell.x][cell.y] = {random.choice(callapsed_cell_probs)}
+    cell_choise = random.choice(callapsed_cell_probs)
+    map[cell.x][cell.y] = {cell_choise}
     possible_neighbours = get_possible_neighbours(map[cell.x][cell.y], tile_map)
 
     neighbour_updates = [
@@ -139,6 +130,14 @@ def collapse_cell(map: List[List[Set[str]]], cell: Coordinate, map_width, map_he
                     get_possible_neighbours(map[neighbour.x][neighbour.y], tile_map),
                     Map.get_neighbouring_cell_coordinates(coord=neighbour, map_width=map_width, map_height=map_height)
                 ))
+
+    # print()
+    # for r in range(len(map[0])):
+    #     for c in range(len(map)):
+    #         print(str(len(map[c][r])) + " ", end="")
+    #     print()
+    #
+    # breakpoint()
 
 
 def get_neighbouring_cell_probabilities(map: List[List[Set[str]]], cell: Coordinate, map_width, map_height) -> Dict[str, int]:

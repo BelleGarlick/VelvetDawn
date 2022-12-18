@@ -7,7 +7,7 @@ from dao.models import Entity as DbEntity, Player
 from dao.models.entity_setup import EntitySetup
 from velvet_dawn.entities import get_entities
 from velvet_dawn.models.game_setup import GameSetup
-
+from velvet_dawn.models.phase import Phase
 
 """ velvet_dawn.game.setup
 
@@ -49,6 +49,9 @@ def update_setup(entity_id: str, count: int):
             If the entity is a commaner then this will
             be ignored.
     """
+    if velvet_dawn.game.phase() != Phase.Lobby:
+        raise errors.ValidationError("Game setup units may only be changed in the lobby by the admin")
+
     # Check entity exists
     if entity_id not in get_entities():
         raise errors.ValidationError(f"Unknown entity id: '{entity_id}'")
@@ -58,11 +61,14 @@ def update_setup(entity_id: str, count: int):
     if item:
         query = db.session.query(EntitySetup).where(EntitySetup.entity_id == entity_id)
         if count > 0:
-            query.update({EntitySetup.amount == count})
+            query.update({EntitySetup.amount: count})
         else:
-            query.delete()
+            print("deleting")
+            for item in query.all():
+                db.session.delete(item)
 
     elif count > 0:
+        print("adding")
         db.session.add(EntitySetup(entity_id=entity_id, amount=count))
 
     db.session.commit()
@@ -74,6 +80,9 @@ def is_setup_valid():
 
 
 def place_entity(player, entity_id, x, y):
+    if velvet_dawn.game.phase() != Phase.Setup:
+        raise errors.ValidationError("Game setup may only be changed during game setup")
+
     setup = get_setup()
     entities = get_entities()
     existing_entities = db.session.query(DbEntity).where(DbEntity.player == player, DbEntity.entity_id == entity_id).all()
@@ -121,6 +130,9 @@ def remove_entity(player_id: str, x: int, y: int):
     Raises:
         ValidationError: If user has no entity in the cell
     """
+    if velvet_dawn.game.phase() != Phase.Setup:
+        raise errors.ValidationError("Game setup may only be changed during game setup")
+
     entity = db.session.query(DbEntity).where(
         DbEntity.player == player_id,
         DbEntity.pos_x == x,

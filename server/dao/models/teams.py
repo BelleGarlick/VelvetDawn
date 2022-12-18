@@ -18,7 +18,7 @@ class Team(db.Model):
             "name": self.name,
             "color": self.color,
             "players": [
-                player.json() for player in db.session.query(Player).where(
+                player.name for player in db.session.query(Player).where(
                     Player.team == self.team_id
                 ).all()
             ]

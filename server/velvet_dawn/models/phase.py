@@ -3,6 +3,6 @@ import enum
 
 class Phase(str, enum.Enum):
     Lobby = "lobby"
-    SETUP = "setup"
+    Setup = "setup"
     GAME = "game"
     GAME_OVER = "over"

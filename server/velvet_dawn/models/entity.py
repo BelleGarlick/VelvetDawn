@@ -55,8 +55,6 @@ class Entity:
             },
             "movement": self.movement.json(),
             "combat": self.combat.json(),
-            "upgrades": {},
-            "assets": {},
         }
 
     @staticmethod

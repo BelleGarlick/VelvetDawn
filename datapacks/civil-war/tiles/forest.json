@@ -1,6 +1,6 @@
 {
   "name": "Forest",
-  "texture": "civil-war:forest.png",
+  "texture": "civil-war:forest.jpg",
   "traversable": false,
   "neighbours": {
     "civil-war:woods": 1,

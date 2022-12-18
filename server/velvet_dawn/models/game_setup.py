@@ -11,6 +11,6 @@ class GameSetup:
 
     def json(self):
         return {
-            "commanders": self.commanders,
-            "units": [x.json() for x in self.units]
+            "commanders": list(self.commanders),
+            "units": {x.entity_id: x.amount for x in self.units}
         }

@@ -1,7 +1,10 @@
+import velvet_dawn.teams
 from dao.initialisation import db
 from dao.models import Keys, KeyValues
+from velvet_dawn.models.game_state import GameState
 from velvet_dawn.models.mode import Mode
 from velvet_dawn.models.phase import Phase
+from velvet_dawn.game import setup
 
 
 # TODO Test this with auto team balanacing
@@ -24,10 +27,21 @@ def initial_entities():
     }
 
 
-def phase():
+def phase(set: Phase = None):
     phase = db.session.query(KeyValues).where(KeyValues.key == Keys.PHASE).one_or_none()
+
+    if set:
+        if phase:
+            db.session.query(KeyValues).where(KeyValues.key == Keys.PHASE).update({
+                KeyValues.value: set
+            })
+        else:
+            db.session.add(KeyValues(key=Keys.PHASE, value=set))
+        db.session.commit()
+        return
+
     if phase:
-        return int(phase.value)
+        return phase.value
 
     return Phase.Lobby
 
@@ -53,3 +67,13 @@ def active_turn():
 def start_setup_phase():
     # TODO Check game setup is valid before people start placing
     pass
+
+
+def get_state():
+    return GameState(
+        phase=phase(),
+        turn=turn(),
+        active_turn=active_turn(),
+        teams=velvet_dawn.teams.list(),
+        players=velvet_dawn.players.list()
+    )

@@ -1,4 +1,5 @@
 import { Team } from "./team";
+import {Player} from "models";
 
 export enum GamePhrase {
     Lobby = 'lobby',
@@ -11,5 +12,6 @@ export interface GameState {
     phase: GamePhrase,
     turn: number,
     activeTurn: string,
-    teams: Team[]
+    teams: Team[],
+    players: { [key: string]: Player }
 }

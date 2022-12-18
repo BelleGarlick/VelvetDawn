@@ -11,3 +11,10 @@ class Tile(db.Model):
     y = db.Column(db.Integer, primary_key=True)
 
     tile_id = db.Column(db.Integer, nullable=False)
+
+    def json(self):
+        return {
+            "id": self.tile_id,
+            "x": self.x,
+            "y": self.y
+        }

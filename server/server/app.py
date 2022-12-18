@@ -1,3 +1,5 @@
+import time
+
 from flask import request, send_file
 from functools import wraps
 
@@ -5,9 +7,10 @@ import errors
 import velvet_dawn
 from config import Config
 from dao.initialisation import app
+from server.blueprints.setup import setup_blueprint
 
 
-config = Config.load()
+app.register_blueprint(setup_blueprint, url_prefix="/setup")
 
 
 def validator():
@@ -98,15 +101,7 @@ def get_entity_setup():
 
 @app.route("/game-state/")
 def get_game_state():
-    return {
-        "phase": velvet_dawn.game.phase(),
-        "turn": velvet_dawn.game.turn(),
-        "activeTurn": velvet_dawn.game.active_turn(),
-        "teams": [
-            team.json()
-            for team in velvet_dawn.teams.list()
-        ]
-    }
+    return velvet_dawn.game.get_state().json()
 
 
 @app.route("/join/", methods=["POST"])
@@ -121,12 +116,17 @@ def join_game():
 
 
 if __name__ == "__main__":
+    config = Config.load()
+
     velvet_dawn.entities.initialise(config)
     velvet_dawn.map.tiles.initialise(config)
     velvet_dawn.resources.initialise(config)
 
-    with app.app_context():
-        velvet_dawn.map.new(20, 10)
+    # with app.app_context():
+    #     start = time.time()
+    #     velvet_dawn.map.new(50, 40)
+    #     end = time.time()
+    #     print(end - start)
 
     velvet_dawn.entities.get_entities()
 

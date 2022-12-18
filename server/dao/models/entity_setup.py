@@ -6,9 +6,3 @@ class EntitySetup(db.Model):
 
     entity_id = db.Column(db.Text, primary_key=True)
     amount = db.Column(db.Integer, nullable=False)
-
-    def json(self):
-        return {
-            "id": self.entity_id,
-            "amount": self.amount
-        }

@@ -8,6 +8,7 @@ from typing import Dict
 class Tile:
 
     id: str
+    texture: str
     name: str
     traversable: bool = True
     neighbours: Dict[str, int] = None
@@ -15,7 +16,8 @@ class Tile:
     def json(self):
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "texture": self.texture
         }
 
     @staticmethod
@@ -26,8 +28,10 @@ class Tile:
 
             tile = Tile(
                 id=f"{file_path.parent.parent.stem}:{file_path.stem}",
-                name=data['name']
+                name=data['name'],
+                texture=data['texture']
             )
+
             tile.traversable = data.get("traversalbe", True)
             tile.neighbours = data['neighbours']
 

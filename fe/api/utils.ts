@@ -4,12 +4,12 @@ import axios from "axios";
 export function getUrl() {
     let port = window.location.port
     port = '666'
-    return window.location.protocol + "//" + window.location.hostname + ":" + 666 + "/"
+    return window.location.protocol + "//" + window.location.hostname + ":" + 666
 }
 
 
 export function getResourceUrl(resourceId: string) {
-    return `${getUrl()}resources/${resourceId}/`
+    return `${getUrl()}/resources/${resourceId}`
 }
 
 

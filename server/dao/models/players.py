@@ -2,7 +2,6 @@ from sqlalchemy.orm import relationship
 
 from constants import SPECTATORS_TEAM_ID
 from dao.initialisation import db
-from dao.models.teams import Team
 
 
 class Player(db.Model):
