@@ -1,15 +1,18 @@
-import math
 import random
 from typing import List, Dict, Set
 
-from dao.initialisation import db
-from dao.models import KeyValues, Keys, Tile as DbTile
+from velvet_dawn.dao import db
+from velvet_dawn.dao.models import KeyValues, Keys, Tile as DbTile
 from velvet_dawn.models.coordinate import Coordinate
-from velvet_dawn.map.tiles import get_tiles
+from velvet_dawn import datapacks
 
 
 class Map:
     __neighbour_cache: Dict[int, List[Coordinate]] = {}
+
+    @staticmethod
+    def reset_cache():
+        Map.__neighbour_cache = {}
 
     @staticmethod
     def get_neighbouring_cell_coordinates(coord: Coordinate, map_width, map_height):
@@ -45,12 +48,12 @@ class Map:
 def new(cols: int, rows: int):
     print("Generating Map")
 
-    Map.cache = {}
+    Map.reset_cache()
 
     seed = random.randint(10000, 99999)
     random.seed(seed)
 
-    tiles = get_tiles().values()
+    tiles = datapacks.tiles.values()
 
     # TODO This should be strings in a set not list
     map: List[List[Set[str]]] = [
@@ -102,8 +105,6 @@ def get_possible_neighbours(cell_options: Set[str], tile_map: dict):
 
 
 def collapse_cell(map: List[List[Set[str]]], cell: Coordinate, map_width, map_height):
-    tile_map = get_tiles()
-
     # TODO Only get probabilities from fully collapsed cells
     callapsed_cell_probs = []
     cell_probabilites = get_neighbouring_cell_probabilities(map, cell, map_width, map_height)
@@ -112,7 +113,7 @@ def collapse_cell(map: List[List[Set[str]]], cell: Coordinate, map_width, map_he
 
     cell_choise = random.choice(callapsed_cell_probs)
     map[cell.x][cell.y] = {cell_choise}
-    possible_neighbours = get_possible_neighbours(map[cell.x][cell.y], tile_map)
+    possible_neighbours = get_possible_neighbours(map[cell.x][cell.y], datapacks.tiles)
 
     neighbour_updates = [
         (possible_neighbours, Map.get_neighbouring_cell_coordinates(coord=cell, map_width=map_width, map_height=map_height))
@@ -127,7 +128,7 @@ def collapse_cell(map: List[List[Set[str]]], cell: Coordinate, map_width, map_he
             map[neighbour.x][neighbour.y] = map[neighbour.x][neighbour.y].intersection(possible_neighbours)
             if len(map[neighbour.x][neighbour.y]) < current_possibilities:
                 neighbour_updates.append((
-                    get_possible_neighbours(map[neighbour.x][neighbour.y], tile_map),
+                    get_possible_neighbours(map[neighbour.x][neighbour.y], datapacks.tiles),
                     Map.get_neighbouring_cell_coordinates(coord=neighbour, map_width=map_width, map_height=map_height)
                 ))
 
@@ -141,8 +142,6 @@ def collapse_cell(map: List[List[Set[str]]], cell: Coordinate, map_width, map_he
 
 
 def get_neighbouring_cell_probabilities(map: List[List[Set[str]]], cell: Coordinate, map_width, map_height) -> Dict[str, int]:
-    tiles = get_tiles()
-
     probability_map = {tile: 0 for tile in map[cell.x][cell.y]}
     neighbouring_cell_coords = Map.get_neighbouring_cell_coordinates(cell, map_width, map_height)
 
@@ -153,10 +152,10 @@ def get_neighbouring_cell_probabilities(map: List[List[Set[str]]], cell: Coordin
 
         possible_neighbours = {}
         for tile in possible_tiles:
-            for key in tiles[tile].neighbours:
+            for key in datapacks.tiles[tile].neighbours:
                 if key not in possible_neighbours:
                     possible_neighbours[key] = 0
-                possible_neighbours[key] += tiles[tile].neighbours[key]
+                possible_neighbours[key] += datapacks.tiles[tile].neighbours[key]
 
         for key in list(probability_map):
             if key not in possible_neighbours:

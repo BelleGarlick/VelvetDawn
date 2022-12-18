@@ -1,7 +1,8 @@
 import errors
 import velvet_dawn.game.setup
-from dao.initialisation import app
+from velvet_dawn.dao import app
 from test_server.base_test import BaseTest
+from velvet_dawn.models.phase import Phase
 
 
 class TestSetup(BaseTest):
@@ -43,9 +44,11 @@ class TestSetup(BaseTest):
     def test_place_setup_entity(self):
         with app.app_context():
             # TODO Check within starting territory
+            velvet_dawn.game.phase(set=Phase.Lobby)
             velvet_dawn.map.creation.new(5, 5)
             velvet_dawn.players.join("playerA", "")
             velvet_dawn.players.join("playerB", "")
+            velvet_dawn.game.phase(set=Phase.Setup)
 
             # Test random entity throws error
             with self.assertRaises(errors.UnknownEntityError):
@@ -58,8 +61,10 @@ class TestSetup(BaseTest):
                 velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 0, 0)
 
             # Update the setup definition to allow a commander and two muskets
+            velvet_dawn.game.phase(set=Phase.Lobby)
             velvet_dawn.game.setup.update_setup("civil-war:commander", 1)
             velvet_dawn.game.setup.update_setup("civil-war:musketeers", 2)
+            velvet_dawn.game.phase(set=Phase.Setup)
 
             # Test creating twos commander is an issue and that a commander can be removed and readded
             # also testing that removing an entity with no entity to remove will rause an error

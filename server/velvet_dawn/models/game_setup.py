@@ -1,11 +1,12 @@
 import dataclasses
 from typing import Set, List
 
-from dao.models.entity_setup import EntitySetup
+from velvet_dawn.dao.models.entity_setup import EntitySetup
 
 
 @dataclasses.dataclass
 class GameSetup:
+
     commanders: Set[str]
     units: List[EntitySetup]
 

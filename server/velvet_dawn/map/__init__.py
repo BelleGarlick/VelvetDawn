@@ -1,7 +1,7 @@
-from dao.initialisation import db
-from dao.models import KeyValues, Keys, Tile, Entity
+from velvet_dawn.dao import db
+from velvet_dawn.dao.models import KeyValues, Keys, Tile , Entity
 from velvet_dawn.map.creation import new
-from velvet_dawn.map.tiles import get_tiles, get as get_tile
+from velvet_dawn import datapacks
 
 
 def get():
@@ -41,6 +41,12 @@ def is_placeable(x: int, y: int) -> bool:
     if not db_tile:
         return False
 
-    tile = get_tiles()[db_tile.tile_id]
+    tile = datapacks.tiles[db_tile.tile_id]
 
     return tile.traversable
+
+
+def get_tile(x, y):
+    return db.session.query(Tile)\
+        .where(Tile.x == x, Tile.y == y)\
+        .one_or_none()

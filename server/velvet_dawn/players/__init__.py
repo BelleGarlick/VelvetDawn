@@ -2,8 +2,8 @@ import re
 from typing import List, Optional
 
 import errors
-from dao.initialisation import db
-from dao.models import Player
+from velvet_dawn.dao import db
+from velvet_dawn.dao.models import Player
 
 
 # noinspection PyShadowingBuiltins

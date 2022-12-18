@@ -2,10 +2,10 @@ from typing import List
 
 import errors
 import velvet_dawn
-from dao.initialisation import db
-from dao.models import Entity as DbEntity, Player
-from dao.models.entity_setup import EntitySetup
-from velvet_dawn.entities import get_entities
+from velvet_dawn.dao import db
+from velvet_dawn.dao.models import Entity as DbEntity, Player
+from velvet_dawn.dao.models.entity_setup import EntitySetup
+from velvet_dawn import datapacks
 from velvet_dawn.models.game_setup import GameSetup
 from velvet_dawn.models.phase import Phase
 
@@ -22,8 +22,6 @@ their initial setup entities when in the setup phase.
 
 def get_setup():
     """ Get the game setup definition """
-    entities = get_entities()
-
     entity_setup: List[EntitySetup] = db.session.query(EntitySetup).all()
     entity_setup = sorted(entity_setup, key=lambda x: x.entity_id)
 
@@ -31,11 +29,11 @@ def get_setup():
         commanders={
             entity.entity_id
             for entity in entity_setup
-            if entities[entity.entity_id].commander
+            if datapacks.entities[entity.entity_id].commander
         },
         units=[
             entity for entity in entity_setup
-            if not entities[entity.entity_id].commander
+            if not datapacks.entities[entity.entity_id].commander
         ]
     )
 
@@ -53,7 +51,7 @@ def update_setup(entity_id: str, count: int):
         raise errors.ValidationError("Game setup units may only be changed in the lobby by the admin")
 
     # Check entity exists
-    if entity_id not in get_entities():
+    if entity_id not in datapacks.entities:
         raise errors.ValidationError(f"Unknown entity id: '{entity_id}'")
 
     # If exists, update else create
@@ -84,10 +82,9 @@ def place_entity(player, entity_id, x, y):
         raise errors.ValidationError("Game setup may only be changed during game setup")
 
     setup = get_setup()
-    entities = get_entities()
     existing_entities = db.session.query(DbEntity).where(DbEntity.player == player, DbEntity.entity_id == entity_id).all()
 
-    if entity_id not in entities:
+    if entity_id not in datapacks.entities:
         raise errors.UnknownEntityError(entity_id)
 
     # TODO Check within the starting territory
@@ -148,7 +145,6 @@ def remove_entity(player_id: str, x: int, y: int):
 
 def validate_player_setups():
     """ This function checks all players have placed their commands """
-    entities = get_entities()
     players = db.session.query(Player).all()
 
     for player in players:
@@ -156,7 +152,7 @@ def validate_player_setups():
 
         player_has_commander = False
         for item in player_entities:
-            if entities[item.entity_id].commander:
+            if datapacks.entities[item.entity_id].commander:
                 player_has_commander = True
 
         if not player_has_commander:

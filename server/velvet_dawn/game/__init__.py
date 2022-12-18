@@ -1,6 +1,6 @@
 import velvet_dawn.teams
-from dao.initialisation import db
-from dao.models import Keys, KeyValues
+from velvet_dawn.dao import db
+from velvet_dawn.dao.models import Keys, KeyValues
 from velvet_dawn.models.game_state import GameState
 from velvet_dawn.models.mode import Mode
 from velvet_dawn.models.phase import Phase
@@ -13,18 +13,6 @@ def mode():
     # Change game mode, delete all teams, then auto balance
     # otherwise just return
     return Mode.ALL_V_ALL
-
-
-def initial_entities():
-    return {
-        "civil-war:commander": 1,
-        "civil-war:general": 3,
-        "civil-war:pikemen": 6,
-        "civil-war:cavalry": 3,
-        "civil-war:cannons": 2,
-        "civil-war:medics": 1,
-        "civil-war:musketeers": 6
-    }
 
 
 def phase(set: Phase = None):
@@ -75,5 +63,6 @@ def get_state():
         turn=turn(),
         active_turn=active_turn(),
         teams=velvet_dawn.teams.list(),
-        players=velvet_dawn.players.list()
+        players=velvet_dawn.players.list(),
+        setup=velvet_dawn.game.setup.get_setup()
     )

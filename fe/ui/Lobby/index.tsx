@@ -2,10 +2,10 @@ import * as React from "react";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import {Typography} from "@material-ui/core";
 import * as Api from "api"
-import {GameSetup} from "models/gameSetup";
 import {LobbyUsers} from "ui/Lobby/LobbyUsers";
 import {LobbyUnits} from "ui/Lobby/LobbyUnits";
 import {ViewState} from "models/view-state";
+import {GameSetup} from "models/gameState";
 
 
 export function Lobby({ setView }: { setView: (x: ViewState) => void }) {
@@ -19,7 +19,7 @@ export function Lobby({ setView }: { setView: (x: ViewState) => void }) {
     React.useEffect(() => {
         setTimer(setInterval(() => {
             setGameState(VelvetDawn.state)
-            Api.setup.getEntitySetup().then(setGameSetup)
+            setGameSetup(VelvetDawn.state.setup)
 
             if (VelvetDawn.state.phase != "lobby") {
                 setView(ViewState.Game)

@@ -1,9 +1,8 @@
 from typing import List
 
 from constants import SPECTATORS_TEAM_ID
-from dao.initialisation import db
-from dao.models import Player
-from dao.models.teams import Team
+from velvet_dawn.dao import db
+from velvet_dawn.dao.models import Player, Team
 from .. import game
 from ..models.mode import Mode
 from ..models.phase import Phase
@@ -17,6 +16,7 @@ def add_player_to_spectators(player_name: str):
     print(f"Adding '{player_name}' to spectators team.")
     team = db.session.query(Team).where(Team.name == SPECTATORS_TEAM_ID).one_or_none()
     if not team:
+        print(SPECTATORS_TEAM_ID)
         new_team(SPECTATORS_TEAM_ID, "Spectators")
 
     db.session.query(Player).where(Player.name == player_name).update({Player.team: SPECTATORS_TEAM_ID})

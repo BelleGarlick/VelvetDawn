@@ -1,6 +1,6 @@
 import enum
 
-from dao.initialisation import db
+from velvet_dawn.dao import db
 
 
 class Keys(str, enum.Enum):

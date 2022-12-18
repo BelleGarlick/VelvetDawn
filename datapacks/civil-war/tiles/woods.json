@@ -3,7 +3,7 @@
   "texture": "civil-war:woods.jpg",
   "neighbours": {
     "civil-war:woods": 1,
-    "civil-war:towns": 1,
+    "civil-war:grass": 1,
     "civil-war:forest": 2
   }
 }

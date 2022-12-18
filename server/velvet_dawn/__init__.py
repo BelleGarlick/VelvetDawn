@@ -1,1 +1,1 @@
-from . import map, players, teams, game, entities, resources
+from . import map, players, teams, game, datapacks

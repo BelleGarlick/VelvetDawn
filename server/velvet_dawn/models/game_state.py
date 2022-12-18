@@ -1,8 +1,8 @@
 import dataclasses
-from typing import List, Dict
+from typing import List
 
-from dao.models import Player
-from dao.models.teams import Team
+from velvet_dawn.dao.models import Player, Team
+from velvet_dawn.models.game_setup import GameSetup
 
 
 @dataclasses.dataclass
@@ -12,6 +12,7 @@ class GameState:
     active_turn: int
     players: List[Player]
     teams: List[Team]
+    setup: GameSetup
 
     def json(self):
         return {
@@ -19,5 +20,6 @@ class GameState:
             "turn": self.turn,
             "activeTurn": self.active_turn,
             "players": {player.name: player.json() for player in self.players},
-            "teams": [team.json() for team in self.teams]
+            "teams": [team.json() for team in self.teams],
+            "setup": self.setup.json()
         }

@@ -1,8 +1,8 @@
 import {Typography} from "@material-ui/core";
 import * as React from "react";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
-import {GameSetup} from "models/gameSetup";
 import * as Api from "api"
+import {GameSetup} from "models/gameState";
 
 
 function AdminView({ setup, setSetup }: { setup: GameSetup, setSetup: (x: GameSetup) => void }) {

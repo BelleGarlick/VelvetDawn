@@ -28,7 +28,11 @@ export class VelvetDawn {
         turn: -1,
         activeTurn: "-1",
         teams: [],
-        players: {}
+        players: {},
+        setup: {
+            commanders: [],
+            units: {}
+        }
     }
 
     // Rendering Entities

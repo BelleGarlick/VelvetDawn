@@ -1,6 +1,4 @@
-from sqlalchemy.orm import relationship
-
-from dao.initialisation import db
+from velvet_dawn.dao import db
 
 
 class Tile(db.Model):

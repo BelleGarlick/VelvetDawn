@@ -1,11 +1,7 @@
-import {get, post} from "api/utils";
-import {GameState, GameSetup} from "models";
+import {post} from "api/utils";
+import {GameSetup, GameState} from "models";
 import { VelvetDawn } from "velvet-dawn/velvet-dawn";
 
-
-export function getEntitySetup(): Promise<GameSetup> {
-    return get("/setup/")
-}
 
 export function updateGameSetup(entity: string, count: number): Promise<GameSetup> {
     return post("/setup/", {

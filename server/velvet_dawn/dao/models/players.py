@@ -1,7 +1,7 @@
 from sqlalchemy.orm import relationship
 
 from constants import SPECTATORS_TEAM_ID
-from dao.initialisation import db
+from velvet_dawn.dao import db
 
 
 class Player(db.Model):

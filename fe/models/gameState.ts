@@ -8,10 +8,18 @@ export enum GamePhrase {
     GameOver = 'over'
 }
 
+
+export interface GameSetup {
+    commanders: string[]
+    units: { [key: string]: number },
+}
+
+
 export interface GameState {
     phase: GamePhrase,
     turn: number,
     activeTurn: string,
     teams: Team[],
-    players: { [key: string]: Player }
+    players: { [key: string]: Player },
+    setup: GameSetup
 }

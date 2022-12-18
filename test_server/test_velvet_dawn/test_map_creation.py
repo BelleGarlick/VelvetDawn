@@ -1,5 +1,5 @@
 import velvet_dawn
-from dao.initialisation import app
+from velvet_dawn.dao import app
 from test_server.base_test import BaseTest
 
 

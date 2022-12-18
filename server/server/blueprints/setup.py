@@ -6,11 +6,6 @@ from velvet_dawn.models.phase import Phase
 setup_blueprint = Blueprint('setup_blueprint', __name__)
 
 
-@setup_blueprint.route("/")
-def get_game_setup():
-    return velvet_dawn.game.setup.get_setup().json()
-
-
 @setup_blueprint.route("/", methods=["POST"])
 def update_game_setup():
     # TODO verify admin

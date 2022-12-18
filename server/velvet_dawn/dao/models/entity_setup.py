@@ -1,4 +1,4 @@
-from dao.initialisation import db
+from velvet_dawn.dao import db
 
 
 class EntitySetup(db.Model):

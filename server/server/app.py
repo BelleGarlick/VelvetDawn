@@ -1,15 +1,14 @@
-import time
-
 from flask import request, send_file
 from functools import wraps
 
 import errors
 import velvet_dawn
 from config import Config
-from dao.initialisation import app
+from velvet_dawn.dao import app
 from server.blueprints.setup import setup_blueprint
 
 
+config = Config.load()
 app.register_blueprint(setup_blueprint, url_prefix="/setup")
 
 
@@ -64,7 +63,7 @@ def get_map_tiles():
     return [
         tile.json()
         for tile in
-        velvet_dawn.map.tiles.get_tiles().values()
+        velvet_dawn.datapacks.tiles.values()
     ]
 
 
@@ -73,13 +72,13 @@ def get_resources():
     return [
         resource.json()
         for resource in
-        velvet_dawn.resources.get_resources().values()
+        velvet_dawn.datapacks.resources.values()
     ]
 
 
 @app.route("/resources/<resource_id>/")
 def get_resource(resource_id):
-    resource = velvet_dawn.resources.get_resources().get(resource_id)
+    resource = velvet_dawn.datapacks.resources.get(resource_id)
     if not resource:
         return "File not found", 404
     return send_file(resource.path)
@@ -90,13 +89,8 @@ def get_entities():
     return [
         entity.json()
         for entity in
-        velvet_dawn.entities.get_entities().values()
+        velvet_dawn.datapacks.entities.values()
     ]
-
-
-@app.route("/entities/setup/")
-def get_entity_setup():
-    return velvet_dawn.game.initial_entities()
 
 
 @app.route("/game-state/")
@@ -116,18 +110,12 @@ def join_game():
 
 
 if __name__ == "__main__":
-    config = Config.load()
-
-    velvet_dawn.entities.initialise(config)
-    velvet_dawn.map.tiles.initialise(config)
-    velvet_dawn.resources.initialise(config)
+    velvet_dawn.datapacks.init(config)
 
     # with app.app_context():
     #     start = time.time()
     #     velvet_dawn.map.new(50, 40)
     #     end = time.time()
     #     print(end - start)
-
-    velvet_dawn.entities.get_entities()
 
     app.run("0.0.0.0", port=config.port, debug=True)

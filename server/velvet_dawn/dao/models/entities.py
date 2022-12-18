@@ -1,7 +1,5 @@
-import enum
-
-from dao.initialisation import db
-from dao.models.players import Player
+from velvet_dawn.dao import db
+from velvet_dawn.dao.models.players import Player
 
 
 class Entity(db.Model):

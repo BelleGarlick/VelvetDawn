@@ -1,8 +1,6 @@
 import dataclasses
 import enum
-import json
 from pathlib import Path
-from typing import Dict
 
 
 class ResourceType(str, enum.Enum):
