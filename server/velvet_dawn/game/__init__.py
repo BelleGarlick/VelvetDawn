@@ -52,17 +52,19 @@ def active_turn():
     return None
 
 
-def start_setup_phase():
+def start_setup_phase(config):
+    velvet_dawn.map.allocate_spawn_points(config)
+    phase(set=Phase.Setup)
     # TODO Check game setup is valid before people start placing
-    pass
 
 
-def get_state():
+def get_state(user: str):
     return GameState(
         phase=phase(),
         turn=turn(),
         active_turn=active_turn(),
         teams=velvet_dawn.teams.list(),
         players=velvet_dawn.players.list(),
-        setup=velvet_dawn.game.setup.get_setup()
+        setup=velvet_dawn.game.setup.get_setup(),
+        spawn_area=velvet_dawn.map.spawn.get_allocated_spawn_area(user)
     )

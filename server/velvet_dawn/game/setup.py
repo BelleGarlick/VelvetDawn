@@ -77,7 +77,7 @@ def is_setup_valid():
     return bool(get_setup().commanders)
 
 
-def place_entity(player, entity_id, x, y):
+def place_entity(player: str, entity_id: str, x: int, y: int):
     if velvet_dawn.game.phase() != Phase.Setup:
         raise errors.ValidationError("Game setup may only be changed during game setup")
 
@@ -87,7 +87,8 @@ def place_entity(player, entity_id, x, y):
     if entity_id not in datapacks.entities:
         raise errors.UnknownEntityError(entity_id)
 
-    # TODO Check within the starting territory
+    if not velvet_dawn.map.is_point_spawnable(user=player, x=x, y=y):
+        raise errors.ValidationError("This point is not within your spawn territory")
 
     if not velvet_dawn.map.is_placeable(x=x, y=y):
         raise errors.ValidationError("Cannot place two entities in the same tile.")

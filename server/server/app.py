@@ -1,3 +1,5 @@
+import time
+
 from flask import request, send_file
 from functools import wraps
 
@@ -95,7 +97,10 @@ def get_entities():
 
 @app.route("/game-state/")
 def get_game_state():
-    return velvet_dawn.game.get_state().json()
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    return velvet_dawn.game.get_state(username).json()
 
 
 @app.route("/join/", methods=["POST"])
@@ -114,7 +119,7 @@ if __name__ == "__main__":
 
     # with app.app_context():
     #     start = time.time()
-    #     velvet_dawn.map.new(50, 40)
+    #     velvet_dawn.map.new(100, 80)
     #     end = time.time()
     #     print(end - start)
 

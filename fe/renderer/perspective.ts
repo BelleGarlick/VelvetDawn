@@ -1,7 +1,7 @@
 import { TileEntity } from "renderer/entities/tile-entity"
 import { VelvetDawn } from "velvet-dawn/velvet-dawn"
 
-const TileRadius = 40
+const TileRadius = 50
 const TileHeight = Math.pow(3, 1/2) * TileRadius
 const TileWidth = 2 * TileRadius
 const TileSpacingX = TileWidth * 0.75

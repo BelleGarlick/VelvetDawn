@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from constants import SPECTATORS_TEAM_ID
 from velvet_dawn.dao import db
@@ -68,3 +68,12 @@ def auto_update_teams():
         if not players:
             db.session.delete(team)
             db.session.commit()
+
+
+# TODO Test
+def get_team_for_player(player_name: str) -> Optional[Team]:
+    player = db.session.query(Player).where(Player.name == player_name).one_or_none()
+    if not player:
+        return None
+
+    return db.session.query(Team).where(Team.team_id == player.team).one_or_none()

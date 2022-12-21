@@ -48,6 +48,6 @@ def start_game_setup():
     player = request.args.get("username")
 
     if velvet_dawn.game.phase() == Phase.Lobby:
-        velvet_dawn.game.phase(Phase.Setup)
+        velvet_dawn.game.start_setup_phase(config)
 
     return velvet_dawn.game.get_state().json()
