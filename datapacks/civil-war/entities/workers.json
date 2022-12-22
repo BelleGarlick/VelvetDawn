@@ -1,5 +1,6 @@
 {
   "name": "Workers",
+  "extends": ["civil-war:_max-health-upgrades"],
   "max_health": 50,
   "can_build": [
     "roads",

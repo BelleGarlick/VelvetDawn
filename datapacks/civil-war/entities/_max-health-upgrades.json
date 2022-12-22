@@ -1,0 +1,35 @@
+{
+  "abstract": true,
+  "upgrades": [
+    {
+      "name": "Max Health",
+      "description": "Upgrade the max health of this unit.",
+      "tree": [
+        {
+          "name": "Max Health 1",
+          "description": "Increase the maximum health of this unit by 10%",
+          "trigger": {
+            "target": "self.health.max",
+            "multiply": 1.1
+          }
+        },
+        {
+          "name": "Max Health 2",
+          "description": "Increase the maximum health of this unit by 10%",
+          "trigger": {
+            "target": "self.health.max",
+            "multiply": 1.1
+          }
+        },
+        {
+          "name": "Max Health 3",
+          "description": "Increase the maximum health of this unit by 10%",
+          "trigger": {
+            "target": "self.health.max",
+            "multiply": 1.1
+          }
+        }
+      ]
+    }
+  ]
+}

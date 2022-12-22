@@ -1,5 +1,6 @@
 {
   "name": "Musketeers",
+  "extends": ["civil-war:_max-health-upgrades"],
   "movement": {
     "range": 2
   },

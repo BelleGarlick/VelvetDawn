@@ -1,5 +1,6 @@
 {
   "name": "Pikemen",
+  "extends": ["civil-war:_max-health-upgrades"],
   "max_health": 50,
   "movement": {
     "range": 2

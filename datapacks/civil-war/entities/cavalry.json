@@ -1,5 +1,6 @@
 {
   "name": "Cavalry",
+  "extends": ["civil-war:_max-health-upgrades"],
   "movement": {
     "range": 4
   },

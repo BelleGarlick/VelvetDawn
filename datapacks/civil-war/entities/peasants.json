@@ -1,5 +1,6 @@
 {
   "name": "Peasants",
+  "extends": ["civil-war:_max-health-upgrades"],
   "max_health": 25,
   "movement": {
     "range": 2

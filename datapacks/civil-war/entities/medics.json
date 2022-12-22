@@ -1,5 +1,6 @@
 {
   "name": "Medics",
+  "extends": ["civil-war:_max-health-upgrades"],
   "max_health": 50,
   "combat": {
       "damage": 10

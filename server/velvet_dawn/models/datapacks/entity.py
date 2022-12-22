@@ -1,6 +1,6 @@
-import json
 import dataclasses
-from pathlib import Path
+
+from velvet_dawn.models.datapacks.taggable import Taggable
 
 
 @dataclasses.dataclass
@@ -35,8 +35,10 @@ class EntityMovement:
         }
 
 
-class Entity:
+class Entity(Taggable):
     def __init__(self, id: str, name: str):
+        super().__init__()
+
         self.id = id
         self.name = name
         self.max_health = 100
@@ -58,17 +60,13 @@ class Entity:
         }
 
     @staticmethod
-    def load(file_path):
-        file_path = Path(file_path)
-        with open(file_path) as file:
-            data = json.load(file)
+    def load(id: str, data: dict):
+        entity = Entity(id=id, name=data['name'])
 
-            entity = Entity(
-                id=f"{file_path.parent.parent.stem}:{file_path.stem}",
-                name=data['name']
-            )
-            entity.commander = data.get("commander", False)
-            entity.combat.update(data.get('combat', {}))
-            entity.movement.update(data.get('movement', {}))
+        entity.commander = data.get("commander", False)
+        entity.combat.update(data.get('combat', {}))
+        entity.movement.update(data.get('movement', {}))
 
-            return entity
+        entity._load_tags(data)
+
+        return entity

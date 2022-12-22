@@ -1,12 +1,20 @@
 import errors
 import velvet_dawn.game.setup
+import velvet_dawn.game.setup
 from config import Config
+
 from velvet_dawn.dao import app
 from test_server.base_test import BaseTest
 from velvet_dawn.models.phase import Phase
 
 
 class TestSetup(BaseTest):
+    @classmethod
+    def setUpClass(cls) -> None:
+        test_config = Config(
+            datapacks=['civil-war', 'gods']
+        )
+        velvet_dawn.datapacks.init(test_config)
 
     def test_updating_setup_definition(self):
         with app.app_context():
