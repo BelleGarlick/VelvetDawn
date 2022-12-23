@@ -5,6 +5,7 @@ import errors
 import velvet_dawn.map.neighbours
 from config import Config
 from constants import SPECTATORS_TEAM_ID
+from logger import logger
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import Team, Player, SpawnArea
 from velvet_dawn.models.coordinate import Coordinate
@@ -22,6 +23,8 @@ areas
 
 
 def allocate_spawn_points(config: Config):
+    logger.info("Allocating spawn area.")
+
     teams: List[Team] = db.session.query(Team).where(Team.team_id != SPECTATORS_TEAM_ID).all()
     if not teams:
         raise errors.ValidationError("No teams to allocate spawn points for")

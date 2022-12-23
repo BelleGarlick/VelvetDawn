@@ -17,5 +17,8 @@
       },
       "notes": "Allows for a stronger attack to cavalry"
     }
-  ]
+  ],
+  "textures": {
+    "background": "civil-war:pikeman.png"
+  }
 }

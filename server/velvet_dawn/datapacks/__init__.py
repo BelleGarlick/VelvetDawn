@@ -123,8 +123,9 @@ def _load_resources(resources_path: Path):
     for file in os.listdir(resources_path):
         if file == ".DS_Store": continue
 
-        logging.info(f" - {resources_path.parent}/{file}")
         resource_path = resources_path / file
+        resource_id = _construct_id(resource_path, include_file_type=True)
+        logging.info(f" - {resource_id}")
 
         file_type, resource_type = resource_path.suffix[1:], ResourceType.Audio
         if file_type in {"mp3"}:
@@ -136,7 +137,6 @@ def _load_resources(resources_path: Path):
         else:
             raise Exception(f"Resource '{resource_path}' is invalid. File types may only be mp3, woff, jpg or png")
 
-        resource_id = _construct_id(resource_path, include_file_type=True)
         resources[resource_id] = Resource(
             id=resource_id,
             path=resource_path,

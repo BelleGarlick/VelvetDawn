@@ -32,5 +32,8 @@
         "closest[tag:heavy-fighter]"
       ]
     }
-  ]
+  ],
+  "textures": {
+    "background": "civil-war:commander.png"
+  }
 }

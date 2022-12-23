@@ -25,5 +25,8 @@
       "modifies": "self.movement.range",
       "modifier": { "add": 1 }
     }
-  ]
+  ],
+  "textures": {
+    "background": "civil-war:cannons.png"
+  }
 }

@@ -97,8 +97,8 @@ def get_entities():
 
 @app.route("/game-state/")
 def get_game_state():
-    username = request.form.get("username")
-    password = request.form.get("password")
+    username = request.args.get("username")
+    password = request.args.get("password")
 
     return velvet_dawn.game.get_state(username).json()
 
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     # with app.app_context():
     #     start = time.time()
-    #     velvet_dawn.map.new(100, 80)
+    #     velvet_dawn.map.new(config)
     #     end = time.time()
     #     print(end - start)
 

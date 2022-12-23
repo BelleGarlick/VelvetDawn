@@ -10,9 +10,9 @@ export function ServerResourceLoadingScreen({ children }: { children: React.Reac
         VelvetDawn.init()
             .then(() => {
                 // TODO Load images and audio in. Once done, show the lobby screen
-                console.log(VelvetDawn.entities)
-                console.log(VelvetDawn.resources)
-                console.log(VelvetDawn.tiles)
+                console.log(VelvetDawn.datapacks.entities)
+                console.log(VelvetDawn.datapacks.resources)
+                console.log(VelvetDawn.datapacks.tiles)
                 setLoading(false)
             })
             .catch((e) => {

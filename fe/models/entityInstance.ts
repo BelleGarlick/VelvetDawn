@@ -5,7 +5,7 @@ export interface EntityInstance {
     player: string,
     entity: string,
     position: {
-        x: string,
-        y: string
+        x: number,
+        y: number
     }
 }

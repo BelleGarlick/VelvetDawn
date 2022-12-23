@@ -1,12 +1,10 @@
 import * as Api from "api"
-import {Entity, Tile, Resource, ResourceType, Player} from "models";
-import {getUrl} from "api/utils";
-import {MENU_AUDIO_ID} from "../constants";
+import {Player} from "models";
 import {GamePhrase, GameState} from "models/gameState";
 import {LoginDetails} from "models/login-details";
-import {Textures} from "../renderer/Textures";
 import {TileEntity} from "../renderer/entities/tile-entity";
 import {UnitEntity} from "../renderer/entities/unit-entity";
+import {Datapacks} from "./datapacks";
 
 
 export class VelvetDawn {
@@ -17,13 +15,11 @@ export class VelvetDawn {
     }
 
     // Datapack Definitions
-    public static entities: { [key: string]: Entity } = {}
-    public static tiles: { [key: string]: Tile } = {}
-    public static resources: { [key: string]: Resource } = {}
+    public static datapacks = new Datapacks();
     public static mapWidth = 0
     public static mapHeight = 0
 
-    public static state: GameState = {
+    private static state: GameState = {
         phase: GamePhrase.Lobby,
         turn: -1,
         activeTurn: "-1",
@@ -32,72 +28,56 @@ export class VelvetDawn {
         setup: {
             commanders: [],
             units: {}
-        }
+        },
+        entities: {},
+        spawnArea: []
     }
 
     // Rendering Entities
     public static map: TileEntity[][] = []
     public static tileEntities: TileEntity[];
-    public static unitEntities: UnitEntity[];
+    public static unitsDict: { [key: string]: UnitEntity } = {}
+    public static spawnAreasSet: boolean = false
 
     public static audioPlayers: { [key: string]: HTMLAudioElement } = {}
 
     public static refreshTimer: number = -1
 
     public static init() {
-        clearTimeout(this.refreshTimer)
+        clearTimeout(VelvetDawn.refreshTimer)
         // @ts-ignore
-        this.refreshTimer = setInterval(() => {
-            this.refreshGameState()
+        VelvetDawn.refreshTimer = setInterval(() => {
+            VelvetDawn.refreshGameState()
         }, 1000);
 
         return Promise.all([
-            Api.entities.getEntities().then(entities => {
-                entities.forEach(entity => VelvetDawn.entities[entity.id] = entity)
-            }),
-
-            Api.map.getTiles().then(tiles => {
-                tiles.forEach(tile => VelvetDawn.tiles[tile.id] = tile)
-            }),
-
-            Api.resources.getResources().then(resources => {
-                const imageIds: string[] = []
-                resources.forEach(resource => {
-                    VelvetDawn.resources[resource.id] = resource
-                    if (resource.type == ResourceType.Audio && resource.id !== MENU_AUDIO_ID)  // Menu audio is loaded before here so it auto plays
-                        VelvetDawn.audioPlayers[resource.id] = new Audio(`${getUrl()}/resources/velvet-dawn:menu.mp3/`)
-                    if (resource.type == ResourceType.Image)
-                        imageIds.push(resource.id)
-                })
-                Textures.load(imageIds)
-            }),
+            VelvetDawn.datapacks.init(),
 
             Api.map.getMap().then(mapDef => {
-                this.mapHeight = mapDef.height
-                this.mapWidth = mapDef.width
-                this.map = []
-                for (let i = 0; i < this.mapWidth; i++) {
+                VelvetDawn.mapHeight = mapDef.height
+                VelvetDawn.mapWidth = mapDef.width
+                VelvetDawn.map = []
+                for (let i = 0; i < VelvetDawn.mapWidth; i++) {
                     const col = []
-                    for (let j = 0; j < this.mapHeight; j++) {
+                    for (let j = 0; j < VelvetDawn.mapHeight; j++) {
                         col.push(null);
                     }
-                    this.map.push(col)
+                    VelvetDawn.map.push(col)
                 }
 
-                this.tileEntities = mapDef.tiles.map((tile) => {
-                    let tileEntity = new TileEntity(tile.id, tile.x, tile.y)
-                    this.map[tile.x][tile.y] = tileEntity;
+                VelvetDawn.tileEntities = mapDef.tiles.map((tile) => {
+                    let tileEntity = new TileEntity(tile.id, tile.tileId, tile.x, tile.y)
+                    VelvetDawn.map[tile.x][tile.y] = tileEntity;
                     return tileEntity
                 })
             }),
 
-            this.refreshGameState()
+            VelvetDawn.refreshGameState()
         ])
     }
 
     static refreshGameState() {
-        return Api.game.getState()
-            .then(x => this.state = x)
+        return Api.game.getState().then(VelvetDawn.setState)
     }
 
     static getPlayer(): Player {
@@ -108,7 +88,7 @@ export class VelvetDawn {
     }
 
     static getNeighbourTiles(tileX: number, tileY: number): TileEntity[] {
-        const isOdd = tileX % 2 == 1
+        const isOdd = tileX % 2 === 1
 
         return [
             {x: tileX - 1, y: isOdd ? tileY : tileY - 1},
@@ -123,7 +103,7 @@ export class VelvetDawn {
                 return x >= 0 && y >= 0 && x < VelvetDawn.mapWidth && y < VelvetDawn.mapHeight
             })
             .map(({ x, y }) => {
-                return this.map[x][y]
+                return VelvetDawn.map[x][y]
             })
     }
 
@@ -137,4 +117,36 @@ export class VelvetDawn {
     //     //         })
     //     // }
     // }
+
+    public static setState(state: GameState) {
+        VelvetDawn.state = state
+
+        Object.keys(VelvetDawn.state.entities).forEach(entityId => {
+            const serverEntity = VelvetDawn.state.entities[entityId]
+
+            if (VelvetDawn.unitsDict.hasOwnProperty(entityId)) {
+                const entity = VelvetDawn.unitsDict[entityId]
+                entity.setPosition(serverEntity.position)
+            } else {
+                VelvetDawn.unitsDict[entityId] = UnitEntity.fromServerInstance(serverEntity);
+            }
+        });
+
+        Object.keys(VelvetDawn.unitsDict).forEach(entityId => {
+            if (!VelvetDawn.state.entities.hasOwnProperty(entityId)) {
+                delete VelvetDawn.state.entities[entityId]
+            }
+        })
+
+        if (VelvetDawn.map.length > 0 && VelvetDawn.state.spawnArea.length > 0 && !VelvetDawn.spawnAreasSet) {
+            VelvetDawn.state.spawnArea.forEach(({x, y}) => {
+                VelvetDawn.map[x][y].isSpawnArea = true
+            })
+            VelvetDawn.spawnAreasSet = true
+        }
+    }
+
+    public static getState() {
+        return VelvetDawn.state;
+    }
 }

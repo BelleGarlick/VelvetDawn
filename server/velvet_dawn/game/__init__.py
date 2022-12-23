@@ -1,6 +1,7 @@
 import velvet_dawn.teams
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import Keys, KeyValues
+from velvet_dawn.dao.models import Keys, KeyValues, Entity
+
 from velvet_dawn.models.game_state import GameState
 from velvet_dawn.models.mode import Mode
 from velvet_dawn.models.phase import Phase
@@ -59,12 +60,21 @@ def start_setup_phase(config):
 
 
 def get_state(user: str):
+    current_phase = phase()
+
+    spawn_area = []
+    if current_phase == Phase.Setup:
+        spawn_area = velvet_dawn.map.spawn.get_allocated_spawn_area(user)
+
+    entities = db.session.query(Entity).all()
+
     return GameState(
-        phase=phase(),
+        phase=current_phase,
         turn=turn(),
         active_turn=active_turn(),
         teams=velvet_dawn.teams.list(),
         players=velvet_dawn.players.list(),
         setup=velvet_dawn.game.setup.get_setup(),
-        spawn_area=velvet_dawn.map.spawn.get_allocated_spawn_area(user)
+        spawn_area=spawn_area,
+        entities=entities
     )

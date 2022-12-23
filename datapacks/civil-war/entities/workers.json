@@ -9,5 +9,8 @@
   ],
   "combat": {
       "damage": 5
+  },
+  "textures": {
+    "background": "civil-war:hammer.png"
   }
 }

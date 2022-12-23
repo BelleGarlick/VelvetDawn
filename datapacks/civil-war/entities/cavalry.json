@@ -24,5 +24,8 @@
     { "on": "spawn" },
     { "on": "kill" },
     { "on": "attack" }
-  ]
+  ],
+  "textures": {
+    "background": "civil-war:cavalry.png"
+  }
 }

@@ -3,5 +3,8 @@
 export interface Entity {
     id: string
     name: string
-    commander: boolean
+    commander: boolean,
+    textures: {
+        background: string
+    }
 }

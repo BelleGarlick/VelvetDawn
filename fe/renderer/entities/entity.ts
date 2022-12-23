@@ -1,12 +1,13 @@
-import {Perspective} from "../perspective";
+import {Renderable} from "./renderable";
 
-export abstract class Entity {
+export abstract class Entity extends Renderable {
 
-    public readonly id: string;
+    public readonly instanceId: number;
+    public readonly entityId: string
 
-    protected constructor(id: string) {
-        this.id = id
+    protected constructor(id: number, entityId: string) {
+        super();
+        this.instanceId = id;
+        this.entityId = entityId;
     }
-
-    public abstract render(ctx: CanvasRenderingContext2D, perspective: Perspective): null;
 }

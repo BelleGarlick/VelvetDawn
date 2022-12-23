@@ -1,7 +1,8 @@
 import { TileEntity } from "renderer/entities/tile-entity"
 import { VelvetDawn } from "velvet-dawn/velvet-dawn"
+import {RenderingConstants} from "./phases/scene";
 
-const TileRadius = 50
+const TileRadius = 100
 const TileHeight = Math.pow(3, 1/2) * TileRadius
 const TileWidth = 2 * TileRadius
 const TileSpacingX = TileWidth * 0.75
@@ -38,7 +39,7 @@ export class Perspective {
         })
     }
 
-    getTileRenderingConstants(x: number, y: number) {
+    getTileRenderingConstants(x: number, y: number, constants: RenderingConstants) {
         const { x: tilePosX, y: tilePosY } = this.getTileCoordinates(x, y)
 
         const clipPoints = [
@@ -52,9 +53,9 @@ export class Perspective {
 
         const visible = (
             tilePosX > -TileRadius &&
-            tilePosX < window.innerWidth + TileRadius &&
+            tilePosX < constants.width + TileRadius &&
             tilePosY > -TileRadius &&
-            tilePosY < window.innerHeight + TileRadius
+            tilePosY < constants.height + TileRadius
         );
 
         return {
@@ -87,5 +88,10 @@ export class Perspective {
         })
 
         return tile
+    }
+
+    getUnitSize(): number {
+        // 0.6 * TileDiameter
+        return 2 * TileRadius * 0.6;
     }
 }

@@ -1,5 +1,3 @@
-from sqlalchemy.orm import relationship
-
 from constants import SPECTATORS_TEAM_ID
 from velvet_dawn.dao import db
 
@@ -15,16 +13,11 @@ class Player(db.Model):
 
     admin = db.Column(db.Boolean, default=False)
 
-    entities = relationship("Entity", cascade="all, delete")
-
     def json(self):
         return {
             "id": self.id,
             "name": self.name,
             "team": self.team,
             "admin": self.admin,
-            "spectating": self.team == SPECTATORS_TEAM_ID,
-            "entities": [
-                entity.json() for entity in self.entities
-            ]
+            "spectating": self.team == SPECTATORS_TEAM_ID
         }

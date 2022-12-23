@@ -1,9 +1,12 @@
 import velvet_dawn
 from flask import Blueprint, request
 
+from config import Config
 from velvet_dawn.models.phase import Phase
 
 setup_blueprint = Blueprint('setup_blueprint', __name__)
+
+config = Config().load()
 
 
 @setup_blueprint.route("/", methods=["POST"])
@@ -27,7 +30,7 @@ def add_entity_during_setup():
 
     velvet_dawn.game.setup.place_entity(player, entity, x, y)
 
-    return velvet_dawn.game.get_state().json()
+    return velvet_dawn.game.get_state(player).json()
 
 
 @setup_blueprint.route("/remove/", methods=["POST"])
@@ -39,7 +42,7 @@ def remove_entity_during_setup():
 
     velvet_dawn.game.setup.remove_entity(player, x, y)
 
-    return velvet_dawn.game.get_state().json()
+    return velvet_dawn.game.get_state(player).json()
 
 
 @setup_blueprint.route("/start-setup/", methods=["POST"])
@@ -50,4 +53,4 @@ def start_game_setup():
     if velvet_dawn.game.phase() == Phase.Lobby:
         velvet_dawn.game.start_setup_phase(config)
 
-    return velvet_dawn.game.get_state().json()
+    return velvet_dawn.game.get_state(player).json()

@@ -1,10 +1,11 @@
 import {VelvetDawn} from "../velvet-dawn/velvet-dawn";
 import { Perspective } from "./perspective";
-import {TileEntity} from "./entities/tile-entity";
 import {SetupPhase} from "./phases/setup";
+import {Scene} from "./phases/scene";
 
 
-const SIDEBAR_WIDTH = 360
+const SIDEBAR_WIDTH = 700
+const RESOLUTION = 2
 
 
 export class Renderer {
@@ -13,6 +14,8 @@ export class Renderer {
 
     private static instance: Renderer = new Renderer();
     private perspective = new Perspective();
+
+    private scene: Scene = new SetupPhase();
 
     public static getInstance() {
         return this.instance;
@@ -25,21 +28,26 @@ export class Renderer {
         }
 
         var ctx = this.canvas.getContext('2d');
-        this.canvas.width = window.innerWidth
-        this.canvas.height = window.innerHeight
+        this.canvas.width = window.innerWidth * RESOLUTION
+        this.canvas.height = window.innerHeight * RESOLUTION
+        this.canvas.style.width = window.innerWidth + "px"
+        this.canvas.style.height = window.innerHeight + "px"
+
+        const constants = Renderer.getConstants()
 
         VelvetDawn.tileEntities.forEach(tile => {
-            tile.render(ctx, this.perspective)
+            tile.render(ctx, this.perspective, constants)
+        })
+
+        // TODO Entity culling and updating if pos is outside window + 1 border for animating
+        Object.keys(VelvetDawn.unitsDict).forEach(entityId => {
+            VelvetDawn.unitsDict[entityId].render(ctx, this.perspective, constants)
         })
 
         ctx.fillStyle = "#000000"
-        ctx.fillRect(window.innerWidth - SIDEBAR_WIDTH, 0, SIDEBAR_WIDTH, window.innerHeight)
+        ctx.fillRect(constants.width - SIDEBAR_WIDTH, 0, SIDEBAR_WIDTH, constants.height)
 
-        SetupPhase.getInstance().renderSidebar(ctx, {
-            width: window.innerWidth,
-            height: window.innerHeight,
-            sidebar: SIDEBAR_WIDTH
-        })
+        this.scene.renderSidebar(ctx, this.perspective, Renderer.getConstants())
 
         requestAnimationFrame(() => {this.render()})
     }
@@ -50,33 +58,52 @@ export class Renderer {
         let mouseDown = false
         let mousePos = {x: 0, y: 0}
         this.canvas.onmousemove = (event) => {
-            if (mouseDown) {
-                this.perspective.xOffset += mousePos.x - event.pageX
-                this.perspective.yOffset += mousePos.y - event.pageY
-            }
-            mousePos = {x: event.pageX, y: event.pageY}
+            const evX = event.pageX * RESOLUTION
+            const evY = event.pageY * RESOLUTION
 
-            if (SetupPhase.getInstance().hoveredTile) {
-                SetupPhase.getInstance().hoveredTile.hovered = false
+            if (mouseDown) {
+                this.perspective.xOffset += mousePos.x - evX
+                this.perspective.yOffset += mousePos.y - evY
             }
-            SetupPhase.getInstance().hoveredTile = this.perspective.getTileFromMouse(mousePos.x, mousePos.y)
-            SetupPhase.getInstance().hoveredTile.hovered = true
+            mousePos = {x: evX, y: evY}
+
+            if (this.scene.hoveredTile) {
+                this.scene.hoveredTile.hovered = false
+            }
+            this.scene.hoveredTile = this.perspective.getTileFromMouse(mousePos.x, mousePos.y)
+            this.scene.hoveredTile.hovered = true
         }
 
         let mouseDownPos = {x: 0, y: 0}
         this.canvas.onmousedown = (event) => {
             mouseDown = true
-            mouseDownPos = {x: event.pageX, y: event.pageY}
+            mouseDownPos = {x: event.pageX * RESOLUTION, y: event.pageY * RESOLUTION}
         }
 
         this.canvas.onmouseup = (event) => {
+            const evX = event.pageX * RESOLUTION
+            const evY = event.pageY * RESOLUTION
+
             mouseDown = false
-            const distance = Math.hypot(event.pageY - mouseDownPos.y, event.pageX - mouseDownPos.x)
+            const distance = Math.hypot(evY - mouseDownPos.y, evX - mouseDownPos.x)
             if (distance < 10) {
-                SetupPhase.getInstance().tileClicked()
+                this.scene.clicked(Renderer.getConstants(), evX, evY)
             }
         }
 
         this.render()
+    }
+
+    getScene(): Scene {
+        return this.scene;
+    }
+
+    static getConstants() {
+        return {
+            width: window.innerWidth * RESOLUTION,
+            height: window.innerHeight * RESOLUTION,
+            sidebar: SIDEBAR_WIDTH,
+            sidebarPadding: 10
+        }
     }
 }

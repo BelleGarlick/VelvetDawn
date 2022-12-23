@@ -9,11 +9,11 @@ function AdminView({ setup, setSetup }: { setup: GameSetup, setSetup: (x: GameSe
 
     return <>
         <Typography>Commanders</Typography>
-        {Object.keys(VelvetDawn.entities)
-            .filter(x => VelvetDawn.entities[x].commander)
+        {Object.keys(VelvetDawn.datapacks.entities)
+            .filter(x => VelvetDawn.datapacks.entities[x].commander)
             .map(entity => {
             return <div style={{ display: 'flex', justifyContent: 'space-between' }} key={entity}>
-                <div>{VelvetDawn.entities[entity].name}</div>
+                <div>{VelvetDawn.datapacks.entities[entity].name}</div>
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                     {!setup.commanders.includes(entity) && <button onClick={() => {
                         Api.setup.updateGameSetup(entity, 1).then(setSetup)
@@ -26,14 +26,14 @@ function AdminView({ setup, setSetup }: { setup: GameSetup, setSetup: (x: GameSe
         })}
 
         <Typography>Units</Typography>
-        {Object.keys(VelvetDawn.entities)
-            .filter(x => !VelvetDawn.entities[x].commander)
+        {Object.keys(VelvetDawn.datapacks.entities)
+            .filter(x => !VelvetDawn.datapacks.entities[x].commander)
             .map(entity => {
             return <div style={{
                 display: 'flex',
                 justifyContent: 'space-between'
             }} key={entity}>
-                <div>{VelvetDawn.entities[entity].name}</div>
+                <div>{VelvetDawn.datapacks.entities[entity].name}</div>
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                     <button onClick={() => {
                         console.log(setup.units[entity])
@@ -56,7 +56,7 @@ function NonAdminView({ setup }: { setup: GameSetup }) {
         <div>
             {setup.commanders.map((commander) => {
                 return <div style={{ display: 'flex', justifyContent: 'space-between' }} key={commander}>
-                    <div>{VelvetDawn.entities[commander].name}</div>
+                    <div>{VelvetDawn.datapacks.entities[commander].name}</div>
                     <div><button>i</button></div>
                 </div>
             })}
@@ -66,7 +66,7 @@ function NonAdminView({ setup }: { setup: GameSetup }) {
         <div>
             {Object.keys(setup.units).map((unit) => {
                 return <div style={{ display: 'flex', justifyContent: 'space-between' }} key={unit}>
-                    <p>{VelvetDawn.entities[unit].name}</p>
+                    <p>{VelvetDawn.datapacks.entities[unit].name}</p>
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <div>{setup.units[unit]}</div>
                         <div><button>i</button></div>

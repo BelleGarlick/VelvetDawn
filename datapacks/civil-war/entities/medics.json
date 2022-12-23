@@ -16,5 +16,8 @@
       "condition": { "target": "self.health", "lessThan": 11 },
       "modifies": { "add": 20 }
     }
-  ]
+  ],
+  "textures": {
+    "background": "civil-war:medic.png"
+  }
 }

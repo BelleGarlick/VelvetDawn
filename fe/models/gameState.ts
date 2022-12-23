@@ -1,5 +1,6 @@
 import { Team } from "./team";
 import {Player} from "models";
+import {EntityInstance} from "models/entityInstance";
 
 export enum GamePhrase {
     Lobby = 'lobby',
@@ -21,5 +22,10 @@ export interface GameState {
     activeTurn: string,
     teams: Team[],
     players: { [key: string]: Player },
-    setup: GameSetup
+    setup: GameSetup,
+    entities: { [key: string]: EntityInstance },
+    spawnArea: {
+        x: number,
+        y: number
+    }[]
 }

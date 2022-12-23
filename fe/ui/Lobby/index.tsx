@@ -6,25 +6,31 @@ import {LobbyUsers} from "ui/Lobby/LobbyUsers";
 import {LobbyUnits} from "ui/Lobby/LobbyUnits";
 import {ViewState} from "models/view-state";
 import {GameSetup} from "models/gameState";
+import {Renderer} from "../../renderer/Renderer";
+
+
+let time: any = -1
 
 
 export function Lobby({ setView }: { setView: (x: ViewState) => void }) {
     const userIsAdmin = VelvetDawn.getPlayer()?.admin == true
 
     const [tab, setTab] = React.useState(0);
-    const [state, setGameState] = React.useState(VelvetDawn.state);
+    const [state, setGameState] = React.useState(VelvetDawn.getState);
     const [gameSetup, setGameSetup] = React.useState<GameSetup>(null);
-    const [time, setTimer] = React.useState<any>(-1)
 
     React.useEffect(() => {
-        setTimer(setInterval(() => {
-            setGameState(VelvetDawn.state)
-            setGameSetup(VelvetDawn.state.setup)
+        time = setInterval(() => {
+            setGameState(VelvetDawn.getState)
+            setGameSetup(VelvetDawn.getState().setup)
 
-            if (VelvetDawn.state.phase != "lobby") {
+            if (VelvetDawn.getState().phase != "lobby") {
                 setView(ViewState.Game)
+
+                Renderer.getInstance().getScene().onStart(Renderer.getConstants())
+                clearInterval(time)
             }
-        }, 1000))
+        }, 1000)
 
         return () => {
             clearInterval(time)
@@ -45,7 +51,7 @@ export function Lobby({ setView }: { setView: (x: ViewState) => void }) {
 
         {userIsAdmin && <button onClick={() => {
             Api.setup.startSetup().then(x => {
-                VelvetDawn.state = x
+                VelvetDawn.setState(x)
             })
         }}>Start</button>}
     </>

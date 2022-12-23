@@ -35,6 +35,19 @@ class EntityMovement:
         }
 
 
+class EntityTextures:
+    def __init__(self):
+        self.background = None
+
+    def update(self, data: dict):
+        self.background = data.get("background")
+
+    def json(self):
+        return {
+            "background": self.background
+        }
+
+
 class Entity(Taggable):
     def __init__(self, id: str, name: str):
         super().__init__()
@@ -46,6 +59,7 @@ class Entity(Taggable):
 
         self.combat = EntityCombat()
         self.movement = EntityMovement()
+        self.textures = EntityTextures()
 
     def json(self):
         return {
@@ -57,6 +71,7 @@ class Entity(Taggable):
             },
             "movement": self.movement.json(),
             "combat": self.combat.json(),
+            "textures": self.textures.json()
         }
 
     @staticmethod
@@ -66,6 +81,7 @@ class Entity(Taggable):
         entity.commander = data.get("commander", False)
         entity.combat.update(data.get('combat', {}))
         entity.movement.update(data.get('movement', {}))
+        entity.textures.update(data.get('textures', {}))
 
         entity._load_tags(data)
 
