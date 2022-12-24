@@ -119,21 +119,14 @@ def _load_resources(resources_path: Path):
     """
     global resources
 
-    if not resources_path.exists():
-        return
-
     overrides = {}
 
-    for file in os.listdir(resources_path):
-        if file == ".DS_Store":
-            continue
-
-        if file == "overrides.json":
-            with open(file) as reader:
+    for resource_path in _scan_dir(resources_path):
+        if resource_path.name == "overrides.json":
+            with open(resource_path.name) as reader:
                 overrides = json.load(reader)
             continue
 
-        resource_path = resources_path / file
         resource_id = _construct_id(resources_path, resource_path, include_file_type=True)
         logging.info(f" - {resource_id}")
 
@@ -201,32 +194,41 @@ def _load_items_in_dir(root_path: Path) -> Dict[Path, dict]:
 
     data_paths = {}
 
-    if not os.path.exists(root_path):
-        return {}
+    for file_path in sorted(_scan_dir(root_path)):
+        with open(file_path) as reader:
+            data = json.load(reader)
 
-    directories = [root_path]
-    while directories:
-        directory = directories.pop(0)
-        for file in sorted(os.listdir(directory)):
-            file_path = directory / file
+            if data.get("abstract", False):
+                def_id = _construct_id(root_path, file_path, data=data)
+                logger.info(f" - ~{def_id}")
+                _abstract_definitions[def_id] = data
+            else:
+                data_paths[file_path] = data
+
+    return data_paths
+
+
+def _scan_dir(dir: Path) -> List[Path]:
+    if not os.path.exists(dir):
+        return []
+
+    found_files = []
+
+    paths = [dir]
+    while paths:
+        current_path = paths.pop(0)
+
+        for file in os.listdir(current_path):
             if file == ".DS_Store":
                 continue
 
-            if os.path.isdir(file_path):
-                directories.append(file_path)
-                continue
+            file_path = current_path / file
+            if file_path.is_dir():
+                paths.append(file_path)
+            else:
+                found_files.append(file_path)
 
-            with open(file_path) as reader:
-                data = json.load(reader)
-
-                if data.get("abstract", False):
-                    def_id = _construct_id(root_path, file_path, data=data)
-                    logger.info(f" - ~{def_id}")
-                    _abstract_definitions[def_id] = data
-                else:
-                    data_paths[file_path] = data
-
-    return data_paths
+    return found_files
 
 
 def _extend(main: dict) -> dict:
