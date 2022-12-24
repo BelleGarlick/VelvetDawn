@@ -16,6 +16,7 @@ from velvet_dawn.models.datapacks.tile import Tile
 """ datapacks module
 
 This module is responsible for loading the datapacks into the game
+and assigning all the ids.
 """
 
 
@@ -78,7 +79,7 @@ def _load_tiles(tiles_path):
     datapack_tiles = _load_items_in_dir(tiles_path)
     for key in datapack_tiles:
         tile_data = datapack_tiles[key]
-        tile_id = _construct_id(key, data=tile_data)
+        tile_id = _construct_id(tiles_path, key, data=tile_data)
 
         logger.info(" - " + tile_id)
 
@@ -99,7 +100,7 @@ def _load_entities(entities_path):
     datapack_entities = _load_items_in_dir(entities_path)
     for key in datapack_entities:
         entity_data = datapack_entities[key]
-        entity_id = _construct_id(key, data=entity_data)
+        entity_id = _construct_id(entities_path, key, data=entity_data)
 
         logger.info(" - " + entity_id)
 
@@ -107,6 +108,7 @@ def _load_entities(entities_path):
         entities[entity.id] = entity
 
 
+# TODO Test overriding
 def _load_resources(resources_path: Path):
     """ Load resources
 
@@ -120,11 +122,19 @@ def _load_resources(resources_path: Path):
     if not resources_path.exists():
         return
 
+    overrides = {}
+
     for file in os.listdir(resources_path):
-        if file == ".DS_Store": continue
+        if file == ".DS_Store":
+            continue
+
+        if file == "overrides.json":
+            with open(file) as reader:
+                overrides = json.load(reader)
+            continue
 
         resource_path = resources_path / file
-        resource_id = _construct_id(resource_path, include_file_type=True)
+        resource_id = _construct_id(resources_path, resource_path, include_file_type=True)
         logging.info(f" - {resource_id}")
 
         file_type, resource_type = resource_path.suffix[1:], ResourceType.Audio
@@ -135,8 +145,10 @@ def _load_resources(resources_path: Path):
         elif file_type in {"jpg", "png"}:
             resource_type = ResourceType.Image
         else:
-            raise Exception(f"Resource '{resource_path}' is invalid. File types may only be mp3, woff, jpg or png")
+            raise Exception(f"Resource '{resource_path}' is invalid. File types may only be mp3, woff, jpg or png or 'overrides.json'")
 
+        # Override the resource from the overrides if it exists, otherwise, use the resource id
+        resource_id = overrides.get(resource_id, resource_id)
         resources[resource_id] = Resource(
             id=resource_id,
             path=resource_path,
@@ -144,10 +156,13 @@ def _load_resources(resources_path: Path):
         )
 
 
-def _construct_id(file_path: Path, include_file_type=False, data: dict = None) -> str:
+# TODO retest with subdirs
+def _construct_id(loader_dir_path: Path, file_path: Path, include_file_type=False, data: dict = None) -> str:
     """ Construct the id for a file being loaded
 
     Args:
+        loader_dir_path: The root path where files are loaded from within.
+            This should be the path to the entities, tiles or resources
         file_path: Path to the file, used to construct id
         include_file_type: If true, the file type will be preserved
         data: If given, then will check to see if the file has an assigned id
@@ -158,19 +173,18 @@ def _construct_id(file_path: Path, include_file_type=False, data: dict = None) -
     if data and "id" in data:
         return data['id']
 
-    # TODO Doc + test
-    file_name = file_path.stem
+    current_datapack_name = loader_dir_path.parent.name
 
-    if include_file_type:
-        file_name = file_path.name
+    # Get just the tokens within the loader_dir_path.
+    file_parts = list(file_path.parts)[len(list(loader_dir_path.parts)):]
 
-    if "_" in file_name[1:]:  # Check if there's a _ and it's not the first char
-        return file_name.replace("_", ":")
+    if not include_file_type:
+        file_parts[-1] = file_path.stem
 
-    return f"{file_path.parent.parent.stem}:{file_name}"
+    return current_datapack_name + ":" + ".".join(file_parts)
 
 
-def _load_items_in_dir(path: Path) -> Dict[Path, dict]:
+def _load_items_in_dir(root_path: Path) -> Dict[Path, dict]:
     """ Load items from a directory.
 
     Abstracts entities will be added to the abstract entities dict and
@@ -178,7 +192,7 @@ def _load_items_in_dir(path: Path) -> Dict[Path, dict]:
     and id here.
 
     Args:
-        path: Directly to load
+        root_path: Directly to load
 
     Returns:
         Concrete entities
@@ -187,22 +201,30 @@ def _load_items_in_dir(path: Path) -> Dict[Path, dict]:
 
     data_paths = {}
 
-    if not os.path.exists(path):
+    if not os.path.exists(root_path):
         return {}
 
-    for file in sorted(os.listdir(path)):
-        if file == ".DS_Store":
-            continue
+    directories = [root_path]
+    while directories:
+        directory = directories.pop(0)
+        for file in sorted(os.listdir(directory)):
+            file_path = directory / file
+            if file == ".DS_Store":
+                continue
 
-        with open(path / file) as reader:
-            data = json.load(reader)
+            if os.path.isdir(file_path):
+                directories.append(file_path)
+                continue
 
-            if data.get("abstract", False):
-                def_id = _construct_id(path / file, data=data)
-                logger.info(f" - ~{def_id}")
-                _abstract_definitions[def_id] = data
-            else:
-                data_paths[path / file] = data
+            with open(file_path) as reader:
+                data = json.load(reader)
+
+                if data.get("abstract", False):
+                    def_id = _construct_id(root_path, file_path, data=data)
+                    logger.info(f" - ~{def_id}")
+                    _abstract_definitions[def_id] = data
+                else:
+                    data_paths[file_path] = data
 
     return data_paths
 

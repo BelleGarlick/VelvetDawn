@@ -1,5 +1,5 @@
-import os
 import json
+import shutil
 from pathlib import Path
 
 import velvet_dawn
@@ -10,6 +10,8 @@ from test_server.base_test import BaseTest
 
 # TODO Test loading entities from json works as expected
 
+# TODO Test loading resources with overriding
+
 
 class TestDatapackLoading(BaseTest):
 
@@ -18,38 +20,36 @@ class TestDatapackLoading(BaseTest):
         datapack_path = Path("example") / "entities"
 
         def _id(x, ft=False, data=None):
-            return velvet_dawn.datapacks._construct_id(x, include_file_type=ft, data=data)
+            return velvet_dawn.datapacks._construct_id(datapack_path, x, include_file_type=ft, data=data)
 
         self.assertEqual("example:entity1", _id(datapack_path / "entity1.json"))
         self.assertEqual("example:entity1.json", _id(datapack_path / "entity1.json", ft=True))
         self.assertEqual("example:_entity1", _id(datapack_path / "_entity1.json"))
-        self.assertEqual("other:entity1", _id(datapack_path / "other_entity1.json"))
+        self.assertEqual("example:deep.deeper.deepest._entity1", _id(datapack_path / "deep" / "deeper" / "deepest" / "_entity1.json"))
         self.assertEqual("other:ahh", _id(datapack_path / "entity1.json", data={"id": "other:ahh"}))
 
     def test_load_items_in_dir(self):
         """ Test that files are loaded correctly into concrete and abstracts dirs """
-        test_path = Path("test_directory")
-        if test_path.exists():
-            for file in os.listdir(test_path):
-                os.remove(test_path / file)
-            test_path.rmdir()
-        test_path.mkdir()
+        test_path = Path("pack")
+        entities_path = test_path / "entities"
 
-        with open(test_path / "pack_example-a.json", "w+") as file:
+        if test_path.exists():
+            shutil.rmtree(test_path)
+        test_path.mkdir()
+        entities_path.mkdir()
+
+        with open(entities_path / "example-a.json", "w+") as file:
             json.dump({"abstract": True, "name": "example_a"}, file)
 
-        with open(test_path / "example-b.json", "w+") as file:
+        with open(entities_path / "example-b.json", "w+") as file:
             json.dump({"name": "example_b"}, file)
 
-        files = velvet_dawn.datapacks._load_items_in_dir(test_path)
-        self.assertNotIn(test_path / "pack_example-a.json", files)
-        self.assertIn(test_path / "example-b.json", files)
+        files = velvet_dawn.datapacks._load_items_in_dir(test_path / "entities")
+        self.assertNotIn(entities_path / "pack:example-a.json", files)
+        self.assertIn(entities_path / "example-b.json", files)
         self.assertIn("pack:example-a", velvet_dawn.datapacks._abstract_definitions)
 
-        if test_path.exists():
-            for file in os.listdir(test_path):
-                os.remove(test_path / file)
-            test_path.rmdir()
+        shutil.rmtree(test_path)
 
     def test_extend(self):
         velvet_dawn.datapacks._abstract_definitions = {

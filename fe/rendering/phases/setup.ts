@@ -21,14 +21,7 @@ export class SetupPhase extends Scene {
     private removeEntityButton: Button = null
 
     render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): undefined {
-        const sidebarStart = constants.width - constants.sidebar;
         const setup = VelvetDawn.getState().setup
-
-        if (this.hoveredTile) {
-            ctx.font = "20px 'Velvet Dawn'";
-            ctx.fillStyle = "#ff0000"
-            ctx.fillText(this.hoveredTile.entityId.toString(), sidebarStart, 100)
-        }
 
         if (this.clickedTile) {
             this.buttons.forEach((button, i) => {
