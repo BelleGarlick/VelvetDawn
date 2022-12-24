@@ -149,7 +149,6 @@ def _load_resources(resources_path: Path):
         )
 
 
-# TODO retest with subdirs
 def _construct_id(loader_dir_path: Path, file_path: Path, include_file_type=False, data: dict = None) -> str:
     """ Construct the id for a file being loaded
 
@@ -209,6 +208,13 @@ def _load_items_in_dir(root_path: Path) -> Dict[Path, dict]:
 
 
 def _scan_dir(dir: Path) -> List[Path]:
+    """ Scan directory
+
+    Walk the tree if directories listing all files within.
+
+    Args:
+        dir: top level to scan
+    """
     if not os.path.exists(dir):
         return []
 

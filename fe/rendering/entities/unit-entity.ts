@@ -18,10 +18,10 @@ export class UnitEntity extends Entity {
     }
 
     render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): null {
-        // const texture = Textures.assets[this.id]
+        // const texture = Textures.get(this.id)
         // console.log(VelvetDawn.)
         const entity = VelvetDawn.datapacks.entities[this.entityId]
-        const texture = Textures.assets[entity.textures.background]
+        const texture = Textures.get(entity.textures.background)
 
         const {x, y} = perspective.getTileCoordinates(this.x, this.y)
 

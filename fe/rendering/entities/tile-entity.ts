@@ -40,7 +40,7 @@ export class TileEntity extends Entity {
             return
 
         const tileData = VelvetDawn.datapacks.tiles[this.entityId]
-        const texture = Textures.assets[tileData.texture]
+        const texture = Textures.get(tileData.texture)
 
         ctx.save();
 

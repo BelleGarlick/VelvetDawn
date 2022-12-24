@@ -2,9 +2,8 @@ import {getResourceUrl} from "api/utils";
 
 
 export class Textures {
-
-    public static assets: { // @ts-ignore
-        [key: string]: Image } = {}
+    // @ts-ignore
+    private static assets: { [key: string]: Image } = {}
 
     public static async load(resourcecs: string[]) {
         resourcecs.forEach(async (resourceId) => {
@@ -20,5 +19,9 @@ export class Textures {
             i.onload = (() => { r(i) });
             i.src = url;
         });
+    }
+
+    public static get(id: string) {
+        return Textures.assets[id] ?? Textures.assets['base:textures.missing.jpg']
     }
 }

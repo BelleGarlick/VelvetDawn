@@ -39,7 +39,7 @@ export class HexButton extends ButtonBase {
 
         let imageWidth = 0
         if (this._icon) {
-            const texture = Textures.assets[this._icon]
+            const texture = Textures.get(this._icon)
             imageWidth = this.height * 0.6;
             ctx.drawImage(
                 texture,
