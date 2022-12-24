@@ -26,8 +26,8 @@ class Config:
     datapacks: List[str] = None
     turn_time: int = 120
 
-    map_width = 50
-    map_height = 40
+    map_width = 31
+    map_height = 19
 
     spawning: SpawningConfig = SpawningConfig()
 
@@ -42,6 +42,10 @@ class Config:
 
             for key in data:
                 setattr(config, key, data[key])
+
+            map_data = data.get("map", {})
+            config.map_width = map_data.get("width", config.map_width)
+            config.map_height = map_data.get("height", config.map_height)
 
         return config
 

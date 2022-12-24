@@ -1,6 +1,9 @@
 {
   "name": "Baledung (God of Ice)",
   "commander": true,
+  "textures": {
+    "background": "civil-war:commander.png"
+  },
   "max_health": 500,
   "movement": {
     "range": 4

@@ -4,8 +4,8 @@ import {Tile} from "models/tile";
 import * as Api from "api/index";
 import {MENU_AUDIO_ID} from "../constants";
 import {getUrl} from "api/utils";
-import {Textures} from "../renderer/Textures";
-import {TileEntity} from "../renderer/entities/tile-entity";
+import {Textures} from "../rendering/Textures";
+import {TileEntity} from "../rendering/entities/tile-entity";
 
 
 export class Datapacks {

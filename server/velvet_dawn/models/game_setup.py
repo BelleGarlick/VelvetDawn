@@ -1,5 +1,5 @@
 import dataclasses
-from typing import Set, List
+from typing import Set, List, Dict
 
 from velvet_dawn.dao.models.entity_setup import EntitySetup
 
@@ -8,10 +8,14 @@ from velvet_dawn.dao.models.entity_setup import EntitySetup
 class GameSetup:
 
     commanders: Set[str]
-    units: List[EntitySetup]
+    units: Dict[str, int]
+    placed_commander: bool
+    remaining_units: Dict[str, int]
 
     def json(self):
         return {
             "commanders": list(self.commanders),
-            "units": {x.entity_id: x.amount for x in self.units}
+            "units": self.units,
+            "placedCommander": self.placed_commander,
+            "remainingUnits": self.remaining_units
         }

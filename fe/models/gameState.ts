@@ -12,7 +12,9 @@ export enum GamePhrase {
 
 export interface GameSetup {
     commanders: string[]
-    units: { [key: string]: number },
+    units: { [key: string]: number }
+    placedCommander: boolean
+    remainingUnits: { [key: string]: number }
 }
 
 

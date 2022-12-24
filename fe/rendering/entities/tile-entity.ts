@@ -1,4 +1,4 @@
-import { Perspective } from "renderer/perspective";
+import { Perspective } from "rendering/perspective";
 import {Textures} from "../Textures";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import {Entity} from "./entity";

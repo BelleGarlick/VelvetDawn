@@ -2,5 +2,9 @@
   "port": 666,
   "password": "bananana",
   "turn_time": "60",
+  "map": {
+    "width": 31,
+    "height": 19
+  },
   "datapacks": ["velvet-dawn", "civil-war", "gods"]
 }

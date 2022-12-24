@@ -74,7 +74,7 @@ def get_state(user: str):
         active_turn=active_turn(),
         teams=velvet_dawn.teams.list(),
         players=velvet_dawn.players.list(),
-        setup=velvet_dawn.game.setup.get_setup(),
+        setup=velvet_dawn.game.setup.get_setup(user),
         spawn_area=spawn_area,
         entities=entities
     )

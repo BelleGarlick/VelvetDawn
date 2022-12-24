@@ -2,10 +2,7 @@
   "name": "Marsh",
   "texture": "civil-war:marsh.jpg",
   "neighbours": {
-    "civil-war:marsh": 1,
-    "civil-war:grass": 2
-  },
-  "blocks_movment": [
-    "tag:heavy"
-  ]
+    "civil-war:marsh": 2,
+    "civil-war:grass": 1
+  }
 }

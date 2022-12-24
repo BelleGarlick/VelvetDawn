@@ -1,6 +1,6 @@
 import * as React from "react"
 import {useEffect, useRef} from "react";
-import { Renderer } from "renderer/Renderer";
+import { Renderer } from "rendering/Renderer";
 
 
 export function GameView() {

@@ -2,9 +2,12 @@ import * as Api from "api"
 import {Player} from "models";
 import {GamePhrase, GameState} from "models/gameState";
 import {LoginDetails} from "models/login-details";
-import {TileEntity} from "../renderer/entities/tile-entity";
-import {UnitEntity} from "../renderer/entities/unit-entity";
+import {TileEntity} from "../rendering/entities/tile-entity";
+import {UnitEntity} from "../rendering/entities/unit-entity";
 import {Datapacks} from "./datapacks";
+import {EntityInstance} from "models/entityInstance";
+
+type entityMapDict = { [key: string]: EntityInstance }
 
 
 export class VelvetDawn {
@@ -27,7 +30,9 @@ export class VelvetDawn {
         players: {},
         setup: {
             commanders: [],
-            units: {}
+            units: {},
+            placedCommander: false,
+            remainingUnits: {}
         },
         entities: {},
         spawnArea: []
@@ -35,6 +40,7 @@ export class VelvetDawn {
 
     // Rendering Entities
     public static map: TileEntity[][] = []
+    public static mapEntities: entityMapDict = {}
     public static tileEntities: TileEntity[];
     public static unitsDict: { [key: string]: UnitEntity } = {}
     public static spawnAreasSet: boolean = false
@@ -107,20 +113,10 @@ export class VelvetDawn {
             })
     }
 
-    // static tileClicked(hoveredTile: TileEntity) {
-    //     // if (VelvetDawn.state.phase == GamePhrase.Setup) {
-    //     //     Api.setup.placeEntity("civil-war:commander", hoveredTile.x, hoveredTile.y)
-    //     //         .then((state) => {
-    //     //             this.state = state
-    //     //         }).catch((x) => {
-    //     //             console.log(x)
-    //     //         })
-    //     // }
-    // }
-
     public static setState(state: GameState) {
         VelvetDawn.state = state
 
+        const newMapEntities: entityMapDict = {}
         Object.keys(VelvetDawn.state.entities).forEach(entityId => {
             const serverEntity = VelvetDawn.state.entities[entityId]
 
@@ -130,11 +126,14 @@ export class VelvetDawn {
             } else {
                 VelvetDawn.unitsDict[entityId] = UnitEntity.fromServerInstance(serverEntity);
             }
+
+            newMapEntities[`${serverEntity.position.x}-${serverEntity.position.y}`] = serverEntity
         });
+        VelvetDawn.mapEntities = newMapEntities;
 
         Object.keys(VelvetDawn.unitsDict).forEach(entityId => {
             if (!VelvetDawn.state.entities.hasOwnProperty(entityId)) {
-                delete VelvetDawn.state.entities[entityId]
+                delete VelvetDawn.unitsDict[entityId]
             }
         })
 
@@ -144,6 +143,7 @@ export class VelvetDawn {
             })
             VelvetDawn.spawnAreasSet = true
         }
+
     }
 
     public static getState() {

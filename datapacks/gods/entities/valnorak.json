@@ -1,5 +1,8 @@
 {
   "name": "Valnorak (God of Fire)",
+  "textures": {
+    "background": "civil-war:commander.png"
+  },
   "commander": true,
   "max_health": 500,
   "movement": {

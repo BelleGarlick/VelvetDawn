@@ -7,8 +7,9 @@
   },
   "combat": {
       "damage": "200",
-      "range": 10,
-      "radius": 2
+      "range": 6,
+      "radius": 2,
+      "cooldown": 4
   },
   "tags": [
     "tag:heavy"

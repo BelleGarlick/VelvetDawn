@@ -20,21 +20,38 @@ their initial setup entities when in the setup phase.
 """
 
 
-def get_setup():
+def get_setup(player: str):
+    # TODO Test this
     """ Get the game setup definition """
     entity_setup: List[EntitySetup] = db.session.query(EntitySetup).all()
     entity_setup = sorted(entity_setup, key=lambda x: x.entity_id)
 
+    commander_entities = {
+        entity.entity_id
+        for entity in entity_setup
+        if datapacks.entities[entity.entity_id].commander
+    }
+
+    units = {
+        entity.entity_id: entity.amount for entity in entity_setup
+        if not datapacks.entities[entity.entity_id].commander
+    }
+
+    # calculate remaining players
+    player_entities = db.session.query(DbEntity).where(DbEntity.player == player).all()
+    placed_commander, remaining_units = False, {x: units[x] for x in units}
+
+    for entity in player_entities:
+        if entity.entity_id in commander_entities:
+            placed_commander = True
+        else:
+            remaining_units[entity.entity_id] -= 1
+
     return GameSetup(
-        commanders={
-            entity.entity_id
-            for entity in entity_setup
-            if datapacks.entities[entity.entity_id].commander
-        },
-        units=[
-            entity for entity in entity_setup
-            if not datapacks.entities[entity.entity_id].commander
-        ]
+        commanders=commander_entities,
+        units=units,
+        placed_commander=placed_commander,
+        remaining_units=remaining_units
     )
 
 
@@ -72,17 +89,17 @@ def update_setup(entity_id: str, count: int):
     db.session.commit()
 
 
-def is_setup_valid():
-    """ Setups must contain commanders """
-    return bool(get_setup().commanders)
+def is_setup_valid(player):
+    # TODO Test that when going from lobby to setup, this is checked
+    """ Setup definitions must contain commanders """
+    return bool(get_setup(player).commanders)
 
 
 def place_entity(player: str, entity_id: str, x: int, y: int):
     if velvet_dawn.game.phase() != Phase.Setup:
         raise errors.ValidationError("Game setup may only be changed during game setup")
 
-    setup = get_setup()
-    existing_entities = db.session.query(DbEntity).where(DbEntity.player == player, DbEntity.entity_id == entity_id).all()
+    setup = get_setup(player)
 
     if entity_id not in datapacks.entities:
         raise errors.UnknownEntityError(entity_id)
@@ -96,16 +113,15 @@ def place_entity(player: str, entity_id: str, x: int, y: int):
     # Check that the entity is valid within the setup definition
     if entity_id in setup.commanders:
         # Check they don't already have a commander
-        if existing_entities:
+        if setup.placed_commander:
             raise errors.ValidationError("You already have a commander in play")
     else:
-        entitie_setup_definition: List[EntitySetup] = list(filter(lambda unit: unit.entity_id, setup.units))
-        if entitie_setup_definition:
-            if len(existing_entities) >= entitie_setup_definition[0].amount:
-                raise errors.ValidationError(f"You already have the maximum number of {entity_id} in play")
-
-        else:
+        remaining_units = setup.remaining_units.get(entity_id, None)
+        if remaining_units is None:
             raise errors.EntityMissingFromSetupDefinition(f"Enitity {entity_id} not included in the setup definition.")
+
+        if remaining_units <= 0:
+            raise errors.ValidationError(f"You already have the maximum number of {entity_id} in play")
 
     # Finally, add the entity to the db
     db.session.add(DbEntity(

@@ -1,11 +1,47 @@
 import {VelvetDawn} from "../velvet-dawn/velvet-dawn";
 import { Perspective } from "./perspective";
 import {SetupPhase} from "./phases/setup";
-import {Scene} from "./phases/scene";
+import {RenderingConstants, Scene} from "./phases/scene";
 
 
-const SIDEBAR_WIDTH = 700
+const SIDEBAR_WIDTH = 300
 const RESOLUTION = 2
+
+
+class DebugOptions {
+
+    private lastRenderTime: number = 0
+    private lastFrameEnd: number = 0
+    private rates: number[] = []
+
+    public update(frameStart: number, frameEnd: number) {
+        this.lastRenderTime = frameEnd - frameStart;
+
+        if (this.lastFrameEnd != 0) {
+            this.rates.push(frameEnd - this.lastFrameEnd)
+        }
+        this.lastFrameEnd = frameEnd
+
+        if (this.rates.length > 100) {
+            this.rates.shift()
+        }
+    }
+
+    render(ctx: CanvasRenderingContext2D, constants: RenderingConstants) {
+        let total = 0
+        this.rates.forEach(x => total += x);
+        total /= this.rates.length
+        const renderRate = Math.round(total * 100) / 100;
+
+        const framesPerSecond = Math.round(1000 / total * 100) / 100;
+
+        ctx.fillStyle = "#ffffff"
+        ctx.textBaseline = "bottom"
+        ctx.textAlign = "left"
+        ctx.font = "40px arial";
+        ctx.fillText(`Render Times: ${this.lastRenderTime} ${renderRate} ${framesPerSecond}`, 10, constants.height - 10)
+    }
+}
 
 
 export class Renderer {
@@ -17,6 +53,8 @@ export class Renderer {
 
     private scene: Scene = new SetupPhase();
 
+    private debugOptions  = new DebugOptions();
+
     public static getInstance() {
         return this.instance;
     }
@@ -26,6 +64,7 @@ export class Renderer {
         if (!this.canvas) {
             return undefined
         }
+        const start = new Date().getTime()
 
         var ctx = this.canvas.getContext('2d');
         this.canvas.width = window.innerWidth * RESOLUTION
@@ -34,6 +73,9 @@ export class Renderer {
         this.canvas.style.height = window.innerHeight + "px"
 
         const constants = Renderer.getConstants()
+
+        ctx.fillStyle = "#6688cc"
+        ctx.fillRect(0, 0, constants.width, constants.height)
 
         VelvetDawn.tileEntities.forEach(tile => {
             tile.render(ctx, this.perspective, constants)
@@ -45,9 +87,14 @@ export class Renderer {
         })
 
         ctx.fillStyle = "#000000"
-        ctx.fillRect(constants.width - SIDEBAR_WIDTH, 0, SIDEBAR_WIDTH, constants.height)
+        ctx.fillRect(constants.sidebarStart, 0, constants.sidebar, constants.height)
 
-        this.scene.renderSidebar(ctx, this.perspective, Renderer.getConstants())
+        this.scene.render(ctx, this.perspective, Renderer.getConstants())
+
+        this.debugOptions.render(ctx, constants)
+
+        const end = new Date().getTime()
+        this.debugOptions.update(start, end);
 
         requestAnimationFrame(() => {this.render()})
     }
@@ -98,12 +145,29 @@ export class Renderer {
         return this.scene;
     }
 
-    static getConstants() {
+    static getConstants(): RenderingConstants {
+        const width = window.innerWidth * RESOLUTION
+        const sidebarWidth = SIDEBAR_WIDTH * RESOLUTION
+        const sidebarPadding = 10 * RESOLUTION
+        const sidebarStart = width - sidebarWidth
+        const height = window.innerHeight * RESOLUTION
+
+        const buttonHeight = 50 * RESOLUTION
+
         return {
-            width: window.innerWidth * RESOLUTION,
-            height: window.innerHeight * RESOLUTION,
-            sidebar: SIDEBAR_WIDTH,
-            sidebarPadding: 10
+            resolution: RESOLUTION,
+
+            width: width,
+            height: height,
+            sidebar: sidebarWidth,
+            sidebarPadding: sidebarPadding,
+            sidebarStart: sidebarStart,
+
+            buttonSpacing: 10 * RESOLUTION,
+            buttonHeight: buttonHeight,
+            buttonWidth: sidebarWidth - sidebarPadding - sidebarPadding,
+            nextTurnButtonStartX: sidebarStart + sidebarPadding,
+            nextTurnButtonStartY: height - buttonHeight - sidebarPadding
         }
     }
 }

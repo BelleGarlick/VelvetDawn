@@ -23,7 +23,7 @@ module.exports = {
       'velvet-dawn': path.resolve(__dirname, './fe/velvet-dawn/'),
       models: path.resolve(__dirname, './fe/models/'),
       ui: path.resolve(__dirname, './fe/ui/'),
-      renderer: path.resolve(__dirname, './fe/renderer/'),
+      rendering: path.resolve(__dirname, './fe/rendering/'),
       entity: path.resolve(__dirname, './fe/entity/'),
     }
   },

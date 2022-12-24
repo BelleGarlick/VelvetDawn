@@ -1,4 +1,4 @@
-import { TileEntity } from "renderer/entities/tile-entity"
+import { TileEntity } from "rendering/entities/tile-entity"
 import { VelvetDawn } from "velvet-dawn/velvet-dawn"
 import {RenderingConstants} from "./phases/scene";
 

@@ -6,7 +6,7 @@ import {LobbyUsers} from "ui/Lobby/LobbyUsers";
 import {LobbyUnits} from "ui/Lobby/LobbyUnits";
 import {ViewState} from "models/view-state";
 import {GameSetup} from "models/gameState";
-import {Renderer} from "../../renderer/Renderer";
+import {Renderer} from "../../rendering/Renderer";
 
 
 let time: any = -1
