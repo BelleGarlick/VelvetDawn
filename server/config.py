@@ -24,7 +24,9 @@ class Config:
     port: int = 1651
     password: str = 'bananana'
     datapacks: List[str] = None
-    turn_time: int = 120
+
+    turn_time: int = 300
+    setup_time: int = 300
 
     map_width = 31
     map_height = 19

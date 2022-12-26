@@ -1,8 +1,7 @@
 import * as React from "react";
-import {getResourceUrl, getUrl} from "api/utils";
+import {getResourceUrl} from "api/utils";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import {FONT_ID, MENU_AUDIO_ID} from "../../constants";
-import * as constants from "constants";
 
 
 export function InitialResourceLoadingScreen({ children }: { children: React.ReactElement }): JSX.Element {

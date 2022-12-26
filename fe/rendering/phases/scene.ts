@@ -1,5 +1,6 @@
 import {TileEntity} from "../entities/tile-entity";
 import {Perspective} from "../perspective";
+import {TurnBanner} from "../entities/turn-banner";
 
 
 export interface RenderingConstants {
@@ -22,6 +23,8 @@ export interface RenderingConstants {
 
 
 export abstract class Scene {
+
+    protected readonly turnBanner = new TurnBanner();
 
     public hoveredTile: TileEntity | undefined = undefined;
     protected clickedTile: TileEntity | undefined = undefined;

@@ -8,17 +8,21 @@ from test_server.base_test import BaseTest
 from velvet_dawn.models.phase import Phase
 
 
+test_config = Config(
+    datapacks=['civil-war', 'gods']
+)
+
+
 class TestSetup(BaseTest):
     @classmethod
     def setUpClass(cls) -> None:
-        test_config = Config(
-            datapacks=['civil-war', 'gods']
-        )
         velvet_dawn.datapacks.init(test_config)
 
     def test_updating_setup_definition(self):
         with app.app_context():
-            setup = velvet_dawn.game.setup.get_setup()
+            velvet_dawn.players.join("player1", "password")
+
+            setup = velvet_dawn.game.setup.get_setup("player1")
             self.assertEqual(len(setup.commanders), 0)
             self.assertEqual(len(setup.units), 0)
 
@@ -27,38 +31,37 @@ class TestSetup(BaseTest):
 
             # Add item to setup
             velvet_dawn.game.setup.update_setup("civil-war:workers", 10)
-            setup = velvet_dawn.game.setup.get_setup()
-            self.assertEqual(setup.units[0].entity_id, "civil-war:workers")
-            self.assertEqual(setup.units[0].amount, 10)
+            setup = velvet_dawn.game.setup.get_setup("player1")
+            self.assertEqual(setup.units["civil-war:workers"], 10)
 
             # Remove item from setup
             velvet_dawn.game.setup.update_setup("civil-war:workers", 0)
-            setup = velvet_dawn.game.setup.get_setup()
+            setup = velvet_dawn.game.setup.get_setup("player1")
             self.assertEqual(len(setup.units), 0)
 
             # Add commanders
             velvet_dawn.game.setup.update_setup("gods:valnorak", 10)
             velvet_dawn.game.setup.update_setup("gods:baledung", 10)
-            setup = velvet_dawn.game.setup.get_setup()
+            setup = velvet_dawn.game.setup.get_setup("player1")
             self.assertEqual(len(setup.commanders), 2)
 
             # Test setip is valid with commanders
             velvet_dawn.game.setup.update_setup("civil-war:workers", 1)
-            self.assertTrue(velvet_dawn.game.setup.is_setup_valid())
+            self.assertTrue(velvet_dawn.game.setup.is_setup_valid("player1"))
 
             # Test invalid setup with no commanders but has entities
             velvet_dawn.game.setup.update_setup("gods:valnorak", 0)
             velvet_dawn.game.setup.update_setup("gods:baledung", 0)
-            self.assertFalse(velvet_dawn.game.setup.is_setup_valid())
+            self.assertFalse(velvet_dawn.game.setup.is_setup_valid("player1"))
 
     def test_place_setup_entity(self):
         with app.app_context():
             config = Config().set_map_size(50, 50)
-            velvet_dawn.game.phase(set=Phase.Lobby)
+            velvet_dawn.game.phase._set_phase(Phase.Lobby)
             velvet_dawn.map.new(config)
             velvet_dawn.players.join("playerA", "")
             velvet_dawn.players.join("playerB", "")
-            velvet_dawn.game.start_setup_phase(config)
+            velvet_dawn.game.phase.start_setup_phase(config)
 
             # Test random entity throws error
             with self.assertRaises(errors.UnknownEntityError):
@@ -71,10 +74,10 @@ class TestSetup(BaseTest):
                 velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 25, 0)
 
             # Update the setup definition to allow a commander and two muskets
-            velvet_dawn.game.phase(set=Phase.Lobby)
+            velvet_dawn.game.phase._set_phase(Phase.Lobby)
             velvet_dawn.game.setup.update_setup("civil-war:commander", 1)
             velvet_dawn.game.setup.update_setup("civil-war:musketeers", 2)
-            velvet_dawn.game.phase(set=Phase.Setup)
+            velvet_dawn.game.phase._set_phase(Phase.Setup)
 
             # Test creating twos commander is an issue and that a commander can be removed and readded
             # also testing that removing an entity with no entity to remove will rause an error

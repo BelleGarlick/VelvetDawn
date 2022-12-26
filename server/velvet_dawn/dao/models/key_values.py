@@ -9,9 +9,11 @@ class Keys(str, enum.Enum):
 
     PHASE = 'PHASE'  # 0 = lobby, 1 = setup, 2 = in game
     TURN = 'TURN'  # Turn number - only increments once each player has taken a turn
+    TURN_START = 'TURN_START'
     ACTIVE_TURN = 'ACTIVE_TURN'  # The current team or player who's turn it is
 
     MODE = 'MODE'  # Teams or all v all.
+
 
 
 class KeyValues(db.Model):

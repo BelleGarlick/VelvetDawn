@@ -16,7 +16,6 @@ export class SetupPhase extends Scene {
     private allButtons: Button[] = []
 
     private buttons: IdHexButton[] = []
-    private bannerButton: Button = null
     private nextTurnButton: Button = null
     private removeEntityButton: Button = null
 
@@ -53,31 +52,41 @@ export class SetupPhase extends Scene {
             }
         }
 
-        this.nextTurnButton.enabled(setup.placedCommander).render(ctx, perspective)
+        const playerReady = VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready
+        this.nextTurnButton
+            .setPos(constants.nextTurnButtonStartX, constants.nextTurnButtonStartY)
+            .enabled(setup.placedCommander)
+            .text(playerReady ? "Unready" : "Ready")
+            .backgroundColor(playerReady ? "#33bb00" : "#66dd00")
+            .render(ctx, perspective)
 
         const lineHeight = constants.height - constants.buttonHeight - 2 * constants.sidebarPadding
         ctx.moveTo(constants.sidebarStart + constants.sidebarPadding, lineHeight)
         ctx.lineTo(constants.width - constants.sidebarPadding, lineHeight)
         ctx.stroke()
 
-        this.bannerButton.render(ctx, perspective)
+        this.turnBanner.render(ctx, perspective, constants)
 
         return undefined;
     }
 
     onStart(constants: RenderingConstants): null {
-        const bannerWidth = 500 * constants.resolution;
-        this.bannerButton = new HexButton(bannerWidth, 50 * constants.resolution)
-            .setPos(
-                (constants.width - constants.sidebar) / 2 - bannerWidth / 2,
-                25 * constants.resolution
-            )
-            .text("Setup Phase")
+        this.turnBanner.title("Setup Phase")
 
         this.nextTurnButton = new HexButton(constants.buttonWidth, constants.buttonHeight)
             .setPos(constants.nextTurnButtonStartX, constants.nextTurnButtonStartY)
             .backgroundColor("#66dd00")
-            .text("Done");
+            .text("Done")
+            .onClick(() => {
+                if (VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready) {
+                    Api.turns.unready().then(x => VelvetDawn.setState(x))
+                    VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready = false
+                } else {
+                    Api.turns.ready().then(x => VelvetDawn.setState(x))
+                    VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready = true
+                }
+
+            });
         this.allButtons.push(this.nextTurnButton);
 
         this.removeEntityButton = new HexButton(constants.buttonWidth,constants.buttonHeight)
@@ -94,7 +103,7 @@ export class SetupPhase extends Scene {
             });
         this.allButtons.push(this.removeEntityButton);
 
-        VelvetDawn.getState().setup.commanders.forEach((key, i) => {
+        VelvetDawn.getState().setup.commanders.forEach((key) => {
             const commander = VelvetDawn.datapacks.entities[key];
 
             const button = new IdHexButton(constants.buttonWidth, constants.buttonHeight)

@@ -6,6 +6,7 @@ import {TileEntity} from "../rendering/entities/tile-entity";
 import {UnitEntity} from "../rendering/entities/unit-entity";
 import {Datapacks} from "./datapacks";
 import {EntityInstance} from "models/entityInstance";
+import {SPECTATORS_TEAM} from "../constants";
 
 type entityMapDict = { [key: string]: EntityInstance }
 
@@ -24,8 +25,12 @@ export class VelvetDawn {
 
     private static state: GameState = {
         phase: GamePhrase.Lobby,
-        turn: -1,
-        activeTurn: "-1",
+        turn: {
+            team: null,
+            number: -1,
+            start: -1,
+            seconds: -1
+        },
         teams: [],
         players: {},
         setup: {
@@ -148,5 +153,26 @@ export class VelvetDawn {
 
     public static getState() {
         return VelvetDawn.state;
+    }
+
+    static listCurrentTurnPlayers() {
+        const state = VelvetDawn.getState()
+        if (state.phase === 'setup') {
+            return Object.keys(state.players).map(x => {
+                const player = state.players[x]
+                return player.team !== SPECTATORS_TEAM
+                 ? player
+                 : null
+            }).filter(x => x != null)
+        } else {
+            const turn = state.turn.team
+
+            return Object.keys(state.players).map(x => {
+                const player = state.players[x]
+                return player.team === turn
+                 ? player
+                 : null
+            }).filter(x => x != null)
+        }
     }
 }

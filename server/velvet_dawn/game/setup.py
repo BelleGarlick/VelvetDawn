@@ -38,9 +38,8 @@ def get_setup(player: str):
     }
 
     # calculate remaining players
-    player_entities = db.session.query(DbEntity).where(DbEntity.player == player).all()
     placed_commander, remaining_units = False, {x: units[x] for x in units}
-
+    player_entities = db.session.query(DbEntity).where(DbEntity.player == player).all()
     for entity in player_entities:
         if entity.entity_id in commander_entities:
             placed_commander = True
@@ -64,7 +63,7 @@ def update_setup(entity_id: str, count: int):
             If the entity is a commaner then this will
             be ignored.
     """
-    if velvet_dawn.game.phase() != Phase.Lobby:
+    if velvet_dawn.game.phase.get_phase() != Phase.Lobby:
         raise errors.ValidationError("Game setup units may only be changed in the lobby by the admin")
 
     # Check entity exists
@@ -96,7 +95,7 @@ def is_setup_valid(player):
 
 
 def place_entity(player: str, entity_id: str, x: int, y: int):
-    if velvet_dawn.game.phase() != Phase.Setup:
+    if velvet_dawn.game.phase.get_phase() != Phase.Setup:
         raise errors.ValidationError("Game setup may only be changed during game setup")
 
     setup = get_setup(player)
@@ -144,7 +143,7 @@ def remove_entity(player_id: str, x: int, y: int):
     Raises:
         ValidationError: If user has no entity in the cell
     """
-    if velvet_dawn.game.phase() != Phase.Setup:
+    if velvet_dawn.game.phase.get_phase() != Phase.Setup:
         raise errors.ValidationError("Game setup may only be changed during game setup")
 
     entity = db.session.query(DbEntity).where(
@@ -162,9 +161,7 @@ def remove_entity(player_id: str, x: int, y: int):
 
 def validate_player_setups():
     """ This function checks all players have placed their commands """
-    players = db.session.query(Player).all()
-
-    for player in players:
+    for player in velvet_dawn.players.list(exclude_spectators=True):
         player_entities: List[DbEntity] = db.session.query(DbEntity).where(DbEntity.player == player.name).all()
 
         player_has_commander = False

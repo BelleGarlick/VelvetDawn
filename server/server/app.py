@@ -1,5 +1,4 @@
 import time
-
 from flask import request, send_file
 from functools import wraps
 
@@ -8,10 +7,12 @@ import velvet_dawn
 from config import Config
 from velvet_dawn.dao import app
 from server.blueprints.setup import setup_blueprint
+from server.blueprints.turn import turn_blueprint
 
 
 config = Config.load()
 app.register_blueprint(setup_blueprint, url_prefix="/setup")
+app.register_blueprint(turn_blueprint, url_prefix="/turns")
 
 
 def validator():
@@ -57,7 +58,7 @@ def ping():
 
 @app.route("/map/")
 def get_map():
-    return velvet_dawn.map.get()
+    return velvet_dawn.map.get(config)
 
 
 @app.route("/map/tiles/")
@@ -100,7 +101,11 @@ def get_game_state():
     username = request.args.get("username")
     password = request.args.get("password")
 
-    return velvet_dawn.game.get_state(username).json()
+    player = velvet_dawn.players.get_player(username)
+    if player.admin:
+        velvet_dawn.game.turns.check_end_turn_case(config)
+
+    return velvet_dawn.game.get_state(config, username).json()
 
 
 @app.route("/join/", methods=["POST"])
@@ -116,11 +121,5 @@ def join_game():
 
 if __name__ == "__main__":
     velvet_dawn.datapacks.init(config)
-
-    # with app.app_context():
-    #     start = time.time()
-    #     velvet_dawn.map.new(config)
-    #     end = time.time()
-    #     print(end - start)
 
     app.run("0.0.0.0", port=config.port, debug=True)

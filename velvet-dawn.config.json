@@ -1,7 +1,8 @@
 {
   "port": 666,
   "password": "bananana",
-  "turn_time": "60",
+  "turn_time": 300,
+  "setup_time": 300,
   "map": {
     "width": 31,
     "height": 19

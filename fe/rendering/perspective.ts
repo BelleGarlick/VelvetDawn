@@ -94,4 +94,15 @@ export class Perspective {
         // 0.6 * TileDiameter
         return 2 * TileRadius * 0.6;
     }
+
+    public computeHexPoints(width: number, height: number) {
+        return [
+            {x: width, y: height / 2},
+            {x: width - (height / 2) * Math.cos(Math.PI / 3), y: height},
+            {x: - (height / 2) * Math.cos(2 * Math.PI / 3), y: height},
+            {x: 0, y: height / 2},
+            {x: - (height / 2) * Math.cos(4 * Math.PI / 3), y: 0},
+            {x: width - (height / 2) * Math.cos(5 * Math.PI / 3), y: 0},
+        ]
+    }
 }

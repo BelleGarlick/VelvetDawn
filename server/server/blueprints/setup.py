@@ -12,12 +12,14 @@ config = Config().load()
 @setup_blueprint.route("/", methods=["POST"])
 def update_game_setup():
     # TODO verify admin
+    player = request.form.get("username")
+
     entity_id = request.form.get("entity")
     count = int(request.form.get("count"))
 
     velvet_dawn.game.setup.update_setup(entity_id, count)
 
-    return velvet_dawn.game.setup.get_setup().json()
+    return velvet_dawn.game.setup.get_setup(player).json()
 
 
 @setup_blueprint.route("/add/", methods=["POST"])
@@ -30,7 +32,7 @@ def add_entity_during_setup():
 
     velvet_dawn.game.setup.place_entity(player, entity, x, y)
 
-    return velvet_dawn.game.get_state(player).json()
+    return velvet_dawn.game.get_state(config, player).json()
 
 
 @setup_blueprint.route("/remove/", methods=["POST"])
@@ -42,7 +44,7 @@ def remove_entity_during_setup():
 
     velvet_dawn.game.setup.remove_entity(player, x, y)
 
-    return velvet_dawn.game.get_state(player).json()
+    return velvet_dawn.game.get_state(config, player).json()
 
 
 @setup_blueprint.route("/start-setup/", methods=["POST"])
@@ -50,7 +52,7 @@ def start_game_setup():
     # TODO verify player is admin
     player = request.args.get("username")
 
-    if velvet_dawn.game.phase() == Phase.Lobby:
-        velvet_dawn.game.start_setup_phase(config)
+    if velvet_dawn.game.phase.get_phase() == Phase.Lobby:
+        velvet_dawn.game.phase.start_setup_phase(config)
 
-    return velvet_dawn.game.get_state(player).json()
+    return velvet_dawn.game.get_state(config, player).json()

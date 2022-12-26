@@ -4,10 +4,9 @@ from typing import List
 import errors
 import velvet_dawn.map.neighbours
 from config import Config
-from constants import SPECTATORS_TEAM_ID
 from logger import logger
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import Team, Player, SpawnArea
+from velvet_dawn.dao.models import Team, SpawnArea
 from velvet_dawn.models.coordinate import Coordinate
 
 
@@ -25,7 +24,7 @@ areas
 def allocate_spawn_points(config: Config):
     logger.info("Allocating spawn area.")
 
-    teams: List[Team] = db.session.query(Team).where(Team.team_id != SPECTATORS_TEAM_ID).all()
+    teams: List[Team] = velvet_dawn.teams.list(exclude_spectators=True)
     if not teams:
         raise errors.ValidationError("No teams to allocate spawn points for")
 
@@ -34,7 +33,7 @@ def allocate_spawn_points(config: Config):
 
     # Count players per team to number of players per team
     max_team_size = max([
-        len(db.session.query(Player).where(Player.team == team.team_id).all())
+        len(velvet_dawn.players.list(team=team.team_id))
         for team in teams
     ])
 

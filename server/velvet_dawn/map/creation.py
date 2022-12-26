@@ -14,6 +14,7 @@ from velvet_dawn.dao.models import KeyValues, Keys, Tile as DbTile
 
 def new(config: Config):
     print("Generating Map")
+    # TODO print time to generate map
 
     velvet_dawn.map.neighbours.reset_cache()
 

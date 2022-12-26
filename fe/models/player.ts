@@ -6,5 +6,6 @@ export interface Player {
     spectating: boolean,
     admin: boolean,
     entities: EntityInstance[],
-    team: string
+    team: string,
+    ready: boolean
 }

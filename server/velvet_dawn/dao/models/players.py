@@ -13,11 +13,14 @@ class Player(db.Model):
 
     admin = db.Column(db.Boolean, default=False)
 
+    ready = db.Column(db.Boolean, default=False)
+
     def json(self):
         return {
             "id": self.id,
             "name": self.name,
             "team": self.team,
             "admin": self.admin,
+            "ready": self.ready,
             "spectating": self.team == SPECTATORS_TEAM_ID
         }

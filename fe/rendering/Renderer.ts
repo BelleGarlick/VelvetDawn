@@ -17,7 +17,7 @@ class DebugOptions {
     public update(frameStart: number, frameEnd: number) {
         this.lastRenderTime = frameEnd - frameStart;
 
-        if (this.lastFrameEnd != 0) {
+        if (this.lastFrameEnd !== 0) {
             this.rates.push(frameEnd - this.lastFrameEnd)
         }
         this.lastFrameEnd = frameEnd
@@ -169,5 +169,10 @@ export class Renderer {
             nextTurnButtonStartX: sidebarStart + sidebarPadding,
             nextTurnButtonStartY: height - buttonHeight - sidebarPadding
         }
+    }
+
+    private static updateScene() {
+        // const phase = VelvetDawn.getState().phase
+        // if (phase == "game" && Renderer.getInstance().scene instanceof )
     }
 }

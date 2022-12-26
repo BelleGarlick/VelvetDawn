@@ -1,6 +1,7 @@
 import re
 from typing import List, Optional
 
+import constants
 import errors
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import Player
@@ -9,7 +10,15 @@ from velvet_dawn.dao.models import Player
 # noinspection PyShadowingBuiltins
 
 
-def list() -> List[Player]:
+def list(team: str = None, exclude_spectators: bool = False) -> List[Player]:
+    if team:
+        return db.session.query(Player).where(Player.team == team).all()
+
+    if exclude_spectators:
+        return db.session.query(Player)\
+            .where(Player.team != constants.SPECTATORS_TEAM_ID)\
+            .all()
+
     return db.session.query(Player).all()
 
 
@@ -31,8 +40,8 @@ def join(player_name: str, password: str):
         password: The password the user logins in with, to
             prevent other user's loging in.
     """
-    if not re.fullmatch(r'[a-zA-Z]{3,8}', player_name):
-        raise errors.ValidationError("Names must be 3-8 characters long and letters only")
+    if not re.fullmatch(r'[a-zA-Z0-9]{3,8}', player_name):
+        raise errors.ValidationError("Names must be 3-8 characters long and letters & numbers only")
 
     player = get_player(player_name)
     if not player:

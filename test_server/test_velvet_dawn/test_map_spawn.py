@@ -21,7 +21,7 @@ class TestMapSpawning(BaseTest):
             velvet_dawn.players.join("bcd", "a")
             config = Config()
             config.spawning = SpawningConfig()
-            velvet_dawn.game.start_setup_phase(config)
+            velvet_dawn.game.phase.start_setup_phase(config)
 
             self.assertNotEqual(0, len(db.session.query(SpawnArea).all()))
 

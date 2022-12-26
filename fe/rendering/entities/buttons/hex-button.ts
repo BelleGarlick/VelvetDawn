@@ -16,13 +16,15 @@ export class HexButton extends ButtonBase {
 
         this.width = width
         this.height = height
-
-        this.computeHexPoints()
     }
 
     public render(ctx: CanvasRenderingContext2D, perspective: Perspective): null {
         if (!this._enabled) {
             ctx.globalAlpha = 0.5
+        }
+
+        if (this._hexPoints.length === 0) {
+            this._hexPoints = perspective.computeHexPoints(this.width, this.height);
         }
 
         ctx.beginPath();
@@ -72,16 +74,5 @@ export class HexButton extends ButtonBase {
         ctx.globalAlpha = 1
 
         return null
-    }
-
-    private computeHexPoints() {
-        this._hexPoints = [
-            {x: this.width, y: this.height / 2},
-            {x: this.width - (this.height / 2) * Math.cos(Math.PI / 3), y: this.height},
-            {x: - (this.height / 2) * Math.cos(2 * Math.PI / 3), y: this.height},
-            {x: 0, y: this.height / 2},
-            {x: - (this.height / 2) * Math.cos(4 * Math.PI / 3), y: 0},
-            {x: this.width - (this.height / 2) * Math.cos(5 * Math.PI / 3), y: 0},
-        ]
     }
 }

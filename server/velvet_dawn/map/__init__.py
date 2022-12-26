@@ -1,3 +1,5 @@
+import velvet_dawn
+from config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import KeyValues, Keys, Tile , Entity
 from velvet_dawn import datapacks
@@ -6,13 +8,23 @@ from velvet_dawn.map.creation import new
 from velvet_dawn.map.spawn import allocate_spawn_points, get_allocated_spawn_area, is_point_spawnable
 
 
-def get():
-    width = int(db.session.query(KeyValues).get(Keys.MAP_WIDTH).value)
-    height = int(db.session.query(KeyValues).get(Keys.MAP_HEIGHT).value)
+def get(config: Config):
+    width = db.session.query(KeyValues).get(Keys.MAP_WIDTH)
+    height = db.session.query(KeyValues).get(Keys.MAP_HEIGHT)
+
+    map_side_invalid = False
+    if not (width and height):
+        map_side_invalid = True
+
+    elif int(width.value) != config.map_width and int(height.value) != config.map_height:
+        map_side_invalid = True
+
+    if map_side_invalid:
+        velvet_dawn.map.new(config)
 
     return {
-        "width": width,
-        "height": height,
+        "width": config.map_width,
+        "height": config.map_height,
         "tiles": [
             x.json() for x in db.session.query(Tile).all()
         ]
