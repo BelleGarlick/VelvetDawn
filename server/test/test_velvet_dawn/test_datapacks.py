@@ -25,7 +25,10 @@ class TestDatapackLoading(BaseTest):
         self.assertEqual("example:entity1", _id(datapack_path / "entity1.json"))
         self.assertEqual("example:entity1.json", _id(datapack_path / "entity1.json", ft=True))
         self.assertEqual("example:_entity1", _id(datapack_path / "_entity1.json"))
-        self.assertEqual("example:deep.deeper.deepest._entity1", _id(datapack_path / "deep" / "deeper" / "deepest" / "_entity1.json"))
+        self.assertEqual(
+            "example:deep.deeper.deepest._entity1",
+            _id(datapack_path / "deep" / "deeper" / "deepest" / "_entity1.json")
+        )
         self.assertEqual("other:ahh", _id(datapack_path / "entity1.json", data={"id": "other:ahh"}))
 
     def test_load_items_in_dir(self):

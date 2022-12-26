@@ -6,8 +6,6 @@ import {Textures} from "../../Textures";
 
 export class HexButton extends ButtonBase {
 
-    public width: number
-    public height: number
 
     private _hexPoints: Position[] = []
 
@@ -33,7 +31,10 @@ export class HexButton extends ButtonBase {
             ctx.lineTo(this.x + x,this.y + y);
         })
         ctx.closePath();
-        ctx.fillStyle = this._backgroundColor
+        ctx.fillStyle = this._hovered ? this._backgroundHoverColor : this._backgroundColor
+        if (!this._enabled)
+            ctx.fillStyle = this._backgroundColor
+
         ctx.fill();
         ctx.strokeStyle = "#ffffff"
         ctx.lineWidth = 2

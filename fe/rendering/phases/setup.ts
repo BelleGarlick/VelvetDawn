@@ -37,6 +37,7 @@ export class SetupPhase extends Scene {
                 }
 
                 button
+                    .hovered(button.isHovered(this.mousePosition))
                     .setPos(x, y)
                     .text(`${entity.id} (${placedUnits}/${availableUnits})`)
                     .enabled(placedUnits < availableUnits)
@@ -47,6 +48,7 @@ export class SetupPhase extends Scene {
             if (selectedEntity && selectedEntity.player === VelvetDawn.loginDetails.username) {
                 const {x, y} = this.getButtonPosition(this.buttons.length, constants)
                 this.removeEntityButton
+                    .hovered(this.removeEntityButton.isHovered(this.mousePosition))
                     .setPos(x, y)
                     .render(ctx, perspective)
             }
@@ -54,6 +56,7 @@ export class SetupPhase extends Scene {
 
         const playerReady = VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready
         this.nextTurnButton
+            .hovered(this.nextTurnButton.isHovered(this.mousePosition))
             .setPos(constants.nextTurnButtonStartX, constants.nextTurnButtonStartY)
             .enabled(setup.placedCommander)
             .text(playerReady ? "Unready" : "Ready")
@@ -76,6 +79,7 @@ export class SetupPhase extends Scene {
         this.nextTurnButton = new HexButton(constants.buttonWidth, constants.buttonHeight)
             .setPos(constants.nextTurnButtonStartX, constants.nextTurnButtonStartY)
             .backgroundColor("#66dd00")
+            .backgroundHoverColor("#99ee33")
             .text("Done")
             .onClick(() => {
                 if (VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready) {
@@ -91,6 +95,7 @@ export class SetupPhase extends Scene {
 
         this.removeEntityButton = new HexButton(constants.buttonWidth,constants.buttonHeight)
             .backgroundColor("#ff0000")
+            .backgroundHoverColor("#ff3333")
             .text("Remove Entity")
             .onClick(() => {
                 const selectedEntity = VelvetDawn.mapEntities[`${this.clickedTile.x}-${this.clickedTile.y}`]
@@ -112,6 +117,7 @@ export class SetupPhase extends Scene {
                 .textColor("#ffffff")
                 .textAlign(TextAlign.Left)
                 .backgroundColor("#000000")
+                .backgroundHoverColor("#333333")
                 .onClick(() => {
                     Api.setup.placeEntity(key, this.clickedTile.x, this.clickedTile.y).then(x => {
                         VelvetDawn.setState(x)
@@ -123,7 +129,7 @@ export class SetupPhase extends Scene {
             this.allButtons.push(button);
         })
 
-        Object.keys(VelvetDawn.getState().setup.units).forEach((key, i) => {
+        Object.keys(VelvetDawn.getState().setup.units).forEach((key) => {
             const unit = VelvetDawn.datapacks.entities[key];
             console.log("Creating key " + key)
 
@@ -133,6 +139,7 @@ export class SetupPhase extends Scene {
                 .textColor("#ffffff")
                 .textAlign(TextAlign.Left)
                 .backgroundColor("#000000")
+                .backgroundHoverColor("#333333")
                 .onClick(() => {
                     console.log(key)
                     Api.setup.placeEntity(key, this.clickedTile.x, this.clickedTile.y).then(x => {
@@ -158,10 +165,7 @@ export class SetupPhase extends Scene {
 
         } else {
             this.allButtons.forEach(button => {
-                if (x >= button.x
-                    && x <= button.x + button.width
-                    && y >= button.y
-                    && y <= button.y + button.height) {
+                if (button.isHovered({x, y})) {
                     button.performClick()
                 }
             })

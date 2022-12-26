@@ -1,6 +1,7 @@
 import {TileEntity} from "../entities/tile-entity";
 import {Perspective} from "../perspective";
 import {TurnBanner} from "../entities/turn-banner";
+import {Position} from "models/position";
 
 
 export interface RenderingConstants {
@@ -24,6 +25,8 @@ export interface RenderingConstants {
 
 export abstract class Scene {
 
+    protected mousePosition: Position | undefined = undefined
+
     protected readonly turnBanner = new TurnBanner();
 
     public hoveredTile: TileEntity | undefined = undefined;
@@ -34,4 +37,8 @@ export abstract class Scene {
     abstract render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): undefined;
 
     abstract clicked(renderingConstants: RenderingConstants, x: number, y: number): undefined
+
+    public setMousePosition(position: Position | undefined) {
+        this.mousePosition = position
+    }
 }

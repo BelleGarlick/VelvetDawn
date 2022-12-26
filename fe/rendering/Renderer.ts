@@ -119,6 +119,12 @@ export class Renderer {
             }
             this.scene.hoveredTile = this.perspective.getTileFromMouse(mousePos.x, mousePos.y)
             this.scene.hoveredTile.hovered = true
+
+            this.scene.setMousePosition(mousePos)
+        }
+
+        this.canvas.onmouseleave = (event) => {
+            this.scene.setMousePosition(undefined)
         }
 
         let mouseDownPos = {x: 0, y: 0}

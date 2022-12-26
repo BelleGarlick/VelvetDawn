@@ -1,4 +1,6 @@
 import {Renderable} from "../renderable";
+import {Position} from "models/position";
+import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
 
 
 export enum TextAlign {
@@ -12,6 +14,8 @@ export abstract class ButtonBase extends Renderable {
 
     public x: number = 0
     public y: number = 0
+    public width: number
+    public height: number
 
     protected _text: string
     protected _textColor: string = "#ffffff"
@@ -21,7 +25,9 @@ export abstract class ButtonBase extends Renderable {
 
     protected _enabled: boolean = true;
 
+    protected _hovered: boolean = false;
     protected _backgroundColor: string = "#000000"
+    protected _backgroundHoverColor: string = "#333333"
 
     private func?: () => void = undefined
 
@@ -31,8 +37,10 @@ export abstract class ButtonBase extends Renderable {
     }
 
     public performClick() {
-        if (this.func && this._enabled)
+        if (this.func && this._enabled) {
+            VelvetDawn.audioPlayers[`base:audio.buttons.button${Math.ceil(Math.random() * 4)}.mp3`].play()
             this.func()
+        }
     }
 
     text(text: string) {
@@ -66,8 +74,29 @@ export abstract class ButtonBase extends Renderable {
         return this
     }
 
+    hovered(hovered: boolean) {
+        this._hovered = hovered
+        return this
+    }
+
     backgroundColor(color: string) {
         this._backgroundColor = color
         return this;
+    }
+
+    backgroundHoverColor(color: string) {
+        this._backgroundHoverColor = color
+        return this;
+    }
+
+    isHovered(position: Position | undefined): boolean {
+        if (position === undefined)
+            return
+
+        const {x, y} = position;
+        return x >= this.x
+            && x <= this.x + this.width
+            && y >= this.y
+            && y <= this.y + this.height;
     }
 }

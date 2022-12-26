@@ -3,9 +3,10 @@ import {Entity} from "models/entity";
 import {Tile} from "models/tile";
 import * as Api from "api/index";
 import {MENU_AUDIO_ID} from "../constants";
-import {getUrl} from "api/utils";
+import {getResourceUrl, getUrl} from "api/utils";
 import {Textures} from "../rendering/Textures";
 import {TileEntity} from "../rendering/entities/tile-entity";
+import {VelvetDawn} from "./velvet-dawn";
 
 
 export class Datapacks {
@@ -28,9 +29,12 @@ export class Datapacks {
                 const imageIds: string[] = []
                 resources.forEach(resource => {
                     this.resources[resource.id] = resource
-                    // if (resource.type == ResourceType.Audio && resource.id !== MENU_AUDIO_ID)  // Menu audio is loaded before here so it auto plays
-                    //     VelvetDawn.audioPlayers[resource.id] = new Audio(`${getUrl()}/resources/velvet-dawn:menu.mp3/`)
-                    if (resource.type == ResourceType.Image)
+                    console.log(resource)
+                    if (resource.type === ResourceType.Audio) {  // Menu audio is loaded before here so it auto plays
+                        VelvetDawn.audioPlayers[resource.id] = new Audio(getResourceUrl(resource.id));
+                        console.log(VelvetDawn.audioPlayers)
+                    }
+                    if (resource.type === ResourceType.Image)
                         imageIds.push(resource.id)
                 })
                 Textures.load(imageIds)
