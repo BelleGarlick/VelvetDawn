@@ -1,5 +1,5 @@
 import velvet_dawn
-from config import Config
+from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.models.phase import Phase
 from velvet_dawn.dao.models import Keys, Player

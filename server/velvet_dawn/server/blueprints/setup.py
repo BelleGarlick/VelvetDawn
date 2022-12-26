@@ -1,7 +1,7 @@
 import velvet_dawn
 from flask import Blueprint, request
 
-from config import Config
+from velvet_dawn.config import Config
 from velvet_dawn.models.phase import Phase
 
 setup_blueprint = Blueprint('setup_blueprint', __name__)

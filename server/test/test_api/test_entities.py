@@ -1,7 +1,7 @@
 import unittest
 
 import velvet_dawn
-from server.app import app, config
+from velvet_dawn.server.app import app, config
 
 
 class TestEntitiesApi(unittest.TestCase):

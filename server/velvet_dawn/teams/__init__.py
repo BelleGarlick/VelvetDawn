@@ -1,10 +1,9 @@
 from typing import List, Optional
 
-import constants
-from constants import SPECTATORS_TEAM_ID
+from velvet_dawn.constants import SPECTATORS_TEAM_ID
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import Player, Team
-from .. import game
+from .. import game, constants
 from ..models.mode import Mode
 from ..models.phase import Phase
 

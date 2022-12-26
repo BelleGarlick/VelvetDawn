@@ -1,13 +1,12 @@
-import time
 from flask import request, send_file
 from functools import wraps
 
-import errors
 import velvet_dawn
-from config import Config
+from velvet_dawn import errors
+from velvet_dawn.config import Config
 from velvet_dawn.dao import app
-from server.blueprints.setup import setup_blueprint
-from server.blueprints.turn import turn_blueprint
+from velvet_dawn.server.blueprints.setup import setup_blueprint
+from velvet_dawn.server.blueprints.turn import turn_blueprint
 
 
 config = Config.load()
@@ -122,4 +121,4 @@ def join_game():
 if __name__ == "__main__":
     velvet_dawn.datapacks.init(config)
 
-    app.run("0.0.0.0", port=config.port, debug=True)
+    app.run("0.0.0.0", port=config.port, debug=config.debug)

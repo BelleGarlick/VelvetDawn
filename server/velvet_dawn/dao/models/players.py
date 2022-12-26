@@ -1,4 +1,4 @@
-from constants import SPECTATORS_TEAM_ID
+from velvet_dawn.constants import SPECTATORS_TEAM_ID
 from velvet_dawn.dao import db
 
 

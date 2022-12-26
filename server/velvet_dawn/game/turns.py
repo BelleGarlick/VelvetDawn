@@ -1,9 +1,9 @@
 import time
 from typing import List
 
-import errors
+from velvet_dawn import errors
 import velvet_dawn
-from config import Config
+from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import Keys, Player, Team
 from velvet_dawn.models.game_state import TurnData

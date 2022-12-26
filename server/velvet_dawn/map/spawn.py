@@ -1,10 +1,10 @@
 import math
 from typing import List
 
-import errors
+from velvet_dawn import errors
 import velvet_dawn.map.neighbours
-from config import Config
-from logger import logger
+from velvet_dawn.config import Config
+from velvet_dawn.logger import logger
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import Team, SpawnArea
 from velvet_dawn.models.coordinate import Coordinate

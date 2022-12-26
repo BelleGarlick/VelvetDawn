@@ -1,7 +1,7 @@
 import velvet_dawn
 from flask import Blueprint, request
 
-from config import Config
+from velvet_dawn.config import Config
 
 turn_blueprint = Blueprint('turn_blueprint', __name__)
 

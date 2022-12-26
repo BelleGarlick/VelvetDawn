@@ -5,8 +5,8 @@ import sys
 from pathlib import Path
 from typing import Dict, List
 
-from config import Config
-from logger import logger
+from velvet_dawn.config import Config
+from velvet_dawn.logger import logger
 from velvet_dawn.models.datapacks.entity import Entity
 from velvet_dawn.models.datapacks.resource import Resource, ResourceType
 from velvet_dawn.models.datapacks.taggable import Taggable

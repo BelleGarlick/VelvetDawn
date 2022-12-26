@@ -1,10 +1,10 @@
-import errors
+from velvet_dawn import errors
 import velvet_dawn.game.setup
 import velvet_dawn.game.setup
-from config import Config
+from velvet_dawn.config import Config
 
 from velvet_dawn.dao import app
-from test_server.base_test import BaseTest
+from test.base_test import BaseTest
 from velvet_dawn.models.phase import Phase
 
 

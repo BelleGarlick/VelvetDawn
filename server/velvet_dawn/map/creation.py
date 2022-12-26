@@ -2,7 +2,7 @@ import random
 import velvet_dawn.map.neighbours
 from typing import List, Dict, Set
 
-from config import Config
+from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn import datapacks
 from velvet_dawn.models.coordinate import Coordinate

@@ -1,10 +1,10 @@
 import time
 
-import errors
+from velvet_dawn import errors
 import velvet_dawn.players
-from base_test import BaseTest
-from config import Config
-from server.app import config
+from test.base_test import BaseTest
+from velvet_dawn.config import Config
+from velvet_dawn.server.app import config
 from velvet_dawn.dao import app, db
 from velvet_dawn.dao.models import Keys, Player
 from velvet_dawn.models.phase import Phase

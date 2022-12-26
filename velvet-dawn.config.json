@@ -1,4 +1,5 @@
 {
+  "debug": false,
   "port": 666,
   "password": "bananana",
   "turn_time": 300,

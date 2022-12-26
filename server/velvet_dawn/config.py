@@ -31,6 +31,8 @@ class Config:
     map_width = 31
     map_height = 19
 
+    debug = False
+
     spawning: SpawningConfig = SpawningConfig()
 
     @staticmethod
@@ -38,7 +40,7 @@ class Config:
         config = Config()
         config.spawning = SpawningConfig()
 
-        config_path = Path(__file__).parent.parent / "velvet-dawn.config.json"
+        config_path = Path(__file__).parent.parent.parent / "velvet-dawn.config.json"
         with open(config_path) as file:
             data = json.load(file)
 

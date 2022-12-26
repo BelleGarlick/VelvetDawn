@@ -1,7 +1,7 @@
 import velvet_dawn
-from config import Config
+from velvet_dawn.config import Config
 from velvet_dawn.dao import app
-from test_server.base_test import BaseTest
+from test.base_test import BaseTest
 
 
 class TestMapCreation(BaseTest):

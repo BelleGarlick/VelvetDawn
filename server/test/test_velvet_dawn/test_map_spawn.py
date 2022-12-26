@@ -1,11 +1,11 @@
-from config import Config, SpawningConfig
+from velvet_dawn.config import Config, SpawningConfig
 
 import velvet_dawn
 from velvet_dawn.dao import app, db
 from velvet_dawn.dao.models import SpawnArea
 from velvet_dawn.models.coordinate import Coordinate
 
-from test_server.base_test import BaseTest
+from test.base_test import BaseTest
 
 
 class TestMapSpawning(BaseTest):

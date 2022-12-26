@@ -1,4 +1,4 @@
-from config import Config
+from velvet_dawn.config import Config
 from velvet_dawn.models.coordinate import Coordinate
 
 

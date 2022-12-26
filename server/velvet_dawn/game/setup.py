@@ -1,11 +1,10 @@
 from typing import List
 
-import errors
 import velvet_dawn
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import Entity as DbEntity, Player
+from velvet_dawn.dao.models import Entity as DbEntity
 from velvet_dawn.dao.models.entity_setup import EntitySetup
-from velvet_dawn import datapacks
+from velvet_dawn import datapacks, errors
 from velvet_dawn.models.game_setup import GameSetup
 from velvet_dawn.models.phase import Phase
 

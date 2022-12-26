@@ -3,7 +3,7 @@ import shutil
 from pathlib import Path
 
 import velvet_dawn
-from test_server.base_test import BaseTest
+from test.base_test import BaseTest
 
 
 # TODO Test overriding entity from files
