@@ -18,22 +18,22 @@ class SpawningConfig:
         return self
 
 
-@dataclasses.dataclass
 class Config:
 
-    port: int = 1651
-    password: str = 'bananana'
-    datapacks: List[str] = None
+    def __init__(self):
+        self.port: int = 1651
+        self.password: str = 'bananana'
+        self.datapacks: List[str] = []
 
-    turn_time: int = 300
-    setup_time: int = 300
+        self.turn_time: int = 300
+        self.setup_time: int = 300
 
-    map_width = 31
-    map_height = 19
+        self.map_width = 31
+        self.map_height = 19
 
-    debug = False
+        self.debug = False
 
-    spawning: SpawningConfig = SpawningConfig()
+        self.spawning: SpawningConfig = SpawningConfig()
 
     @staticmethod
     def load():

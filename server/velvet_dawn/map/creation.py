@@ -5,6 +5,7 @@ from typing import List, Dict, Set
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn import datapacks
+from velvet_dawn.logger import logger
 from velvet_dawn.models.coordinate import Coordinate
 from velvet_dawn.dao.models import KeyValues, Keys, Tile as DbTile
 
@@ -13,13 +14,10 @@ from velvet_dawn.dao.models import KeyValues, Keys, Tile as DbTile
 
 
 def new(config: Config):
-    print("Generating Map")
-    # TODO print time to generate map
-
     velvet_dawn.map.neighbours.reset_cache()
 
     seed = random.randint(10000, 99999)
-    print(f"Creating map with seed: {seed}.")
+    logger.info(f"Creating map with seed: {seed}.")
     random.seed(seed)
 
     tiles = datapacks.tiles.values()
@@ -38,11 +36,11 @@ def new(config: Config):
     i = 0
     while next_cell:
         if i % 100 == 0:
-            print(f"\r{i + 1}/{config.map_width*config.map_height}", end="")
+            logger.info(f"{i + 1}/{config.map_width*config.map_height}")
         i += 1
         collapse_cell(map, next_cell, config)
         next_cell = get_next_tile(unchecked_cells)
-    print("\rCompleted.")
+    logger.info("Completed.")
 
     db.session.query(DbTile).delete()
 

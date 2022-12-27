@@ -6,6 +6,7 @@ import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import Keys, Player, Team
+from velvet_dawn.logger import logger
 from velvet_dawn.models.game_state import TurnData
 from velvet_dawn.models.phase import Phase
 
@@ -64,14 +65,14 @@ def ready(player: str):
         if not player_setup.placed_commander:
             raise errors.ValidationError("You must place your commander.")
 
-    print(f"Player '{player}' ready.")
+    logger.info(f"Player '{player}' ready.")
     db.session.query(Player).where(Player.name == player).update({Player.ready: True})
     db.session.commit()
 
 
 def unready(player: str):
     """ Mark a player as not ready """
-    print(f"Player '{player}' unready.")
+    logger.info(f"Player '{player}' unready.")
     db.session.query(Player).where(Player.name == player).update({Player.ready: False})
     db.session.commit()
 
@@ -94,7 +95,7 @@ def check_end_turn_case(config: Config):
         return
 
     if _check_all_players_ready(current_phase):
-        print("All players ready!")
+        logger.info("All players ready!")
         if current_phase == Phase.Setup:
             phase.start_game_phase()
         elif current_phase == Phase.GAME:
@@ -106,7 +107,7 @@ def check_end_turn_case(config: Config):
     allowed_turn_time = _current_turn_time(config, current_phase)
 
     if current_time > start_time + allowed_turn_time:
-        print(f"{allowed_turn_time} has elapsed in setup, moving to next turn")
+        logger.info(f"{allowed_turn_time} has elapsed in setup, moving to next turn")
         if current_phase == Phase.Setup:
             phase.start_game_phase()
         elif current_phase == Phase.GAME:

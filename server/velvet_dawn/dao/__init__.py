@@ -12,7 +12,6 @@ db.init_app(app)
 from velvet_dawn.dao import models
 
 with app.app_context():
-    print(db)
     db.create_all()
 
 

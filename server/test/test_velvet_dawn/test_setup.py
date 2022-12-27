@@ -8,9 +8,8 @@ from test.base_test import BaseTest
 from velvet_dawn.models.phase import Phase
 
 
-test_config = Config(
-    datapacks=['civil-war', 'gods']
-)
+test_config = Config()
+test_config.datapacks = ['civil-war', 'gods']
 
 
 class TestSetup(BaseTest):

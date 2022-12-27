@@ -76,12 +76,10 @@ def update_setup(entity_id: str, count: int):
         if count > 0:
             query.update({EntitySetup.amount: count})
         else:
-            print("deleting")
             for item in query.all():
                 db.session.delete(item)
 
     elif count > 0:
-        print("adding")
         db.session.add(EntitySetup(entity_id=entity_id, amount=count))
 
     db.session.commit()

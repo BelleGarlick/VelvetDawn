@@ -1,6 +1,7 @@
 import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
+from velvet_dawn.logger import logger
 from velvet_dawn.models.phase import Phase
 from velvet_dawn.dao.models import Keys, Player
 
@@ -14,7 +15,7 @@ def _set_phase(phase: Phase):
 
 
 def start_setup_phase(config: Config):
-    print("Starting setup phase.")
+    logger.info("Starting setup phase.")
     velvet_dawn.map.allocate_spawn_points(config)
     velvet_dawn.game.turns._update_turn_start_time()
     _set_phase(Phase.Setup)
@@ -26,7 +27,7 @@ def start_setup_phase(config: Config):
 
 
 def start_game_phase():
-    print("Starting game")
+    logger.info("Starting game")
     _set_phase(Phase.GAME)
 
     db.session.query(Player).update({Player.ready: False})

@@ -4,6 +4,7 @@ from velvet_dawn.constants import SPECTATORS_TEAM_ID
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import Player, Team
 from .. import game, constants
+from ..logger import logger
 from ..models.mode import Mode
 from ..models.phase import Phase
 
@@ -16,10 +17,9 @@ def list(exclude_spectators: bool = False) -> List[Team]:
 
 
 def add_player_to_spectators(player_name: str):
-    print(f"Adding '{player_name}' to spectators team.")
+    logger.info(f"Adding '{player_name}' to spectators team.")
     team = db.session.query(Team).where(Team.name == SPECTATORS_TEAM_ID).one_or_none()
     if not team:
-        print(SPECTATORS_TEAM_ID)
         new_team(SPECTATORS_TEAM_ID, "Spectators")
 
     db.session.query(Player).where(Player.name == player_name).update({Player.team: SPECTATORS_TEAM_ID})
@@ -42,7 +42,7 @@ def new_team(team_id: str, name: str):
 
 # TODO Test this in different game modes and scenes
 def auto_update_teams():
-    print("Updating teams")
+    logger.info("Updating teams")
     players = get_players_not_in_teams()
 
     # If in game, add player to the spectators team
@@ -53,7 +53,7 @@ def auto_update_teams():
 
     if game.mode() == Mode.ALL_V_ALL:
         for player in players:
-            print(f"Adding {player.name} to their own team")
+            logger.info(f"Adding {player.name} to their own team")
             new_team(f"team:{player.name}", f"{str(player.name).title()}")
             db.session.query(Player)\
                 .where(Player.name == player.name)\
