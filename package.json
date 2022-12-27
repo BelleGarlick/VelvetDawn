@@ -12,13 +12,10 @@
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@material-ui/core": "*",
-    "@mui/icons-material": "^5.6.1",
     "@types/react": "^17.0.40",
     "@types/react-dom": "^17.0.13",
     "axios": "^0.27.2",
     "magic": "2.3.5-alpha.1",
-    "pixi.js": "latest",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-query": "^3.34.19",
@@ -50,7 +47,6 @@
   "devDependencies": {
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-typescript": "^7.17.12",
-    "@types/google-map-react": "^2.1.7",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",

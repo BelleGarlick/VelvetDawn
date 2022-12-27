@@ -37,7 +37,8 @@ def new(config: Config):
     next_cell = get_next_tile(unchecked_cells)
     i = 0
     while next_cell:
-        print(f"\r{i + 1}/{config.map_width*config.map_height}", end="")
+        if i % 100 == 0:
+            print(f"\r{i + 1}/{config.map_width*config.map_height}", end="")
         i += 1
         collapse_cell(map, next_cell, config)
         next_cell = get_next_tile(unchecked_cells)
@@ -49,8 +50,6 @@ def new(config: Config):
         for row in range(len(map[0])):
             item = map[col][row].pop()
             db.session.add(DbTile(x=col, y=row, tile_id=item))
-            print(item[10] + " ", end="")
-        print()
 
     db.session.merge(KeyValues(key=Keys.MAP_WIDTH, value=str(config.map_width)))
     db.session.merge(KeyValues(key=Keys.MAP_HEIGHT, value=str(config.map_height)))

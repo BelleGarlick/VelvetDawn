@@ -9,7 +9,7 @@ export function getUrl() {
 
 
 export function getResourceUrl(resourceId: string) {
-    return `${getUrl()}/resources/${resourceId}`
+    return `${getUrl()}/datapacks/${resourceId}`
 }
 
 

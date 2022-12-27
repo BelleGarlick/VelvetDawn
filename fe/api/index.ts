@@ -1,7 +1,6 @@
 export * as login from "./login"
-export * as entities from "./entities"
 export * as map from "./map"
-export * as resources from "./resources"
 export * as game from "./game"
 export * as setup from "./setup"
 export * as turns from "./turns"
+export * as datapack from "./datapack"
