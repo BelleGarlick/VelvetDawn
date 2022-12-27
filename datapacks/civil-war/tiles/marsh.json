@@ -1,8 +1,20 @@
 {
   "name": "Marsh",
-  "texture": "civil-war:marsh.jpg",
   "neighbours": {
     "civil-war:marsh": 2,
     "civil-war:grass": 1
+  },
+  "textures": {
+    "color": ["#7c822e", "#8c822e", "#9c822e"],
+    "background": {
+      "__empty__": 12,
+      "civil-war:tiles.grass.grass1.png":  1,
+      "civil-war:tiles.grass.grass2.png":  1,
+      "civil-war:tiles.grass.grass3.png":  1,
+      "civil-war:tiles.grass.grass4.png":  1,
+      "civil-war:tiles.grass.grass5.png":  1,
+      "civil-war:tiles.grass.grass6.png":  1,
+      "civil-war:tiles.grass.grass7.png":  1
+    }
   }
 }

@@ -1,9 +1,17 @@
 {
   "name": "Forest",
-  "texture": "civil-war:forest.jpg",
   "traversable": false,
   "neighbours": {
     "civil-war:woods": 1,
     "civil-war:forest": 1
+  },
+  "textures": {
+    "color": ["#0a8024", "#0a8014", "#0a8034"],
+    "background": [
+      "civil-war:tiles.forest.forest1.png",
+      "civil-war:tiles.forest.forest2.png",
+      "civil-war:tiles.forest.forest3.png",
+      "civil-war:tiles.forest.forest4.png"
+    ]
   }
 }

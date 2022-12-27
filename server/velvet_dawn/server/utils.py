@@ -4,7 +4,7 @@ from flask import request
 import velvet_dawn.game
 from velvet_dawn import errors
 from velvet_dawn.config import Config
-
+from velvet_dawn.logger import logger
 
 config = Config.load()
 

@@ -76,7 +76,7 @@ export class Renderer {
         this.canvas.style.width = window.innerWidth + "px"
         this.canvas.style.height = window.innerHeight + "px"
 
-        ctx.fillStyle = "#6688cc"
+        ctx.fillStyle = "#66d9e8"
         ctx.fillRect(0, 0, constants.width, constants.height)
 
         VelvetDawn.tileEntities.forEach(tile => {

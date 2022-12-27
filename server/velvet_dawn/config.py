@@ -21,8 +21,9 @@ class SpawningConfig:
 class Config:
 
     def __init__(self):
+        self.seed = None
+
         self.port: int = 1651
-        self.password: str = 'bananana'
         self.datapacks: List[str] = []
 
         self.turn_time: int = 300

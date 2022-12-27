@@ -16,7 +16,7 @@ from velvet_dawn.dao.models import KeyValues, Keys, Tile as DbTile
 def new(config: Config):
     velvet_dawn.map.neighbours.reset_cache()
 
-    seed = random.randint(10000, 99999)
+    seed = config.seed or random.randint(10000, 99999)
     logger.info(f"Creating map with seed: {seed}.")
     random.seed(seed)
 
@@ -44,10 +44,18 @@ def new(config: Config):
 
     db.session.query(DbTile).delete()
 
+    # TODO Test that variants and colours are picked in test
     for col in range(len(map)):
         for row in range(len(map[0])):
             item = map[col][row].pop()
-            db.session.add(DbTile(x=col, y=row, tile_id=item))
+            tile = datapacks.tiles[item]
+            db.session.add(DbTile(
+                x=col,
+                y=row,
+                tile_id=item,
+                texture_variant=tile.textures.choose_background(),
+                color=tile.textures.choose_color()
+            ))
 
     db.session.merge(KeyValues(key=Keys.MAP_WIDTH, value=str(config.map_width)))
     db.session.merge(KeyValues(key=Keys.MAP_HEIGHT, value=str(config.map_height)))
@@ -67,6 +75,7 @@ def get_possible_neighbours(cell_options: Set[str], tile_map: dict):
     possible_tiles = set()
     for option in cell_options:
         possible_tiles.update(list(tile_map[option].neighbours))
+
     return possible_tiles
 
 
@@ -77,8 +86,8 @@ def collapse_cell(map: List[List[Set[str]]], cell: Coordinate, config: Config):
     for key in cell_probabilites:
         callapsed_cell_probs += [key] * cell_probabilites[key]
 
-    cell_choise = random.choice(callapsed_cell_probs)
-    map[cell.x][cell.y] = {cell_choise}
+    cell_choice = random.choice(callapsed_cell_probs)
+    map[cell.x][cell.y] = {cell_choice}
     possible_neighbours = get_possible_neighbours(map[cell.x][cell.y], datapacks.tiles)
 
     neighbour_updates = [

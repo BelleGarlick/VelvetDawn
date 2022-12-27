@@ -1,6 +1,5 @@
 import { Perspective } from "rendering/perspective";
 import {Textures} from "../Textures";
-import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import {Entity} from "./entity";
 import {RenderingConstants} from "../scenes/scene";
 
@@ -23,11 +22,17 @@ export class TileEntity extends Entity {
 
     public isSpawnArea: boolean = false
 
-    constructor(instanceId: number, tileId: string, x: number, y: number) {
+    private readonly textureVariant: string
+    private readonly color: string
+
+    constructor(instanceId: number, tileId: string, x: number, y: number, color: string, textureVariant: string) {
         super(instanceId, tileId)
 
         this.x = x;
-        this.y = y
+        this.y = y;
+
+        this.color = color;
+        this.textureVariant = textureVariant;
     }
 
     render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): null {
@@ -37,10 +42,6 @@ export class TileEntity extends Entity {
 
         if (!visible)
             return
-
-        const tileData = VelvetDawn.datapacks.tiles[this.entityId]
-        const texture = Textures.get(tileData.texture)
-
         ctx.save();
 
         // Create Hexagon to clip the image
@@ -57,15 +58,21 @@ export class TileEntity extends Entity {
             ctx.fillRect(imageStart, imageEnd, imageHeight, imageHeight)
         }
 
-        // Render texture
         ctx.globalAlpha = this.isSpawnArea ? 0.5 : 1
-        ctx.drawImage(
-            texture,
-            0, 0,
-            texture.width, texture.height,
-            imageStart, imageEnd,
-            imageWidth, imageHeight
-        )
+        ctx.fillStyle = this.color
+        ctx.fillRect(imageStart, imageEnd, imageHeight, imageHeight)
+
+        // Render texture
+        if (this.textureVariant) {
+            const texture = Textures.get(this.textureVariant)
+            ctx.drawImage(
+                texture,
+                0, 0,
+                texture.width, texture.height,
+                imageStart, imageEnd,
+                imageWidth, imageHeight
+            )
+        }
         ctx.globalAlpha = 1
 
         if (this.hovered) {

@@ -1,11 +1,11 @@
 {
-  "debug": false,
+  "datapacks": ["civil-war", "gods"],
   "port": 666,
-  "turn_time": 300,
-  "setup_time": 300000,
   "map": {
     "width": 31,
     "height": 19
   },
-  "datapacks": ["civil-war", "gods"]
+  "debug": false,
+  "turn_time": 300,
+  "setup_time": 300000
 }

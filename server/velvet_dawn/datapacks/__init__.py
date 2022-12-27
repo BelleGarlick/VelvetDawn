@@ -48,9 +48,9 @@ def _load_datapack(datapack_path: Path):
         logging.error(f"Datapack '{datapack}' not found.")
         sys.exit(1)
 
+    _load_resources(datapack_path / 'resources')
     _load_tiles(datapack_path / 'tiles')
     _load_entities(datapack_path / 'entities')
-    _load_resources(datapack_path / 'resources')
 
 
 def get(id: str, entities_only=False, tiles_only=False, resources_only=False):

@@ -5,7 +5,10 @@ export interface TileInstance {
     tileId: string
 
     x: number
-    y: number
+    y: number,
+
+    color: string
+    texture: string | undefined
 }
 
 

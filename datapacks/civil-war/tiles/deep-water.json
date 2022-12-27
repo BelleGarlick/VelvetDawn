@@ -1,9 +1,22 @@
 {
   "name": "Deep Water",
-  "texture": "civil-war:deep-water.png",
   "traversable": false,
   "neighbours": {
     "civil-war:shallow-water": 1,
     "civil-war:deep-water": 1
+  },
+  "textures": {
+    "color": ["#004499", "#004488", "#005588", "#005599"],
+    "background": {
+      "__empty__": 4,
+      "civil-war:tiles.deep-water.deep-water1.png": 1,
+      "civil-war:tiles.deep-water.deep-water2.png": 1,
+      "civil-war:tiles.deep-water.deep-water3.png": 1,
+      "civil-war:tiles.deep-water.deep-water4.png": 1,
+      "civil-war:tiles.deep-water.deep-water5.png": 1,
+      "civil-war:tiles.deep-water.deep-water6.png": 1,
+      "civil-war:tiles.deep-water.deep-water7.png": 1,
+      "civil-war:tiles.deep-water.deep-water8.png": 1
+    }
   }
 }

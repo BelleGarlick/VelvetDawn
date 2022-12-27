@@ -1,11 +1,23 @@
 {
   "name": "Grass",
-  "texture": "civil-war:grass.png",
   "neighbours": {
     "civil-war:grass": 8,
-    "civil-war:shallow-water": 1,
-    "civil-war:towns": 1,
+    "civil-war:sand": 1,
+    "civil-war:settlement": 1,
     "civil-war:woods": 1,
     "civil-war:marsh": 2
+  },
+  "textures": {
+    "color": ["#2da849", "#2dab49", "#2da449"],
+    "background": {
+      "__empty__": 8,
+      "civil-war:tiles.grass.grass1.png": 1,
+      "civil-war:tiles.grass.grass2.png": 1,
+      "civil-war:tiles.grass.grass3.png": 1,
+      "civil-war:tiles.grass.grass4.png": 1,
+      "civil-war:tiles.grass.grass5.png": 1,
+      "civil-war:tiles.grass.grass6.png": 1,
+      "civil-war:tiles.grass.grass7.png": 1
+    }
   }
 }

@@ -6,8 +6,7 @@
   "scripts": {
     "build": "npm run magic",
     "magic": "webpack",
-    "test": "jest",
-    "electron-dev": "electron ."
+    "test": "jest"
   },
   "dependencies": {
     "@emotion/react": "^11.9.0",

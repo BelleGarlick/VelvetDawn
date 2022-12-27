@@ -76,7 +76,7 @@ export class VelvetDawn {
                 }
 
                 VelvetDawn.tileEntities = mapDef.tiles.map((tile) => {
-                    let tileEntity = new TileEntity(tile.id, tile.tileId, tile.x, tile.y)
+                    let tileEntity = new TileEntity(tile.id, tile.tileId, tile.x, tile.y, tile.color, tile.texture)
                     VelvetDawn.map[tile.x][tile.y] = tileEntity;
                     return tileEntity
                 })

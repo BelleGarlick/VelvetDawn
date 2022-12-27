@@ -2,7 +2,7 @@ import { TileEntity } from "rendering/entities/tile-entity"
 import { VelvetDawn } from "velvet-dawn/velvet-dawn"
 import {RenderingConstants} from "./scenes/scene";
 
-const TileRadius = 100
+const TileRadius = 120
 const TileHeight = Math.pow(3, 1/2) * TileRadius
 const TileWidth = 2 * TileRadius
 const TileSpacingX = TileWidth * 0.75
@@ -13,10 +13,6 @@ export class Perspective {
 
     xOffset = 100
     yOffset = 100
-
-    constructor() {
-
-    }
 
     warp({ x, y } : { x: number, y: number }) {
         return {

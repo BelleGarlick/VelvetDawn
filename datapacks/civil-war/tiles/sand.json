@@ -1,0 +1,21 @@
+{
+  "name": "Sand",
+  "neighbours": {
+    "civil-war:sand": 1,
+    "civil-war:woods": 1,
+    "civil-war:grass": 1,
+    "civil-war:shallow-water": 1
+  },
+  "textures": {
+    "color": "#ccc572",
+    "background": {
+      "__empty__": 4,
+      "civil-war:tiles.sand.sand1.png": 1,
+      "civil-war:tiles.sand.sand2.png": 1,
+      "civil-war:tiles.sand.sand3.png": 1,
+      "civil-war:tiles.sand.sand4.png": 1,
+      "civil-war:tiles.sand.sand5.png": 1,
+      "civil-war:tiles.sand.sand6.png": 1
+    }
+  }
+}
