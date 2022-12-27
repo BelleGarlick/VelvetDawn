@@ -40,7 +40,7 @@ def new_team(team_id: str, name: str):
     db.session.commit()
 
 
-# TODO Test this in different game modes and phases
+# TODO Test this in different game modes and scenes
 def auto_update_teams():
     print("Updating teams")
     players = get_players_not_in_teams()

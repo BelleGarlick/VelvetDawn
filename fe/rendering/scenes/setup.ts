@@ -4,6 +4,7 @@ import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import * as Api from 'api'
 import {Button, HexButton, TextAlign} from "../entities/buttons"
 import {Position} from "models/position";
+import {NextTurnButton} from "../entities/buttons/next-turn-button";
 
 
 class IdHexButton extends HexButton {
@@ -13,17 +14,22 @@ class IdHexButton extends HexButton {
 
 export class SetupPhase extends Scene {
 
-    private allButtons: Button[] = []
+    private tabView: number = 0
 
-    private buttons: IdHexButton[] = []
-    private nextTurnButton: Button = null
+    private commanderButtons: IdHexButton[] = []
+    private unitButtons: IdHexButton[] = []
+    private commanderTab: Button = null
+    private unitsTab: Button = null
     private removeEntityButton: Button = null
+    private nextTurnButton: NextTurnButton = null
 
     render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): undefined {
         const setup = VelvetDawn.getState().setup
 
+        const buttons = this.getVisibleButtons()
+
         if (this.clickedTile) {
-            this.buttons.forEach((button, i) => {
+            buttons.forEach((button, i) => {
                 const {x, y} = this.getButtonPosition(i, constants)
                 const entity = VelvetDawn.datapacks.entities[button.id];
                 let placedUnits: number
@@ -46,7 +52,7 @@ export class SetupPhase extends Scene {
 
             const selectedEntity = VelvetDawn.mapEntities[`${this.clickedTile.x}-${this.clickedTile.y}`]
             if (selectedEntity && selectedEntity.player === VelvetDawn.loginDetails.username) {
-                const {x, y} = this.getButtonPosition(this.buttons.length, constants)
+                const {x, y} = this.getButtonPosition(buttons.length, constants)
                 this.removeEntityButton
                     .hovered(this.removeEntityButton.isHovered(this.mousePosition))
                     .setPos(x, y)
@@ -54,20 +60,27 @@ export class SetupPhase extends Scene {
             }
         }
 
-        const playerReady = VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready
-        this.nextTurnButton
-            .hovered(this.nextTurnButton.isHovered(this.mousePosition))
-            .setPos(constants.nextTurnButtonStartX, constants.nextTurnButtonStartY)
-            .enabled(setup.placedCommander)
-            .text(playerReady ? "Unready" : "Ready")
-            .backgroundColor(playerReady ? "#33bb00" : "#66dd00")
-            .render(ctx, perspective)
+
+        let topLineHeight = constants.buttonHeight + 2 * constants.sidebarPadding
+        ctx.moveTo(constants.sidebarStart + constants.sidebarPadding, topLineHeight)
+        ctx.lineTo(constants.width - constants.sidebarPadding, topLineHeight)
+        ctx.stroke()
 
         const lineHeight = constants.height - constants.buttonHeight - 2 * constants.sidebarPadding
         ctx.moveTo(constants.sidebarStart + constants.sidebarPadding, lineHeight)
         ctx.lineTo(constants.width - constants.sidebarPadding, lineHeight)
         ctx.stroke()
 
+        this.commanderTab
+            .hovered(this.commanderTab.isHovered(this.mousePosition))
+            .setPos(constants.sidebarStart + constants.sidebarPadding, constants.sidebarPadding)
+            .render(ctx, perspective)
+        this.unitsTab
+            .hovered(this.unitsTab.isHovered(this.mousePosition))
+            .setPos(constants.sidebarStart + 2 * constants.sidebarPadding + this.unitsTab.width, constants.sidebarPadding)
+            .render(ctx, perspective)
+
+        this.nextTurnButton.draw(ctx, perspective, constants, this.mousePosition)
         this.turnBanner.render(ctx, perspective, constants)
 
         return undefined;
@@ -75,23 +88,22 @@ export class SetupPhase extends Scene {
 
     onStart(constants: RenderingConstants): null {
         this.turnBanner.title("Setup Phase")
+        this.nextTurnButton = new NextTurnButton(constants);
 
-        this.nextTurnButton = new HexButton(constants.buttonWidth, constants.buttonHeight)
-            .setPos(constants.nextTurnButtonStartX, constants.nextTurnButtonStartY)
-            .backgroundColor("#66dd00")
-            .backgroundHoverColor("#99ee33")
-            .text("Done")
-            .onClick(() => {
-                if (VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready) {
-                    Api.turns.unready().then(x => VelvetDawn.setState(x))
-                    VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready = false
-                } else {
-                    Api.turns.ready().then(x => VelvetDawn.setState(x))
-                    VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready = true
-                }
+        if (VelvetDawn.map.length > 0 && VelvetDawn.getState().spawnArea.length > 0) {
+            VelvetDawn.getState().spawnArea.forEach(({x, y}) => {
+                VelvetDawn.map[x][y].isSpawnArea = true
+            })
+        }
 
-            });
-        this.allButtons.push(this.nextTurnButton);
+        const tabWidth = (constants.sidebar - 3 * constants.sidebarPadding) / 2
+        this.commanderTab = new HexButton(tabWidth, constants.buttonHeight)
+            .text("Commanders")
+            .onClick(() => this.tabView = 0)
+
+        this.unitsTab = new HexButton(tabWidth, constants.buttonHeight)
+            .text("Units")
+            .onClick(() => this.tabView = 1)
 
         this.removeEntityButton = new HexButton(constants.buttonWidth,constants.buttonHeight)
             .backgroundColor("#ff0000")
@@ -106,7 +118,6 @@ export class SetupPhase extends Scene {
                     VelvetDawn.setState(x)
                 })
             });
-        this.allButtons.push(this.removeEntityButton);
 
         VelvetDawn.getState().setup.commanders.forEach((key) => {
             const commander = VelvetDawn.datapacks.entities[key];
@@ -125,8 +136,7 @@ export class SetupPhase extends Scene {
                 })
             button.id = key
 
-            this.buttons.push(button);
-            this.allButtons.push(button);
+            this.commanderButtons.push(button);
         })
 
         Object.keys(VelvetDawn.getState().setup.units).forEach((key) => {
@@ -148,8 +158,7 @@ export class SetupPhase extends Scene {
                 })
             button.id = key
 
-            this.buttons.push(button);
-            this.allButtons.push(button);
+            this.unitButtons.push(button);
         })
 
         return null
@@ -164,20 +173,62 @@ export class SetupPhase extends Scene {
             this.clickedTile.selected = true;
 
         } else {
-            this.allButtons.forEach(button => {
-                if (button.isHovered({x, y})) {
+            [
+                ...this.getVisibleButtons(),
+                this.commanderTab,
+                this.unitsTab,
+                this.nextTurnButton,
+                this.removeEntityButton
+            ].forEach(button => {
+                if (button.isHovered({x, y}))
                     button.performClick()
-                }
             })
         }
 
         return null
     }
 
+    keyboardInput(event: KeyboardEvent): null {
+        // Switch tab
+        if (event.key === "Tab") {
+            this.tabView = 1 - this.tabView;
+            event.preventDefault();
+        }
+
+        // Place item
+        if (event.keyCode >= 49 && event.keyCode <= 57) {
+            const buttonIndex = event.keyCode - 49;
+            const buttons = this.getVisibleButtons()
+            if (buttonIndex < buttons.length)
+                buttons[buttonIndex].performClick()
+            event.preventDefault()
+        }
+
+        // Remove Item
+        if (event.key === "Backspace") {
+            this.removeEntityButton.performClick();
+            event.preventDefault()
+        }
+
+        // Ready up
+        if (event.key === "Enter") {
+            this.nextTurnButton.performClick();
+            event.preventDefault()
+        }
+
+        return null
+    }
+
+    getVisibleButtons() {
+        return this.tabView === 0
+            ? this.commanderButtons
+            : this.unitButtons;
+    }
+
     private getButtonPosition(index: number, constants: RenderingConstants): Position {
         return {
             x: constants.sidebarStart + constants.sidebarPadding,
-            y: index * (constants.buttonHeight + constants.buttonSpacing) + constants.sidebarPadding
+            y: (index + 1) * (constants.buttonHeight + constants.buttonSpacing) + constants.sidebarPadding * 2
         }
     }
 }

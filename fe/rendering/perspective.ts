@@ -1,6 +1,6 @@
 import { TileEntity } from "rendering/entities/tile-entity"
 import { VelvetDawn } from "velvet-dawn/velvet-dawn"
-import {RenderingConstants} from "./phases/scene";
+import {RenderingConstants} from "./scenes/scene";
 
 const TileRadius = 100
 const TileHeight = Math.pow(3, 1/2) * TileRadius

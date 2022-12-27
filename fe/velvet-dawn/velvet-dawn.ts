@@ -48,7 +48,6 @@ export class VelvetDawn {
     public static mapEntities: entityMapDict = {}
     public static tileEntities: TileEntity[];
     public static unitsDict: { [key: string]: UnitEntity } = {}
-    public static spawnAreasSet: boolean = false
 
     public static audioPlayers: { [key: string]: HTMLAudioElement } = {}
 
@@ -141,14 +140,6 @@ export class VelvetDawn {
                 delete VelvetDawn.unitsDict[entityId]
             }
         })
-
-        if (VelvetDawn.map.length > 0 && VelvetDawn.state.spawnArea.length > 0 && !VelvetDawn.spawnAreasSet) {
-            VelvetDawn.state.spawnArea.forEach(({x, y}) => {
-                VelvetDawn.map[x][y].isSpawnArea = true
-            })
-            VelvetDawn.spawnAreasSet = true
-        }
-
     }
 
     public static getState() {

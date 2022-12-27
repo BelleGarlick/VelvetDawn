@@ -7,5 +7,5 @@ then
 
 elif [ $1 == "test" ]
 then
-  python -m unittest discover -s server
+  pytest
 fi

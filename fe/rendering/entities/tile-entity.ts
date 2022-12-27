@@ -2,7 +2,7 @@ import { Perspective } from "rendering/perspective";
 import {Textures} from "../Textures";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import {Entity} from "./entity";
-import {RenderingConstants} from "../phases/scene";
+import {RenderingConstants} from "../scenes/scene";
 
 
 export enum Highlight {
@@ -15,7 +15,6 @@ export class TileEntity extends Entity {
 
     public readonly x: number;
     public readonly y: number;
-
 
     public highlight = Highlight.None
 

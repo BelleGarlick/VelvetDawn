@@ -1,7 +1,8 @@
 import {VelvetDawn} from "../velvet-dawn/velvet-dawn";
 import { Perspective } from "./perspective";
-import {SetupPhase} from "./phases/setup";
-import {RenderingConstants, Scene} from "./phases/scene";
+import {SetupPhase} from "./scenes/setup";
+import {RenderingConstants, Scene} from "./scenes/scene";
+import {GamePhase} from "./scenes/game";
 
 
 const SIDEBAR_WIDTH = 300
@@ -61,18 +62,19 @@ export class Renderer {
 
     // @ts-ignore
     public render() {
-        if (!this.canvas) {
+        if (!this.canvas)
             return undefined
-        }
+
         const start = new Date().getTime()
 
-        var ctx = this.canvas.getContext('2d');
+        const constants = Renderer.getConstants()
+        this.updateScene(constants);
+
+        const ctx = this.canvas.getContext('2d');
         this.canvas.width = window.innerWidth * RESOLUTION
         this.canvas.height = window.innerHeight * RESOLUTION
         this.canvas.style.width = window.innerWidth + "px"
         this.canvas.style.height = window.innerHeight + "px"
-
-        const constants = Renderer.getConstants()
 
         ctx.fillStyle = "#6688cc"
         ctx.fillRect(0, 0, constants.width, constants.height)
@@ -123,7 +125,7 @@ export class Renderer {
             this.scene.setMousePosition(mousePos)
         }
 
-        this.canvas.onmouseleave = (event) => {
+        this.canvas.onmouseleave = () => {
             this.scene.setMousePosition(undefined)
         }
 
@@ -143,6 +145,11 @@ export class Renderer {
                 this.scene.clicked(Renderer.getConstants(), evX, evY)
             }
         }
+
+        document.addEventListener('keydown', (event) => {
+            this.scene.keyboardInput(event)
+        });
+
 
         this.render()
     }
@@ -177,8 +184,17 @@ export class Renderer {
         }
     }
 
-    private static updateScene() {
-        // const phase = VelvetDawn.getState().phase
-        // if (phase == "game" && Renderer.getInstance().scene instanceof )
+    private updateScene(constants: RenderingConstants) {
+        const phase = VelvetDawn.getState().phase
+
+        if (phase === "setup" && !(this.scene instanceof SetupPhase)) {
+            this.scene = new SetupPhase()
+            this.scene.onStart(constants)
+        }
+
+        if (phase === "game" && !(this.scene instanceof GamePhase)) {
+            this.scene = new GamePhase()
+            this.scene.onStart(constants)
+        }
     }
 }

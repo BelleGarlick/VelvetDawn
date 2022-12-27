@@ -41,4 +41,6 @@ export abstract class Scene {
     public setMousePosition(position: Position | undefined) {
         this.mousePosition = position
     }
+
+    abstract keyboardInput(event: KeyboardEvent): null
 }

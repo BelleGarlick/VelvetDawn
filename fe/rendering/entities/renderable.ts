@@ -1,5 +1,5 @@
 import {Perspective} from "../perspective";
-import {RenderingConstants} from "../phases/scene";
+import {RenderingConstants} from "../scenes/scene";
 
 export abstract class Renderable {
 

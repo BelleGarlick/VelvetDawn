@@ -145,16 +145,17 @@ def remove_entity(player_id: str, x: int, y: int):
     if velvet_dawn.game.phase.get_phase() != Phase.Setup:
         raise errors.ValidationError("Game setup may only be changed during game setup")
 
-    entity = db.session.query(DbEntity).where(
+    entities = db.session.query(DbEntity).where(
         DbEntity.player == player_id,
         DbEntity.pos_x == x,
         DbEntity.pos_y == y
-    ).one_or_none()
+    ).all()
 
-    if not entity:
+    if not entities:
         raise errors.ValidationError("No entity for you to remove here.")
 
-    db.session.delete(entity)
+    for entity in entities:
+        db.session.delete(entity)
     db.session.commit()
 
 

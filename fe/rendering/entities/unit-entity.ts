@@ -1,6 +1,6 @@
 import {Entity} from "./entity";
 import {Perspective} from "../perspective";
-import {RenderingConstants} from "../phases/scene";
+import {RenderingConstants} from "../scenes/scene";
 import {EntityInstance} from "models/entityInstance";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import {Textures} from "../Textures";

@@ -1,6 +1,6 @@
 import {Renderable} from "./renderable";
 import {Perspective} from "../perspective";
-import {RenderingConstants} from "../phases/scene";
+import {RenderingConstants} from "../scenes/scene";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 
 export class TurnBanner extends Renderable {

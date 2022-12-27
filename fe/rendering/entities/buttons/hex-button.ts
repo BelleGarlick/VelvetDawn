@@ -6,7 +6,6 @@ import {Textures} from "../../Textures";
 
 export class HexButton extends ButtonBase {
 
-
     private _hexPoints: Position[] = []
 
     constructor(width: number, height: number) {

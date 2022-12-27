@@ -104,12 +104,10 @@ class TestDatapackLoading(BaseTest):
 
         self.assertEqual(merged["a"], "string")
 
-        # Test updating again works in meregd but doesn't affect base
+        # Test updating again works in merged but doesn't affect base
         velvet_dawn.datapacks._merge_dicts(merged, {
             "a": "not string",
-            "e": {
-                "z": "y"
-            },
+            "e": {"z": "y"},
             "h": ["j"]
         })
 

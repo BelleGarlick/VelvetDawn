@@ -2,10 +2,8 @@ import {Resource, ResourceType} from "models/resource";
 import {Entity} from "models/entity";
 import {Tile} from "models/tile";
 import * as Api from "api/index";
-import {MENU_AUDIO_ID} from "../constants";
-import {getResourceUrl, getUrl} from "api/utils";
+import {getResourceUrl} from "api/utils";
 import {Textures} from "../rendering/Textures";
-import {TileEntity} from "../rendering/entities/tile-entity";
 import {VelvetDawn} from "./velvet-dawn";
 
 
@@ -29,10 +27,8 @@ export class Datapacks {
                 const imageIds: string[] = []
                 resources.forEach(resource => {
                     this.resources[resource.id] = resource
-                    console.log(resource)
                     if (resource.type === ResourceType.Audio) {  // Menu audio is loaded before here so it auto plays
                         VelvetDawn.audioPlayers[resource.id] = new Audio(getResourceUrl(resource.id));
-                        console.log(VelvetDawn.audioPlayers)
                     }
                     if (resource.type === ResourceType.Image)
                         imageIds.push(resource.id)
