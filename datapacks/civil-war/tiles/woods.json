@@ -8,7 +8,7 @@
   },
   "textures": {
     "color": ["#21943a", "#21944a", "#31942a"],
-    "background": [
+    "image": [
       "civil-war:tiles.woods.woods1.png",
       "civil-war:tiles.woods.woods2.png",
       "civil-war:tiles.woods.woods3.png",

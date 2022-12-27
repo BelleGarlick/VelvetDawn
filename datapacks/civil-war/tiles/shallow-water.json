@@ -8,8 +8,8 @@
   },
   "textures": {
     "color": ["#399699", "#399688", "#398899"],
-    "background": {
-      "__empty__": 6,
+    "image": {
+      "null": 6,
       "civil-war:tiles.shallow-water.shallow-water1.png": 1,
       "civil-war:tiles.shallow-water.shallow-water2.png": 1,
       "civil-war:tiles.shallow-water.shallow-water3.png": 1,

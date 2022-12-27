@@ -1,4 +1,4 @@
-from velvet_dawn import errors
+from velvet_dawn import errors, datapacks
 import velvet_dawn.game.setup
 import velvet_dawn.game.setup
 from velvet_dawn.config import Config
@@ -55,6 +55,9 @@ class TestSetup(BaseTest):
 
     def test_place_setup_entity(self):
         with app.app_context():
+            for tile in datapacks.tiles:
+                datapacks.tiles[tile].traversable = True
+
             config = Config().set_map_size(50, 50)
             velvet_dawn.game.phase._set_phase(Phase.Lobby)
             velvet_dawn.map.new(config)

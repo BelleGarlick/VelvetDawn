@@ -1,5 +1,5 @@
 import dataclasses
-
+from .custom_attributes import CustomAttributes
 from velvet_dawn.models.datapacks.taggable import Taggable
 
 
@@ -57,6 +57,7 @@ class Entity(Taggable):
         self.max_health = 100
         self.commander = False
 
+        self.attributes = CustomAttributes()
         self.combat = EntityCombat()
         self.movement = EntityMovement()
         self.textures = EntityTextures()
@@ -69,6 +70,7 @@ class Entity(Taggable):
             "health": {
                 "max": self.max_health
             },
+            "attributes": self.attributes.json(),
             "movement": self.movement.json(),
             "combat": self.combat.json(),
             "textures": self.textures.json()
@@ -82,6 +84,7 @@ class Entity(Taggable):
         entity.combat.update(data.get('combat', {}))
         entity.movement.update(data.get('movement', {}))
         entity.textures.update(data.get('textures', {}))
+        entity.attributes.load(id, data.get('attributes', []))
 
         entity._load_tags(data)
 

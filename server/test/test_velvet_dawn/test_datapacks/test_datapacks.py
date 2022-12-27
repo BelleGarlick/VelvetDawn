@@ -8,7 +8,7 @@ from test.base_test import BaseTest
 
 # TODO Test overriding entity from files
 
-# TODO Test loading entities from json works as expected
+# TODO Test loading entity from json works as expected
 
 # TODO Test loading resources with overriding
 
@@ -17,7 +17,7 @@ class TestDatapackLoading(BaseTest):
 
     def test_construct_id(self):
         """ Test entity id is correct """
-        datapack_path = Path("example") / "entities"
+        datapack_path = Path("example") / "entity"
 
         def _id(x, ft=False, data=None):
             return velvet_dawn.datapacks._construct_id(datapack_path, x, include_file_type=ft, data=data)
@@ -34,7 +34,7 @@ class TestDatapackLoading(BaseTest):
     def test_load_items_in_dir(self):
         """ Test that files are loaded correctly into concrete and abstracts dirs """
         test_path = Path("pack")
-        entities_path = test_path / "entities"
+        entities_path = test_path / "entity"
 
         if test_path.exists():
             shutil.rmtree(test_path)
@@ -47,7 +47,7 @@ class TestDatapackLoading(BaseTest):
         with open(entities_path / "example-b.json", "w+") as file:
             json.dump({"name": "example_b"}, file)
 
-        files = velvet_dawn.datapacks._load_items_in_dir(test_path / "entities")
+        files = velvet_dawn.datapacks._load_items_in_dir(test_path / "entity")
         self.assertNotIn(entities_path / "pack:example-a.json", files)
         self.assertIn(entities_path / "example-b.json", files)
         self.assertIn("pack:example-a", velvet_dawn.datapacks._abstract_definitions)
@@ -71,7 +71,7 @@ class TestDatapackLoading(BaseTest):
         extended = velvet_dawn.datapacks._extend({"extends": []})
         self.assertEqual(1, len(extended))
 
-        # Check extending from a but not d
+        # Check extending from 'a' but not 'd'
         extended = velvet_dawn.datapacks._extend({"extends": ["a"]})
         self.assertEqual(2, len(extended))
         self.assertEqual("c", extended["b"])

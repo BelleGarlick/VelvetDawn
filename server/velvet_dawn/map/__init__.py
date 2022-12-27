@@ -47,7 +47,7 @@ def is_placeable(x: int, y: int) -> bool:
         If the tile is traversable
     """
     # First check if there is already an entity at that position
-    entity_at_position = db.session.query(Entity).where(Entity.pos_x==x, Entity.pos_y==y).one_or_none()
+    entity_at_position = db.session.query(Entity).where(Entity.pos_x == x, Entity.pos_y == y).one_or_none()
     if entity_at_position:
         return False
 

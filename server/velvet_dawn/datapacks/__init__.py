@@ -10,7 +10,7 @@ from velvet_dawn.logger import logger
 from velvet_dawn.models.datapacks.entity import Entity
 from velvet_dawn.models.datapacks.resource import Resource, ResourceType
 from velvet_dawn.models.datapacks.taggable import Taggable
-from velvet_dawn.models.datapacks.tile import Tile
+from velvet_dawn.models.datapacks.tiles.tile import Tile
 
 
 """ datapacks module

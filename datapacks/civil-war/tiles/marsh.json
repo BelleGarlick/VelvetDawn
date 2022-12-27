@@ -6,8 +6,8 @@
   },
   "textures": {
     "color": ["#7c822e", "#8c822e", "#9c822e"],
-    "background": {
-      "__empty__": 12,
+    "image": {
+      "null": 12,
       "civil-war:tiles.grass.grass1.png":  1,
       "civil-war:tiles.grass.grass2.png":  1,
       "civil-war:tiles.grass.grass3.png":  1,

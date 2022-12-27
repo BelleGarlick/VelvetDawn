@@ -13,6 +13,8 @@ class Tile(db.Model):
     texture_variant = db.Column(db.String)
     color = db.Column(db.String, nullable=False)
 
+    attributes = db.Column(db.JSON, nullable=False)
+
     def json(self):
         return {
             "id": self.x * 10000 + self.y,
@@ -20,5 +22,6 @@ class Tile(db.Model):
             "x": self.x,
             "y": self.y,
             "texture": self.texture_variant,
-            "color": self.color
+            "color": self.color,
+            "attributes": self.custom_attributes
         }

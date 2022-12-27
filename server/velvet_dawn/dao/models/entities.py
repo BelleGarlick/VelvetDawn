@@ -15,6 +15,8 @@ class Entity(db.Model):
     pos_x = db.Column(db.Integer, nullable=False)
     pos_y = db.Column(db.Integer, nullable=False)
 
+    attributes = db.Column(db.JSON, nullable=False)
+
     def json(self):
         return {
             "id": self.id,
@@ -23,5 +25,6 @@ class Entity(db.Model):
             "position": {
                 "x": self.pos_x,
                 "y": self.pos_y
-            }
+            },
+            "attributes": self.custom_attributes
         }

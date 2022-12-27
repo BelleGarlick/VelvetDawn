@@ -53,8 +53,9 @@ def new(config: Config):
                 x=col,
                 y=row,
                 tile_id=item,
-                texture_variant=tile.textures.choose_background(),
-                color=tile.textures.choose_color()
+                texture_variant=tile.textures.choose_image(),
+                color=tile.textures.choose_color(),
+                attributes=tile.attributes.db_json()
             ))
 
     db.session.merge(KeyValues(key=Keys.MAP_WIDTH, value=str(config.map_width)))

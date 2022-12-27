@@ -120,11 +120,13 @@ def place_entity(player: str, entity_id: str, x: int, y: int):
             raise errors.ValidationError(f"You already have the maximum number of {entity_id} in play")
 
     # Finally, add the entity to the db
+    entity = datapacks.entities[entity_id]
     db.session.add(DbEntity(
         player=player,
         entity_id=entity_id,
         pos_x=x,
-        pos_y=y
+        pos_y=y,
+        attributes=entity.attributes.db_json()
     ))
     db.session.commit()
 
