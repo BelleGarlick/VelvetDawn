@@ -5,7 +5,7 @@ from velvet_dawn import errors
 import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import Keys, Player, Team
+from velvet_dawn.dao.models import Keys, Player, Team, Entity as DbEntity
 from velvet_dawn.logger import logger
 from velvet_dawn.models.game_state import TurnData
 from velvet_dawn.models.phase import Phase
@@ -99,7 +99,7 @@ def check_end_turn_case(config: Config):
         if current_phase == Phase.Setup:
             phase.start_game_phase()
         elif current_phase == Phase.GAME:
-            _begin_next_turn()
+            begin_next_turn()
 
     current_time = time.time()
     start_time = velvet_dawn.dao.get_value(Keys.TURN_START, _type=float)
@@ -111,27 +111,39 @@ def check_end_turn_case(config: Config):
         if current_phase == Phase.Setup:
             phase.start_game_phase()
         elif current_phase == Phase.GAME:
-            _begin_next_turn()
+            begin_next_turn()
 
 
-def _begin_next_turn():
+def begin_next_turn():
     """ Start the next turn by:
          - Marking all players as not ready
          - Set the next team's turn
          - Update the turn timer
+         - Updating the remaining movement of all entities to their range
     """
     teams: List[Team] = sorted(velvet_dawn.teams.list(exclude_spectators=True), key=lambda t: t.team_id)
 
     db.session.query(Player).update({Player.ready: False})
     db.session.commit()
 
-    current_turn = get_active_turn(Phase.GAME)
+    # Find the next team's turn
+    # If current none, default to the last team for when looped through, else loop through and find the next iteration
+    current_turn = velvet_dawn.dao.get_value(Keys.ACTIVE_TURN, default=teams[-1].team_id)
     new_team_turn = None
     for i, team in enumerate(teams):
         if team.team_id == current_turn:
             new_team_turn = teams[i + 1 - len(teams)].team_id
 
     velvet_dawn.dao.set_value(Keys.ACTIVE_TURN, new_team_turn)
+
+    # Update turn's player's entities to reset there remaining moves
+    players = velvet_dawn.players.list(team=new_team_turn)
+    for player in players:
+        for unit in velvet_dawn.units.list(player=player.name):
+            db.session.query(DbEntity).where(DbEntity.id == unit.id).update({
+                DbEntity.movement_remaining: unit.movement_range
+            })
+        db.session.commit()
 
     _update_turn_start_time()
 

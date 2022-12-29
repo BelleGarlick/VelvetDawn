@@ -1,7 +1,5 @@
-import {get} from "api/utils";
-import {Tile} from "models/tile";
-import {Entity} from "models/entity";
-import {Resource} from "models/resource";
+import {get} from "./utils";
+import {Tile, Entity, Resource} from "models/index";
 
 export function getDatapacks(): Promise<{
     tiles: Tile[],

@@ -1,12 +1,11 @@
 import * as React from "react";
 import {Login} from "ui/Login";
-import {LoginDetails} from "models/login-details";
+import {LoginDetails} from "models";
 import {InitialResourceLoadingScreen} from "ui/ResourceLoaders/InitialResourceLoadingScreen";
 import {ServerResourceLoadingScreen} from "ui/ResourceLoaders/ServerResourceLoadingScreen";
 import {Lobby} from "ui/Lobby";
 import {ViewContainer} from "ui/ViewContainer";
-import {ViewState} from "models/view-state";
-import {Text} from "ui/Text"
+import {ViewState} from "models";
 import * as ReactDOM from 'react-dom';
 import {GameView} from "ui/GameView";
 
@@ -20,15 +19,15 @@ export default function App() {
 
     return <InitialResourceLoadingScreen>
         <>
-            {view == ViewState.Login && <ViewContainer>
+            {view === ViewState.Login && <ViewContainer>
                 <Login setView={setView} loginDetails={loginDetails} setLoginDetails={setLoginDetails}/>
             </ViewContainer>}
-            {view == ViewState.Lobby && <ViewContainer>
+            {view === ViewState.Lobby && <ViewContainer>
                 <ServerResourceLoadingScreen>
                     <Lobby setView={setView} />
                 </ServerResourceLoadingScreen>
             </ViewContainer>}
-            {view == ViewState.Game && <GameView />}
+            {view === ViewState.Game && <GameView />}
         </>
     </InitialResourceLoadingScreen>
 }

@@ -1,7 +1,7 @@
 import {TileEntity} from "../entities/tile-entity";
 import {Perspective} from "../perspective";
 import {TurnBanner} from "../entities/turn-banner";
-import {Position} from "models/position";
+import {Position, GameState} from "models";
 
 
 export interface RenderingConstants {
@@ -33,6 +33,7 @@ export abstract class Scene {
     protected clickedTile: TileEntity | undefined = undefined;
 
     abstract onStart(constants: RenderingConstants): undefined;
+    abstract onStateUpdate(state: GameState): undefined;
 
     abstract render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): undefined;
 

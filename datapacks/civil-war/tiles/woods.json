@@ -6,6 +6,7 @@
     "civil-war:grass": 1,
     "civil-war:forest": 2
   },
+  "movement": { "penalty": 2 },
   "textures": {
     "color": ["#21943a", "#21944a", "#31942a"],
     "image": [

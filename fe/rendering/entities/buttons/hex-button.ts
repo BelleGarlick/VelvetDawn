@@ -1,6 +1,6 @@
 import {Perspective} from "../../perspective";
 import {ButtonBase, TextAlign} from "./button-base";
-import {Position} from "models/position";
+import {Position} from "models";
 import {Textures} from "../../Textures";
 
 

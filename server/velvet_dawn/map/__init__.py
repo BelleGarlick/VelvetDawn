@@ -1,3 +1,5 @@
+from typing import Union
+
 import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
@@ -31,7 +33,7 @@ def get(config: Config):
     }
 
 
-def is_placeable(x: int, y: int) -> bool:
+def is_traversable(x: int, y: int) -> bool:
     """ Check if a tile can have an entity placed in it
     or traversed through it.
 
@@ -57,10 +59,16 @@ def is_placeable(x: int, y: int) -> bool:
 
     tile = datapacks.tiles[db_tile.tile_id]
 
-    return tile.traversable
+    return tile.movement.traversable
 
 
-def get_tile(x, y):
+def get_tile(x, y) -> Union[Tile, None]:
     return db.session.query(Tile)\
         .where(Tile.x == x, Tile.y == y)\
         .one_or_none()
+
+
+def get_tile_movement_penalty(tile: Tile):
+    # TODO Incorporate influence or changes
+    tile_definition = velvet_dawn.datapacks.tiles[tile.tile_id]
+    return tile_definition.movement.penalty

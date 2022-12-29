@@ -6,6 +6,10 @@ from velvet_dawn.models.datapacks.tiles.tile_textures import TileTextures
 class TestTileTextures(BaseTest):
 
     def test_tile_textures_parsing_color(self):
+        # Bad key
+        with self.assertRaises(errors.ValidationError):
+            TileTextures.load("", {"colour": 0, "color": "#000000"})
+
         # Type is wrong
         with self.assertRaises(errors.ValidationError):
             TileTextures.load("", {"color": 0})

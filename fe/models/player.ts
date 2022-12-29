@@ -1,4 +1,4 @@
-import { EntityInstance } from "./entityInstance";
+import { EntityInstance } from "./entity-instance";
 
 
 export interface Player {

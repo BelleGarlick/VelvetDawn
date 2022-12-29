@@ -22,6 +22,8 @@ class EntityCombat:
         }
 
 
+# TODO add proper class and tests like tile movement
+
 @dataclasses.dataclass
 class EntityMovement:
     range = 2
@@ -35,6 +37,10 @@ class EntityMovement:
         }
 
 
+# TODO Standard
+# TODO Moving
+# TODO Fighting
+# TODO Movement particles
 class EntityTextures:
     def __init__(self):
         self.background = None
@@ -84,7 +90,7 @@ class Entity(Taggable):
         entity.combat.update(data.get('combat', {}))
         entity.movement.update(data.get('movement', {}))
         entity.textures.update(data.get('textures', {}))
-        entity.attributes.load(id, data.get('attributes', []))
+        entity.attributes = CustomAttributes.load(id, data.get('attributes', []))
 
         entity._load_tags(data)
 

@@ -1,9 +1,9 @@
 import {HexButton} from "./hex-button";
 import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
-import * as Api from "api/index";
+import * as Api from "../../../api/index";
 import {RenderingConstants} from "../../scenes/scene";
 import {Perspective} from "../../perspective";
-import {Position} from "models/position";
+import {Position} from "models";
 
 
 export class NextTurnButton extends HexButton {
@@ -25,7 +25,6 @@ export class NextTurnButton extends HexButton {
                 }
             });
     }
-
 
     draw(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, mousePosition: Position) {
         const playerReady = VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready

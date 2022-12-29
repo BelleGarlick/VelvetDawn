@@ -14,17 +14,15 @@
   "tags": [
     "tag:heavy"
   ],
-  "updgrades": [
+  "upgrades": [
     {
       "name": "Range Increase 1",
-      "modifies": "self.movement.range",
-      "modifier": { "add": 1 }
+      "then": {"modifier": "self.movement.range", "add": 1}
     },
     {
       "name": "Range Increase 2",
       "requires": "Range Increase 1",
-      "modifies": "self.movement.range",
-      "modifier": { "add": 1 }
+      "then": {"modifier": "self.movement.range", "add": 1}
     }
   ],
   "textures": {

@@ -16,7 +16,9 @@ from velvet_dawn.dao.models import KeyValues, Keys, Tile as DbTile
 def new(config: Config):
     velvet_dawn.map.neighbours.reset_cache()
 
-    seed = config.seed or random.randint(10000, 99999)
+    seed = config.seed
+    if seed is None:  # need to compare against none as seed maybe 0
+        seed = random.randint(10000, 99999)
     logger.info(f"Creating map with seed: {seed}.")
     random.seed(seed)
 
@@ -27,10 +29,10 @@ def new(config: Config):
         [{tile.id for tile in tiles} for _ in range(config.map_height)]
         for _ in range(config.map_width)
     ]
-    unchecked_cells = set()
+    unchecked_cells = []
     for x in range(config.map_width):
         for y in range(config.map_height):
-            unchecked_cells.add(Coordinate(x, y))
+            unchecked_cells.append(Coordinate(x, y))
 
     next_cell = get_next_tile(unchecked_cells)
     i = 0
@@ -63,11 +65,11 @@ def new(config: Config):
     db.session.commit()
 
 
-def get_next_tile(unchecked_cells: Set[Coordinate]):
+def get_next_tile(unchecked_cells: List[Coordinate]):
     if not unchecked_cells:
         return None
 
-    cell = random.choice(list(unchecked_cells))
+    cell = random.choice(unchecked_cells)
     unchecked_cells.remove(cell)
     return cell
 
@@ -87,7 +89,7 @@ def collapse_cell(map: List[List[Set[str]]], cell: Coordinate, config: Config):
     for key in cell_probabilites:
         callapsed_cell_probs += [key] * cell_probabilites[key]
 
-    cell_choice = random.choice(callapsed_cell_probs)
+    cell_choice = random.choice(sorted(callapsed_cell_probs))
     map[cell.x][cell.y] = {cell_choice}
     possible_neighbours = get_possible_neighbours(map[cell.x][cell.y], datapacks.tiles)
 

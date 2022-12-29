@@ -23,5 +23,5 @@ class Tile(db.Model):
             "y": self.y,
             "texture": self.texture_variant,
             "color": self.color,
-            "attributes": self.custom_attributes
+            "attributes": self.attributes
         }

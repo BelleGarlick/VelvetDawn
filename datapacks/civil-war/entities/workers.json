@@ -6,12 +6,8 @@
     { "id": "clay", "name": "Clay", "default": 0, "icon": "civil-war:attributes.clay.png" }
   ],
   "max_health": 50,
-  "combat": {
-      "damage": 5
-  },
-  "textures": {
-    "background": "civil-war:hammer.png"
-  },
+  "combat": { "damage": 5 },
+  "textures": { "background": "civil-war:hammer.png" },
   "actions": [
     {
       "name": "Harvest Wood",
@@ -42,6 +38,18 @@
       "description": "Harvest wood by moving to shallow water and using this action. Takes two turns, gains one clay",
       "condition": [{ "if": "tile", "equals": "civil-war:woods" }],
       "then": [{ "target": "self.attributes.clay", "add": 1 }]
+    },
+    {
+      "name": "Build Fortress",
+      "turns": 4,
+      "icon": "civil-war:actions.build-fortress.png",
+      "description": "Build a fortress with improve the health, health regen and defence of a unit inside the fortress.",
+      "condition": [
+        { "if": "tile", "equals": "civil-war:grass" },
+        { "if": "self.attributes.clay", "greaterThan": 3 },
+        { "if": "self.attributes.wood", "greaterThan": 3 }
+      ],
+      "then": [{ "target": "tile", "set": "civil-war:fortress" }]
     }
   ]
 }

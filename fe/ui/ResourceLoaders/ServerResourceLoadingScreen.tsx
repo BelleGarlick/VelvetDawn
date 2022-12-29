@@ -1,5 +1,4 @@
 import * as React from "react";
-import {getUrl} from "api/utils";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 
 
@@ -10,9 +9,7 @@ export function ServerResourceLoadingScreen({ children }: { children: React.Reac
         VelvetDawn.init()
             .then(() => {
                 // TODO Load images and audio in. Once done, show the lobby screen
-                console.log(VelvetDawn.datapacks.entities)
-                console.log(VelvetDawn.datapacks.resources)
-                console.log(VelvetDawn.datapacks.tiles)
+                console.log(VelvetDawn.datapacks)
                 setLoading(false)
             })
             .catch((e) => {

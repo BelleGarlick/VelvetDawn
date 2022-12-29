@@ -1,7 +1,5 @@
-import {Resource, ResourceType} from "models/resource";
-import {Entity} from "models/entity";
-import {Tile} from "models/tile";
-import * as Api from "api/index";
+import {Resource, ResourceType, Entity, Tile} from "models";
+import * as Api from "api";
 import {getResourceUrl} from "api/utils";
 import {Textures} from "../rendering/Textures";
 import {VelvetDawn} from "./velvet-dawn";

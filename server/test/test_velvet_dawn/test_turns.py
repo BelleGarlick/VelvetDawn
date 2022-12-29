@@ -46,7 +46,7 @@ class TestGameTurns(BaseTest):
 
             velvet_dawn.players.join("player1", "password")
             velvet_dawn.players.join("player2", "password")
-            velvet_dawn.game.phase._set_phase(Phase.GAME)
+            velvet_dawn.game.phase.start_game_phase()
             velvet_dawn.game.turns._update_turn_start_time()
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
@@ -65,7 +65,8 @@ class TestGameTurns(BaseTest):
         with app.app_context():
             velvet_dawn.players.join("player1", "password")
             velvet_dawn.players.join("player2", "password")
-            velvet_dawn.game.phase._set_phase(Phase.GAME)
+            velvet_dawn.game.phase.start_game_phase()
+
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
                 velvet_dawn.game.turns.get_active_turn(Phase.GAME)
@@ -79,14 +80,38 @@ class TestGameTurns(BaseTest):
                 velvet_dawn.game.turns.get_active_turn(Phase.GAME)
             )
 
+    def test_begin_next_turn_resets_entity_movement(self):
+        """ Test that when a turn begins the entity movement is set to it's range """
+        with app.app_context():
+            test_config = Config().load()
+            test_config.seed = 0
+
+            # Setup the game state
+            velvet_dawn.datapacks.init(test_config)
+            velvet_dawn.map.new(config)
+            velvet_dawn.players.join("player1", "password")
+            velvet_dawn.game.phase._set_phase(Phase.Lobby)
+            velvet_dawn.game.setup.update_setup("civil-war:commander", 1)
+            velvet_dawn.game.phase.start_setup_phase(config)
+            velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", test_config.map_width // 2, 0)
+
+            self.assertEqual(0, velvet_dawn.units.list("player1")[0].movement_remaining)
+
+            velvet_dawn.game.phase.start_game_phase()
+
+            self.assertEqual(
+                velvet_dawn.units.list("player1")[0].movement_remaining,
+                velvet_dawn.units.list("player1")[0].movement_range
+            )
+
     def test_begin_next_turn_and_get_active_turn(self):
-        """ This will test getting the active turn and beinging a new turn """
+        """ This will test getting the active turn and beginning a new turn """
         with app.app_context():
             velvet_dawn.players.join("player1", "password")
             velvet_dawn.players.join("player2", "password")
             self.assertIsNone(velvet_dawn.game.turns.get_active_turn(Phase.Setup))
 
-            velvet_dawn.game.phase._set_phase(Phase.GAME)
+            velvet_dawn.game.phase.start_game_phase()
 
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
@@ -95,7 +120,7 @@ class TestGameTurns(BaseTest):
 
             velvet_dawn.game.turns.ready("player1")
 
-            velvet_dawn.game.turns._begin_next_turn()
+            velvet_dawn.game.turns.begin_next_turn()
 
             players = velvet_dawn.players.list()
             for player in players:
@@ -106,7 +131,7 @@ class TestGameTurns(BaseTest):
                 velvet_dawn.game.turns.get_active_turn(Phase.GAME)
             )
 
-            velvet_dawn.game.turns._begin_next_turn()
+            velvet_dawn.game.turns.begin_next_turn()
 
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,

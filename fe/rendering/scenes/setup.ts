@@ -3,7 +3,7 @@ import {Perspective} from "../perspective";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import * as Api from 'api'
 import {Button, HexButton, TextAlign} from "../entities/buttons"
-import {Position} from "models/position";
+import {Position, GameState} from "models";
 import {NextTurnButton} from "../entities/buttons/next-turn-button";
 
 
@@ -50,7 +50,7 @@ export class SetupPhase extends Scene {
                     .render(ctx, perspective)
             })
 
-            const selectedEntity = VelvetDawn.mapEntities[`${this.clickedTile.x}-${this.clickedTile.y}`]
+            const selectedEntity = VelvetDawn.map.getUnitAtPosition(this.clickedTile.position)
             if (selectedEntity && selectedEntity.player === VelvetDawn.loginDetails.username) {
                 const {x, y} = this.getButtonPosition(buttons.length, constants)
                 this.removeEntityButton
@@ -90,11 +90,9 @@ export class SetupPhase extends Scene {
         this.turnBanner.title("Setup Phase")
         this.nextTurnButton = new NextTurnButton(constants);
 
-        if (VelvetDawn.map.length > 0 && VelvetDawn.getState().spawnArea.length > 0) {
-            VelvetDawn.getState().spawnArea.forEach(({x, y}) => {
-                VelvetDawn.map[x][y].isSpawnArea = true
-            })
-        }
+        VelvetDawn.getState().spawnArea.forEach((position) => {
+            VelvetDawn.map.getTile(position).isSpawnArea = true
+        })
 
         const tabWidth = (constants.sidebar - 3 * constants.sidebarPadding) / 2
         this.commanderTab = new HexButton(tabWidth, constants.buttonHeight)
@@ -109,15 +107,7 @@ export class SetupPhase extends Scene {
             .backgroundColor("#ff0000")
             .backgroundHoverColor("#ff3333")
             .text("Remove Entity")
-            .onClick(() => {
-                const selectedEntity = VelvetDawn.mapEntities[`${this.clickedTile.x}-${this.clickedTile.y}`]
-                if (selectedEntity) {
-                    delete VelvetDawn.unitsDict[selectedEntity.id]
-                }
-                Api.setup.removeEntity(this.clickedTile.x, this.clickedTile.y).then(x => {
-                    VelvetDawn.setState(x)
-                })
-            });
+            .onClick(() => VelvetDawn.map.removeEntityDuringSetup(this.clickedTile.position));
 
         VelvetDawn.getState().setup.commanders.forEach((key) => {
             const commander = VelvetDawn.datapacks.entities[key];
@@ -130,7 +120,7 @@ export class SetupPhase extends Scene {
                 .backgroundColor("#000000")
                 .backgroundHoverColor("#333333")
                 .onClick(() => {
-                    Api.setup.placeEntity(key, this.clickedTile.x, this.clickedTile.y).then(x => {
+                    Api.setup.placeEntity(key, this.clickedTile.position).then(x => {
                         VelvetDawn.setState(x)
                     })
                 })
@@ -152,7 +142,7 @@ export class SetupPhase extends Scene {
                 .backgroundHoverColor("#333333")
                 .onClick(() => {
                     console.log(key)
-                    Api.setup.placeEntity(key, this.clickedTile.x, this.clickedTile.y).then(x => {
+                    Api.setup.placeEntity(key, this.clickedTile.position).then(x => {
                         VelvetDawn.setState(x)
                     })
                 })
@@ -230,5 +220,9 @@ export class SetupPhase extends Scene {
             x: constants.sidebarStart + constants.sidebarPadding,
             y: (index + 1) * (constants.buttonHeight + constants.buttonSpacing) + constants.sidebarPadding * 2
         }
+    }
+
+    onStateUpdate(state: GameState): undefined {
+        return undefined;
     }
 }

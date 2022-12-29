@@ -1,5 +1,5 @@
-import {post} from "api/utils";
-import {GameState} from "models";
+import {post} from "./utils";
+import {GameState} from "models/index";
 import { VelvetDawn } from "velvet-dawn/velvet-dawn";
 
 

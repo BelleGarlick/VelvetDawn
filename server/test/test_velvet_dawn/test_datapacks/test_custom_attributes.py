@@ -38,6 +38,10 @@ class TestCustomAttributesParsing(BaseTest):
         with self.assertRaises(errors.ValidationError):
             CustomAttributes.load("", [{"id": "example-id", "name": "Fine Name", "hidden": "False"}])
 
+        # Invalid key
+        with self.assertRaises(errors.ValidationError):
+            CustomAttributes.load("", [{"id": "example-id", "name": "Fine Name", "invalid-key": "False"}])
+
         # Valid attributes
         CustomAttributes.load("", [
             {"id": "example-id", "name": "Fine Name", "hidden": True, "icon": "an icon", "default": 100},

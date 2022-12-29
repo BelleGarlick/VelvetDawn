@@ -2,7 +2,7 @@ import {VelvetDawn} from "../velvet-dawn/velvet-dawn";
 import { Perspective } from "./perspective";
 import {SetupPhase} from "./scenes/setup";
 import {RenderingConstants, Scene} from "./scenes/scene";
-import {GamePhase} from "./scenes/game";
+import {GameScene} from "./scenes/game-scene";
 
 
 const SIDEBAR_WIDTH = 300
@@ -42,6 +42,10 @@ class DebugOptions {
         ctx.font = "40px arial";
         ctx.fillText(`Render Times: ${this.lastRenderTime} ${renderRate} ${framesPerSecond}`, 10, constants.height - 10)
     }
+
+    public getLastRenderTime() {
+        return this.lastRenderTime
+    }
 }
 
 
@@ -79,13 +83,11 @@ export class Renderer {
         ctx.fillStyle = "#66d9e8"
         ctx.fillRect(0, 0, constants.width, constants.height)
 
-        VelvetDawn.tileEntities.forEach(tile => {
-            tile.render(ctx, this.perspective, constants)
-        })
+        VelvetDawn.map.tiles.forEach(tile => tile.render(ctx, this.perspective, constants))
 
         // TODO Entity culling and updating if pos is outside window + 1 border for animating
-        Object.keys(VelvetDawn.unitsDict).forEach(entityId => {
-            VelvetDawn.unitsDict[entityId].render(ctx, this.perspective, constants)
+        VelvetDawn.map.allUnits().forEach(unit => {
+            unit.render(ctx, this.perspective, constants, this.debugOptions.getLastRenderTime() / 1000)
         })
 
         ctx.fillStyle = "#000000"
@@ -187,13 +189,21 @@ export class Renderer {
     private updateScene(constants: RenderingConstants) {
         const phase = VelvetDawn.getState().phase
 
-        if (phase === "setup" && !(this.scene instanceof SetupPhase)) {
+        // Check if the player is just spectating
+        if (VelvetDawn.getPlayer().spectating) {
+            if (!(this.scene instanceof SetupPhase)) {
+                this.scene = new SetupPhase()
+                this.scene.onStart(constants)
+            }
+        }
+
+        else if (phase === "setup" && !(this.scene instanceof SetupPhase)) {
             this.scene = new SetupPhase()
             this.scene.onStart(constants)
         }
 
-        if (phase === "game" && !(this.scene instanceof GamePhase)) {
-            this.scene = new GamePhase()
+        else if (phase === "game" && !(this.scene instanceof GameScene)) {
+            this.scene = new GameScene()
             this.scene.onStart(constants)
         }
     }

@@ -1,8 +1,9 @@
 import { TileEntity } from "rendering/entities/tile-entity"
 import { VelvetDawn } from "velvet-dawn/velvet-dawn"
 import {RenderingConstants} from "./scenes/scene";
+import {Position} from "models";
 
-const TileRadius = 120
+const TileRadius = 110
 const TileHeight = Math.pow(3, 1/2) * TileRadius
 const TileWidth = 2 * TileRadius
 const TileSpacingX = TileWidth * 0.75
@@ -21,22 +22,22 @@ export class Perspective {
         }
     }
 
-    unwarp({ x, y } : { x: number, y: number }) {
+    unwarp({ x, y }: Position): Position {
         return {
             x: x + this.xOffset,
             y: y + this.yOffset
         }
     }
 
-    public getTileCoordinates(x: number, y: number) {
+    public getTileCoordinates({x, y}: Position): Position {
         return this.warp({
             x: x * TileSpacingX,
             y: y * TileSpacingY + (x % 2 * TileHeight / 2)
         })
     }
 
-    getTileRenderingConstants(x: number, y: number, constants: RenderingConstants) {
-        const { x: tilePosX, y: tilePosY } = this.getTileCoordinates(x, y)
+    getTileRenderingConstants(position: Position, constants: RenderingConstants) {
+        const { x: tilePosX, y: tilePosY } = this.getTileCoordinates(position)
 
         const clipPoints = [
             {x: tilePosX + TileRadius * Math.cos(0), y: tilePosY + TileRadius * Math.sin(0)},
@@ -69,12 +70,12 @@ export class Perspective {
         const tileX = Math.ceil((x - TileRadius) / TileSpacingX)
         const tileY = Math.ceil((y - TileRadius) / TileSpacingY)
 
-        const possibleTiles = VelvetDawn.getNeighbourTiles(tileX, tileY)
+        const possibleTiles = VelvetDawn.map.getNeighbours({x: tileX, y: tileY})
         let tile: TileEntity = undefined
         let distance = 1_000_000
 
         possibleTiles.forEach(cTile => {
-            const { x, y } = this.getTileCoordinates(cTile.x, cTile.y)
+            const { x, y } = this.getTileCoordinates(cTile.position)
             const cDistance = Math.hypot(y - mY, x - mX);
 
             if (cDistance < distance) {

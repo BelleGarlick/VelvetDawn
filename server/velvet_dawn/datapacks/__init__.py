@@ -83,7 +83,7 @@ def _load_tiles(tiles_path):
 
         logger.info(" - " + tile_id)
 
-        tile = Tile.load(id=tile_id, data=_extend(tile_data))
+        tile = Tile.load(tile_id=tile_id, data=_extend(tile_data))
         tiles[tile.id] = tile
 
 

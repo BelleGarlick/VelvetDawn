@@ -1,6 +1,9 @@
+import json
+
 from flask import request
 
 import velvet_dawn
+from velvet_dawn import errors
 from velvet_dawn.dao import app
 from velvet_dawn.server.blueprints import (
     setup_blueprint,
@@ -30,6 +33,12 @@ def add_cors_headers(response):
     return response
 
 
+if not config.debug:
+    import logging
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)
+
+
 @app.route("/ping/")
 def ping():
     return "pong"
@@ -45,6 +54,19 @@ def get_map():
 def get_game_state(user):
     if user.admin:
         velvet_dawn.game.turns.check_end_turn_case(config)
+
+
+@app.route("/move/", methods=["POST"])
+@api_wrapper(return_state=True)
+def move_unit(user):
+    try:
+        entity_pk = request.form.get("entity")
+        path = json.loads(request.form.get("path"))
+    except Exception:
+        raise errors.ValidationError(
+            f"Unable to parse id ('{request.form.get('id')}') and path ('{request.form.get('path')}')")
+
+    velvet_dawn.units.movement.move(user, entity_pk, path, config)
 
 
 @app.route("/join/", methods=["POST"])

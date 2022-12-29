@@ -12,6 +12,9 @@ be chosen when the tile is created.
 """
 
 
+AVAILABLE_KEYS = {"color", "image", "notes"}
+
+
 class TileTextures:
     def __init__(self):
         self.colors: List[str] = []
@@ -63,5 +66,10 @@ class TileTextures:
         elif background_textures is None: pass
         else:
             raise errors.ValidationError(f"{tile_id} has invalid background textures.")
+
+        # Check for random other keys
+        for key in data:
+            if key not in AVAILABLE_KEYS:
+                raise errors.ValidationError(f"{tile_id} textures unknown key: '{key}'")
 
         return textures

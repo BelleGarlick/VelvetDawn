@@ -17,6 +17,10 @@ class Entity(db.Model):
 
     attributes = db.Column(db.JSON, nullable=False)
 
+    # Each turn the remaining movement will be set to the movement range which can be modified by other entities
+    movement_remaining = db.Column(db.Integer, nullable=False)
+    movement_range = db.Column(db.Integer, nullable=False)
+
     def json(self):
         return {
             "id": self.id,
@@ -26,5 +30,9 @@ class Entity(db.Model):
                 "x": self.pos_x,
                 "y": self.pos_y
             },
-            "attributes": self.custom_attributes
+            "movement": {
+                "remaining": self.movement_remaining,
+                "range": self.movement_range
+            },
+            "attributes": self.attributes
         }

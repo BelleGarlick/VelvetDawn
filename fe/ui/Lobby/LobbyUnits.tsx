@@ -2,11 +2,10 @@ import {Typography} from "@material-ui/core";
 import * as React from "react";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import * as Api from "api"
-import {GameSetup} from "models/gameState";
+import {GameSetup} from "models";
 
 
 function AdminView({ setup, setSetup }: { setup: GameSetup, setSetup: (x: GameSetup) => void }) {
-
     return <>
         <Typography>Commanders</Typography>
         {Object.keys(VelvetDawn.datapacks.entities)
@@ -79,7 +78,7 @@ function NonAdminView({ setup }: { setup: GameSetup }) {
 
 
 export function LobbyUnits({ setup, setSetup }: { setup?: GameSetup, setSetup: (x: GameSetup) => void }) {
-    const userIsAdmin = VelvetDawn.getPlayer()?.admin == true
+    const userIsAdmin = VelvetDawn.getPlayer()?.admin === true
 
     if (!setup)
         return <></>

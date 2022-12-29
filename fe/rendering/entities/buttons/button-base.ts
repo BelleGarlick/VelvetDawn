@@ -1,5 +1,5 @@
 import {Renderable} from "../renderable";
-import {Position} from "models/position";
+import {Position} from "models";
 import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
 
 

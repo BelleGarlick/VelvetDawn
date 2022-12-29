@@ -2,6 +2,7 @@ import { Perspective } from "rendering/perspective";
 import {Textures} from "../Textures";
 import {Entity} from "./entity";
 import {RenderingConstants} from "../scenes/scene";
+import {Position} from "models";
 
 
 export enum Highlight {
@@ -12,8 +13,7 @@ export enum Highlight {
 
 export class TileEntity extends Entity {
 
-    public readonly x: number;
-    public readonly y: number;
+    public readonly position: Position;
 
     public highlight = Highlight.None
 
@@ -28,8 +28,7 @@ export class TileEntity extends Entity {
     constructor(instanceId: number, tileId: string, x: number, y: number, color: string, textureVariant: string) {
         super(instanceId, tileId)
 
-        this.x = x;
-        this.y = y;
+        this.position = {x: x, y: y};
 
         this.color = color;
         this.textureVariant = textureVariant;
@@ -38,10 +37,11 @@ export class TileEntity extends Entity {
     render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): null {
         const {
             visible, imageStart, imageEnd, clipPoints, imageWidth, imageHeight
-        } = perspective.getTileRenderingConstants(this.x, this.y, constants);
+        } = perspective.getTileRenderingConstants(this.position, constants);
 
         if (!visible)
             return
+
         ctx.save();
 
         // Create Hexagon to clip the image

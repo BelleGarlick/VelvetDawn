@@ -1,6 +1,5 @@
 import { Team } from "./team";
-import {Player} from "models";
-import {EntityInstance} from "models/entityInstance";
+import {Player, EntityInstance} from "models";
 
 export enum GamePhrase {
     Lobby = 'lobby',
@@ -9,7 +8,6 @@ export enum GamePhrase {
     GameOver = 'over'
 }
 
-
 export interface GameSetup {
     commanders: string[]
     units: { [key: string]: number }
@@ -17,14 +15,12 @@ export interface GameSetup {
     remainingUnits: { [key: string]: number }
 }
 
-
 export interface TurnData {
     team: string | undefined  // current team who's turn it is
     number: number  // The turn number
     start: number  // The unix epoch time the turn started
     seconds: number  // The current length of the turn in seconds
 }
-
 
 export interface GameState {
     phase: GamePhrase,

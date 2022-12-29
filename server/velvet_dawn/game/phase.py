@@ -30,8 +30,8 @@ def start_game_phase():
     logger.info("Starting game")
     _set_phase(Phase.GAME)
 
-    db.session.query(Player).update({Player.ready: False})
-    db.session.commit()
+    velvet_dawn.game.turns.begin_next_turn()
+
 
     # TODO if players haven't got a commander, move them to spectators
 

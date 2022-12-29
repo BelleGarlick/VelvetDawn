@@ -1,6 +1,6 @@
 import {Typography} from "@material-ui/core";
 import * as React from "react";
-import {GameState} from "models/gameState";
+import {GameState} from "models";
 
 
 export function LobbyUsers({ state }: { state: GameState }) {

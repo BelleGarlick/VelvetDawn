@@ -1,5 +1,5 @@
-import {post} from "api/utils";
-import {GameSetup, GameState} from "models";
+import {post} from "./utils";
+import {GameSetup, GameState, Position} from "models/index";
 import { VelvetDawn } from "velvet-dawn/velvet-dawn";
 
 
@@ -12,18 +12,18 @@ export function updateGameSetup(entity: string, count: number): Promise<GameSetu
     })
 }
 
-export function placeEntity(entity: string, x: number, y: number): Promise<GameState> {
+export function placeEntity(entity: string, position: Position): Promise<GameState> {
     return post("/setup/add/", {
         entity: entity,
-        x: x, y: y,
+        x: position.x, y: position.y,
         username: VelvetDawn.loginDetails.username,
         password: VelvetDawn.loginDetails.password
     })
 }
 
-export function removeEntity(x: number, y: number): Promise<GameState> {
+export function removeEntity(position: Position): Promise<GameState> {
     return post("/setup/remove/", {
-        x: x, y: y,
+        x: position.x, y: position.y,
         username: VelvetDawn.loginDetails.username,
         password: VelvetDawn.loginDetails.password
     })

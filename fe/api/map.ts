@@ -1,5 +1,5 @@
-import {get} from "api/utils";
-import {MapDefinition} from "models/map-definition";
+import {get} from "./utils";
+import {MapDefinition} from "models/index";
 
 export function getMap(): Promise<MapDefinition> {
     return get("/map/")

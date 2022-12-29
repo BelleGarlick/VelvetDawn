@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as Api from 'api'
-import {LoginDetails} from "models/login-details";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
-import {ViewState} from "models/view-state";
+import {ViewState, LoginDetails} from "models";
 import {Text} from "ui/Text"
 
 export function Login({ loginDetails, setLoginDetails, setView }: { loginDetails: LoginDetails, setLoginDetails: (x: LoginDetails) => void, setView: (x: ViewState) => void }) {

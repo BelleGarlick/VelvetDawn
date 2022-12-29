@@ -7,7 +7,7 @@
     "civil-war:shallow-water": 1
   },
   "textures": {
-    "color": "#ccc572",
+    "color": ["#ccc572","#cfc572","#c0c572"],
     "image": {
       "null": 4,
       "civil-war:tiles.sand.sand1.png": 1,

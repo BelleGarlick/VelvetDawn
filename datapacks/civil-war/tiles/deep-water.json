@@ -1,10 +1,10 @@
 {
   "name": "Deep Water",
-  "traversable": false,
   "neighbours": {
     "civil-war:shallow-water": 1,
     "civil-war:deep-water": 1
   },
+  "movement": { "traversable": false },
   "textures": {
     "color": ["#004499", "#004488", "#005588", "#005599"],
     "image": {

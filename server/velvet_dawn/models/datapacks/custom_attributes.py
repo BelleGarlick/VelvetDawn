@@ -18,6 +18,8 @@ in game.
 # letting the user know the texture is missing
 EMPTY_ICON_TAG = "__empty__"
 
+AVAILABLE_KEYS = {"id", "name", "icon", "default", "hidden", "notes"}
+
 
 class CustomAttribute:
 
@@ -81,6 +83,11 @@ class CustomAttribute:
             raise errors.ValidationError(
                 f"Object '{parent_id}' attribute '{custom_attribute.id}' hidden value is not valid. Must be a bool.")
 
+        # Check for random other keys
+        for key in data:
+            if key not in AVAILABLE_KEYS:
+                raise errors.ValidationError(f"{parent_id} attribute's has unknown key: '{key}'")
+
         return custom_attribute
 
 
@@ -95,9 +102,7 @@ class CustomAttributes:
 
     def db_json(self):
         """ Return values in a dict mapping the attr. id to the value """
-        return {
-            x.id: x.default for x in self.attributes
-        }
+        return {x.id: x.default for x in self.attributes}
 
     @staticmethod
     def load(parent_id: str, items: list):

@@ -14,7 +14,7 @@ This module handles the entity setup for the games. There
 are functions for the admin to control the number of units
 each player gets and if it's valid to start the game.
 
-This module also contains fucntions for the player to place 
+This module also contains functions for the player to place 
 their initial setup entities when in the setup phase.
 """
 
@@ -103,7 +103,7 @@ def place_entity(player: str, entity_id: str, x: int, y: int):
     if not velvet_dawn.map.is_point_spawnable(user=player, x=x, y=y):
         raise errors.ValidationError("This point is not within your spawn territory")
 
-    if not velvet_dawn.map.is_placeable(x=x, y=y):
+    if not velvet_dawn.map.is_traversable(x=x, y=y):
         raise errors.ValidationError("Cannot place two entities in the same tile.")
 
     # Check that the entity is valid within the setup definition
@@ -120,13 +120,15 @@ def place_entity(player: str, entity_id: str, x: int, y: int):
             raise errors.ValidationError(f"You already have the maximum number of {entity_id} in play")
 
     # Finally, add the entity to the db
-    entity = datapacks.entities[entity_id]
+    entity_definition = datapacks.entities[entity_id]
     db.session.add(DbEntity(
         player=player,
         entity_id=entity_id,
         pos_x=x,
         pos_y=y,
-        attributes=entity.attributes.db_json()
+        attributes=entity_definition.attributes.db_json(),
+        movement_remaining=0,
+        movement_range=entity_definition.movement.range
     ))
     db.session.commit()
 

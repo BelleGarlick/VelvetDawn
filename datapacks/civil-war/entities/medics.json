@@ -8,12 +8,12 @@
   "triggers": [
     {
       "on": "turn",
-      "condition": { "target": "self.health", "greaterThan": 10 },
+      "condition": { "if": "self.health", "greater_than": 10 },
       "modifies": { "add": 10 }
     },
     {
       "on": "turn",
-      "condition": { "target": "self.health", "lessThan": 11 },
+      "condition": { "if": "self.health", "less_than": 11 },
       "modifies": { "add": 20 }
     }
   ],

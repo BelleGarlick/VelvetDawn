@@ -1,4 +1,4 @@
-import {LoginDetails} from "models/login-details";
+import {LoginDetails} from "models/index";
 import {post} from "./utils"
 
 
