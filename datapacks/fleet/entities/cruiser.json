@@ -1,0 +1,14 @@
+{
+    "name": "Cruiser",
+    "max_health": 150,
+    "movement": {
+        "range": 2
+      },
+    "combat": {
+        "damage": "60",
+        "range": 4
+    },
+    "textures": {
+      "background": "fleet:cruiser.png"
+    }
+  }

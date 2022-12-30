@@ -1,0 +1,10 @@
+{
+    "name": "Shallow Water",
+    "textures": {"color": "#285b82"},
+    "neighbours": {
+      "fleet:island": 1,
+      "fleet:rocks": 1,
+      "fleet:shallow-water": 1,
+      "fleet:deep-water": 1
+    }
+  } 

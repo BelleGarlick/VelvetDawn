@@ -1,0 +1,17 @@
+{
+    "name": "Fort",
+    "max_health": 250,
+    "movement": {
+        "range": 0
+      },
+    "combat": {
+        "damage": "50",
+        "range": 6
+    },
+    "tags": [
+      "tag:stationary"
+    ],
+    "textures": {
+      "background": "fleet:fort.png"
+    }
+  }

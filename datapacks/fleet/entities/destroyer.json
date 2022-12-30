@@ -1,0 +1,14 @@
+{
+    "name": "Destroyer",
+    "max_health": 100,
+    "movement": {
+        "range": 3
+      },
+    "combat": {
+        "damage": "40",
+        "range": 3
+    },
+    "textures": {
+      "background": "fleet:destroyer.png"
+    }
+  }

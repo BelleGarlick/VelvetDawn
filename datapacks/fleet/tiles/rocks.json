@@ -1,0 +1,9 @@
+{
+    "name": "Rocks",
+    "textures": {"color": "#3d1f0a"},
+    "neighbours": {
+      "fleet:island": 1,
+      "fleet:rocks": 1,
+      "fleet:shallow-water": 1
+    }
+  } 
