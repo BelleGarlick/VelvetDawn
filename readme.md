@@ -1,4 +1,5 @@
-[![Server Tests](https://github.com/SamGarlick/VelvetDawn/actions/workflows/python-app.yml/badge.svg)](https://github.com/SamGarlick/VelvetDawn/actions/workflows/python-app.yml)
+[![Server Tests](https://github.com/SamGarlick/VelvetDawn/actions/workflows/server-tests.yml/badge.svg)](https://github.com/SamGarlick/VelvetDawn/actions/workflows/server-tests.yml)
+[![Frontend Tests](https://github.com/SamGarlick/VelvetDawn/actions/workflows/frontend-tests.yml/badge.svg)](https://github.com/SamGarlick/VelvetDawn/actions/workflows/frontend-tests.yml)
 
 # Welcome to Velvet Dawn
 ![image-preview](https://github.com/SamGarlick/VelvetDawn/blob/main/images/image1.png?raw=true)
