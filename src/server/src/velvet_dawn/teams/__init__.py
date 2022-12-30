@@ -11,14 +11,14 @@ from ..models.phase import Phase
 
 def list(exclude_spectators: bool = False) -> List[Team]:
     if exclude_spectators:
-        db.session.query(Team).where(Team.team_id != constants.SPECTATORS_TEAM_ID).all()
+        return db.session.query(Team).where(Team.team_id != constants.SPECTATORS_TEAM_ID).all()
 
     return db.session.query(Team).all()
 
 
 def add_player_to_spectators(player_name: str):
     logger.info(f"Adding '{player_name}' to spectators team.")
-    team = db.session.query(Team).where(Team.name == SPECTATORS_TEAM_ID).one_or_none()
+    team = db.session.query(Team).where(Team.team_id == SPECTATORS_TEAM_ID).one_or_none()
     if not team:
         new_team(SPECTATORS_TEAM_ID, "Spectators")
 
@@ -48,7 +48,7 @@ def auto_update_teams():
     # If in game, add player to the spectators team
     if game.phase.get_phase() != Phase.Lobby:
         for player in players:
-            add_player_to_spectators(player.id)
+            add_player_to_spectators(player.name)
         return
 
     if game.mode() == Mode.ALL_V_ALL:

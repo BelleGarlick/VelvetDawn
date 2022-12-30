@@ -190,6 +190,7 @@ export class PathPlanning {
                 }
             }
         }
+        ctx.restore()
     }
 
     /** Clear the cache

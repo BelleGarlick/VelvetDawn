@@ -5,7 +5,9 @@ import {GameState} from "models";
 
 export class SpectatingScene extends Scene {
 
-    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): undefined {
+    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, timeDelta: number): undefined {
+        this.renderTiles(ctx, perspective, constants)
+        this.renderUnits(ctx, perspective, constants, timeDelta)
         this.turnBanner.render(ctx, perspective, constants)
 
         return undefined;

@@ -70,7 +70,10 @@ export class Perspective {
         const tileX = Math.ceil((x - TileRadius) / TileSpacingX)
         const tileY = Math.ceil((y - TileRadius) / TileSpacingY)
 
-        const possibleTiles = VelvetDawn.map.getNeighbours({x: tileX, y: tileY})
+        const possibleTiles = [
+            VelvetDawn.map.getTile({x: tileX, y: tileY}),
+            ...VelvetDawn.map.getNeighbours({x: tileX, y: tileY})
+        ]
         let tile: TileEntity = undefined
         let distance = 1_000_000
 

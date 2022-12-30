@@ -23,13 +23,16 @@ export class GameScene extends Scene {
         return null
     }
 
-    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): undefined {
-        // TODO Render tiles
+    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, timeDelta: number): undefined {
+        this.renderTiles(ctx, perspective, constants)
         this.pathPlanning.render(ctx, perspective, constants, this.hoveredTile?.position)
-        // TODO render units
+        this.renderUnits(ctx, perspective, constants, timeDelta)
+
+        ctx.fillStyle = "#000000"
+        ctx.fillRect(constants.sidebarStart, 0, constants.sidebar, constants.height)
+
         this.turnBanner.render(ctx, perspective, constants)
         this.nextTurnButton.draw(ctx, perspective, constants, this.mousePosition)
-        // TODO Render sidebar
 
         return undefined;
     }

@@ -44,4 +44,7 @@ then
   cd src/frontend
   npm run test
 
+else
+  echo "Missing argument: start, dev, dev-fe, build, test, test-server, test-frontend"
 fi
+

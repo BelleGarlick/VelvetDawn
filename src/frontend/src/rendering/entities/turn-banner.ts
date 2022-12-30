@@ -66,6 +66,9 @@ export class TurnBanner extends Renderable {
                 playersReady += 1;
         })
 
-        return `${playersReady}/${players.length} players ready (${minutes}:${seconds < 10 ? '0' : ''}${seconds})`
+        const teamTurn = VelvetDawn.getState().turn.team;
+        const team = VelvetDawn.getState().teams.find(x => x.id === teamTurn)
+        const teamName = team === undefined ? '' : `Team ${team.name}. `
+        return `${teamName}${playersReady}/${players.length} players ready (${minutes}:${seconds < 10 ? '0' : ''}${seconds})`
     }
 }

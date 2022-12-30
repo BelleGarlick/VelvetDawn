@@ -23,8 +23,14 @@ export class SetupPhase extends Scene {
     private removeEntityButton: Button = null
     private nextTurnButton: NextTurnButton = null
 
-    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): undefined {
+    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, timeDelta: number): undefined {
         const setup = VelvetDawn.getState().setup
+
+        this.renderTiles(ctx, perspective, constants)
+        this.renderUnits(ctx, perspective, constants, timeDelta)
+
+        ctx.fillStyle = "#000000"
+        ctx.fillRect(constants.sidebarStart, 0, constants.sidebar, constants.height)
 
         const buttons = this.getVisibleButtons()
 
@@ -59,7 +65,6 @@ export class SetupPhase extends Scene {
                     .render(ctx, perspective)
             }
         }
-
 
         let topLineHeight = constants.buttonHeight + 2 * constants.sidebarPadding
         ctx.moveTo(constants.sidebarStart + constants.sidebarPadding, topLineHeight)

@@ -52,11 +52,11 @@ def join(player_name: str, password: str):
         db.session.merge(player)
         db.session.commit()
 
-        # Update teams to balance players
-        from .. import teams
-        teams.auto_update_teams()
-
     elif player.password != password:
         raise errors.ValidationError("Incorrect password.")
+
+    # Update teams to balance players
+    from .. import teams
+    teams.auto_update_teams()
 
     return player

@@ -2,6 +2,7 @@ import {TileEntity} from "../entities/tile-entity";
 import {Perspective} from "../perspective";
 import {TurnBanner} from "../entities/turn-banner";
 import {Position, GameState} from "models";
+import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 
 
 export interface RenderingConstants {
@@ -35,7 +36,7 @@ export abstract class Scene {
     abstract onStart(constants: RenderingConstants): undefined;
     abstract onStateUpdate(state: GameState): undefined;
 
-    abstract render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): undefined;
+    abstract render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, timeDelta: number): undefined;
 
     abstract clicked(renderingConstants: RenderingConstants, x: number, y: number): undefined
 
@@ -44,4 +45,16 @@ export abstract class Scene {
     }
 
     abstract keyboardInput(event: KeyboardEvent): null
+
+    protected renderTiles(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants) {
+        VelvetDawn.map.tiles.forEach(tile => tile.render(ctx, perspective, constants))
+    }
+
+    protected renderUnits(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, timeDelta: number) {
+        // TODO Entity culling and updating if pos is outside window + 1 border for animating
+        VelvetDawn.map.allUnits().forEach(unit => {
+            unit.render(ctx, perspective, constants, timeDelta)
+        })
+
+    }
 }

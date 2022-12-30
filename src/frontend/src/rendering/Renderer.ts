@@ -3,6 +3,7 @@ import { Perspective } from "./perspective";
 import {SetupPhase} from "./scenes/setup";
 import {RenderingConstants, Scene} from "./scenes/scene";
 import {GameScene} from "./scenes/game-scene";
+import {SpectatingScene} from "./scenes/spectating-scene";
 
 
 const SIDEBAR_WIDTH = 300
@@ -83,17 +84,7 @@ export class Renderer {
         ctx.fillStyle = "#66d9e8"
         ctx.fillRect(0, 0, constants.width, constants.height)
 
-        VelvetDawn.map.tiles.forEach(tile => tile.render(ctx, this.perspective, constants))
-
-        // TODO Entity culling and updating if pos is outside window + 1 border for animating
-        VelvetDawn.map.allUnits().forEach(unit => {
-            unit.render(ctx, this.perspective, constants, this.debugOptions.getLastRenderTime() / 1000)
-        })
-
-        ctx.fillStyle = "#000000"
-        ctx.fillRect(constants.sidebarStart, 0, constants.sidebar, constants.height)
-
-        this.scene.render(ctx, this.perspective, Renderer.getConstants())
+        this.scene.render(ctx, this.perspective, Renderer.getConstants(), this.debugOptions.getLastRenderTime() / 1000)
 
         this.debugOptions.render(ctx, constants)
 
@@ -162,7 +153,10 @@ export class Renderer {
 
     static getConstants(): RenderingConstants {
         const width = window.innerWidth * RESOLUTION
-        const sidebarWidth = SIDEBAR_WIDTH * RESOLUTION
+        const sidebarWidth = Renderer.getInstance().getScene() instanceof SpectatingScene
+            ? 0
+            : SIDEBAR_WIDTH * RESOLUTION;
+
         const sidebarPadding = 10 * RESOLUTION
         const sidebarStart = width - sidebarWidth
         const height = window.innerHeight * RESOLUTION
@@ -191,8 +185,8 @@ export class Renderer {
 
         // Check if the player is just spectating
         if (VelvetDawn.getPlayer().spectating) {
-            if (!(this.scene instanceof SetupPhase)) {
-                this.scene = new SetupPhase()
+            if (!(this.scene instanceof SpectatingScene)) {
+                this.scene = new SpectatingScene()
                 this.scene.onStart(constants)
             }
         }
