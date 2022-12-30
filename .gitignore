@@ -4,3 +4,4 @@
 src/frontend/node_modules/*
 src/server/venv/*
 src/server/src/test/.pytest_cache/*
+src/server/src/instance/game.db
