@@ -1,11 +1,8 @@
 import {TileEntity} from "../rendering/entities/tile-entity";
 import * as Api from "api";
-import {Position, GameState} from "models";
+import {Position, GameState, GamePhase} from "models";
 import {VelvetDawn} from "./velvet-dawn";
 import {UnitEntity} from "../rendering/entities/unit-entity";
-
-
-// TODO Tests
 
 
 /** This module handles the map state for the game. This includes
@@ -61,7 +58,9 @@ export class VelvetDawnMap {
     }
 
     /** Get a tile at a position */
-    getTile({x, y}: Position) { return this.map[x][y] }
+    getTile({x, y}: Position) {
+        return this.map[x][y]
+    }
 
     /** List all units */
     allUnits(): UnitEntity[] { return Object.values(this.units); }
@@ -76,7 +75,6 @@ export class VelvetDawnMap {
         return this.unitInstanceMap[VelvetDawnMap.hashCoordinate(position)];
     }
 
-    // TODO Add test
     /** Get the neighbours around a tile ordinate
      *
      * @param position: The position to get tiles around
@@ -89,7 +87,6 @@ export class VelvetDawnMap {
             {x: x - 1, y: isOdd ? y : y - 1},
             {x: x - 1, y: isOdd ? y + 1 : y},
             {x: x, y: y - 1},
-            {x: x, y: y},
             {x: x, y: y + 1},
             {x: x + 1, y: isOdd ? y : y - 1},
             {x: x + 1, y: isOdd ? y + 1 : y}
@@ -103,7 +100,6 @@ export class VelvetDawnMap {
             })
     }
 
-    // TODO Test all of this in example scenarios and make sure weights all work
     /** Calculate all possible traversal paths the unit may take.
      *
      * This function will calculate the area around the entity
@@ -165,7 +161,7 @@ export class VelvetDawnMap {
                         uncheckedCoordinates.add(tileHash)
                         uncheckedCells.push({
                             position: tile.position,
-                            weight: nextCell.weight - tileDefinition.movement.penalty,
+                            weight: nextCell.weight - tileDefinition.movement.weight,
                             previous: nextCell
                         })
                     }
@@ -263,20 +259,22 @@ export class VelvetDawnMap {
      * @param position: The position to remove the entity from.
      */
     removeEntityDuringSetup(position: Position) {
-        const selectedEntity = VelvetDawn.map.getUnitAtPosition(position)
-        if (selectedEntity) {
-            delete this.units[selectedEntity.instanceId]
-            delete this.unitInstanceMap[VelvetDawnMap.hashCoordinate(selectedEntity.getPosition())]
-        }
+        if (VelvetDawn.getState().phase === GamePhase.Setup) {
+            const selectedEntity = this.getUnitAtPosition(position)
+            if (selectedEntity) {
+                delete this.units[selectedEntity.instanceId]
+                delete this.unitInstanceMap[VelvetDawnMap.hashCoordinate(selectedEntity.getPosition())]
+            }
 
-        Api.setup.removeEntity(position)
-            .then(x => {
-                VelvetDawn.setState(x)
-            })
-            .catch(x => {
-                // Dont need to move entity back, just wait until the game state refreshes
-                // TODO Popup
-                console.error(x)
-            })
+            Api.setup.removeEntity(position)
+                .then(x => {
+                    VelvetDawn.setState(x)
+                })
+                .catch(x => {
+                    // Dont need to move entity back, just wait until the game state refreshes
+                    // TODO Popup
+                    console.info(x)
+                })
+        }
     }
 }

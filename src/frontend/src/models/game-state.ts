@@ -1,7 +1,7 @@
 import { Team } from "./team";
 import {Player, EntityInstance} from "models/index";
 
-export enum GamePhrase {
+export enum GamePhase {
     Lobby = 'lobby',
     Setup = 'setup',
     Game = 'game',
@@ -23,7 +23,7 @@ export interface TurnData {
 }
 
 export interface GameState {
-    phase: GamePhrase,
+    phase: GamePhase,
     turn: TurnData,
     teams: Team[],
     players: { [key: string]: Player },
@@ -33,4 +33,27 @@ export interface GameState {
         x: number,
         y: number
     }[]
+}
+
+
+export const createBlankState = (): GameState => {
+    return {
+        phase: GamePhase.Lobby,
+        turn: {
+            team: null,
+            number: -1,
+            start: -1,
+            seconds: -1
+        },
+        teams: [],
+        players: {},
+        setup: {
+            commanders: [],
+            units: {},
+            placedCommander: false,
+            remainingUnits: {}
+        },
+        entities: {},
+        spawnArea: []
+    }
 }

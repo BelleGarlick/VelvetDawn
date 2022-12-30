@@ -4,7 +4,7 @@ export interface Tile {
     id: string,
     name: string,
     movement: {
-        penalty: number,
+        weight: number,
         traversable: boolean
     }
 }

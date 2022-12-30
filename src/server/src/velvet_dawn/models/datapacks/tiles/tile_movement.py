@@ -8,23 +8,23 @@ from velvet_dawn import errors
 """ Tile Movement
 
 Defines the movement data for a tile. 
-For now the only attributes are penalty and transferability,
+For now the only attributes are weight and transferability,
 which by default is 1. Higher penalties will take up higher
 amounts of unit movement bandwidth 
 """
 
 
-AVAILABLE_KEYS = {"penalty", "traversable", "notes"}
+AVAILABLE_KEYS = {"weight", "traversable", "notes"}
 
 
 class TileMovement:
     def __init__(self):
-        self.penalty: int = 1
+        self.weight: int = 1
         self.traversable = True
 
     def json(self):
         return {
-            "penalty": self.penalty,
+            "weight": self.weight,
             "traversable": self.traversable
         }
 
@@ -33,13 +33,13 @@ class TileMovement:
         """ Parse the movement data for a tile """
         movement = TileMovement()
 
-        movement.penalty = data.get("penalty", 1)
+        movement.weight = data.get("weight", 1)
         movement.traversable = data.get("traversable", True)
 
-        if not isinstance(movement.penalty, int):
-            raise errors.ValidationError(f"{tile_id} movement penalty must be a number.")
-        if movement.penalty < 1:
-            raise errors.ValidationError(f"{tile_id} movement penalty must be at least 1.")
+        if not isinstance(movement.weight, int):
+            raise errors.ValidationError(f"{tile_id} movement weight must be a number.")
+        if movement.weight < 1:
+            raise errors.ValidationError(f"{tile_id} movement weight must be at least 1.")
 
         if not isinstance(movement.traversable, bool):
             raise errors.ValidationError(f"{tile_id} movement transferability must be either true or false.")

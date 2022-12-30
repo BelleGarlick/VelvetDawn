@@ -8,11 +8,11 @@ class TestTileMovement(BaseTest):
     def test_tile_movement(self):
         # Type is wrong
         with self.assertRaises(errors.ValidationError):
-            TileMovement.load("", {"penalty": "dsa"})
+            TileMovement.load("", {"weight": "dsa"})
 
         # Must be at least 1
         with self.assertRaises(errors.ValidationError):
-            TileMovement.load("", {"penalty": 0})
+            TileMovement.load("", {"weight": 0})
 
         # Wrong type
         with self.assertRaises(errors.ValidationError):
@@ -25,8 +25,8 @@ class TestTileMovement(BaseTest):
         # Valid
         movement = TileMovement.load("", {
             "traversable": False,
-            "penalty": 5,
+            "weight": 5,
             "notes": "Example"
         })
         self.assertEqual(False, movement.traversable)
-        self.assertEqual(5, movement.penalty)
+        self.assertEqual(5, movement.weight)

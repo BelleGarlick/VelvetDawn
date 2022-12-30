@@ -6,7 +6,7 @@
     "civil-war:shallow-water": 1,
     "civil-war:deep-water": 1
   },
-  "movement": { "penalty": 2 },
+  "movement": { "weight": 2 },
   "textures": {
     "color": ["#399699", "#399688", "#398899"],
     "image": {

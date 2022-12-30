@@ -1,5 +1,5 @@
 import * as Api from "api"
-import {GamePhrase, GameState, Player, LoginDetails} from "models";
+import {GamePhase, GameState, Player, LoginDetails, createBlankState} from "models";
 import {Datapacks} from "./datapacks";
 import {SPECTATORS_TEAM} from "../constants";
 import {VelvetDawnMap} from "./map";
@@ -17,33 +17,17 @@ export class VelvetDawn {
     public static mapWidth = 0
     public static mapHeight = 0
 
-    private static state: GameState = {
-        phase: GamePhrase.Lobby,
-        turn: {
-            team: null,
-            number: -1,
-            start: -1,
-            seconds: -1
-        },
-        teams: [],
-        players: {},
-        setup: {
-            commanders: [],
-            units: {},
-            placedCommander: false,
-            remainingUnits: {}
-        },
-        entities: {},
-        spawnArea: []
-    }
+    private static state: GameState = createBlankState()
 
-    public static map: VelvetDawnMap = new VelvetDawnMap();
+    public static map: VelvetDawnMap;
 
     public static audioPlayers: { [key: string]: HTMLAudioElement } = {}
 
     public static refreshTimer: number = -1
 
     public static init() {
+        VelvetDawn.map = new VelvetDawnMap();
+
         clearTimeout(VelvetDawn.refreshTimer)
         // @ts-ignore
         VelvetDawn.refreshTimer = setInterval(() => {

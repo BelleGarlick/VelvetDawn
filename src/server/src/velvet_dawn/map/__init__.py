@@ -68,7 +68,7 @@ def get_tile(x, y) -> Union[Tile, None]:
         .one_or_none()
 
 
-def get_tile_movement_penalty(tile: Tile):
+def get_tile_movement_weight(tile: Tile):
     # TODO Incorporate influence or changes
     tile_definition = velvet_dawn.datapacks.tiles[tile.tile_id]
-    return tile_definition.movement.penalty
+    return tile_definition.movement.weight

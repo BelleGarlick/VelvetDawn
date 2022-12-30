@@ -93,6 +93,6 @@ def _validate_entity_traversing_path(entity: Entity, path: List[Dict[str, int]],
         if remaining_moves <= 0:
             raise errors.EntityMovementErrorTileNoRemainingMoves()
 
-        remaining_moves -= velvet_dawn.map.get_tile_movement_penalty(tile)
+        remaining_moves -= velvet_dawn.map.get_tile_movement_weight(tile)
 
     return remaining_moves

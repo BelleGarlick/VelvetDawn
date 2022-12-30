@@ -4,7 +4,7 @@
     "civil-war:woods": 1,
     "civil-war:forest": 1
   },
-  "movement": { "penalty": 3 },
+  "movement": { "weight": 3 },
   "textures": {
     "color": ["#0a8024", "#0a8014", "#0a8034"],
     "image": [

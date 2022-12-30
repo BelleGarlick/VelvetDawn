@@ -1,4 +1,4 @@
-import {PathPlanningNode} from "../../../velvet-dawn/map";
+import {PathPlanningNode, VelvetDawnMap} from "../../../velvet-dawn/map";
 import {Position} from "models";
 import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
 import {Perspective} from "../../perspective";
@@ -22,6 +22,13 @@ export class PathPlanning {
     private cachePathToPointPosition: Position | undefined
     private cachedPathToPoint: Position[] | undefined = undefined
 
+    private readonly velvetDawnMap: VelvetDawnMap
+
+    constructor(map?: VelvetDawnMap) {
+        this.velvetDawnMap = map ?? VelvetDawn.map
+    }
+
+
     /** Compute the paths the given position may take within a
      * given range.
      *
@@ -36,7 +43,7 @@ export class PathPlanning {
         this.clear()
 
         // Recompute
-        this.cachedPathAreaTree = VelvetDawn.map.getTilesInMovementRange(position, range)
+        this.cachedPathAreaTree = this.velvetDawnMap.getTilesInMovementRange(position, range)
         this.cachedPathAreaPositions = this.cachedPathAreaTree.map(x => x.position)
         this.cachedPathAreaData = {position: position, range: range}
         this.cachedPathPositionsHash = new Set(this.cachedPathAreaPositions.map(pos => {
@@ -114,7 +121,7 @@ export class PathPlanning {
     moveUnit(entityId: number, position: Position) {
         const path = this.getPathToPoint(position)
         if (path) {
-            VelvetDawn.map.move(entityId, path)
+            this.velvetDawnMap.move(entityId, path)
         }
     }
 
@@ -195,6 +202,7 @@ export class PathPlanning {
         this.cachedPathAreaData = undefined
         this.cachedPathAreaTree = undefined
         this.cachedPathAreaPositions = undefined
+        this.cachedPathPositionsHash = undefined
 
         this.cachePathToPointPosition = undefined
         this.cachedPathToPoint = undefined

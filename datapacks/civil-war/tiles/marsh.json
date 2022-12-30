@@ -4,7 +4,7 @@
     "civil-war:marsh": 2,
     "civil-war:grass": 1
   },
-  "movement": { "penalty": 2 },
+  "movement": { "weight": 2 },
   "textures": {
     "color": ["#7c822e", "#8c822e", "#9c822e"],
     "image": {
