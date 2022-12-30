@@ -3,8 +3,8 @@
     "movement": {"traversable": false},
     "textures": {"color": "#feffab"},
     "neighbours": {
-      "fleet:island": 1,
+      "fleet:island": 20,
       "fleet:rocks": 1,
-      "fleet:shallow-water": 1
+      "fleet:shallow-water": 5
     }
   }

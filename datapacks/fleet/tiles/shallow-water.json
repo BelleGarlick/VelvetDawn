@@ -4,7 +4,7 @@
     "neighbours": {
       "fleet:island": 1,
       "fleet:rocks": 1,
-      "fleet:shallow-water": 1,
-      "fleet:deep-water": 1
+      "fleet:shallow-water": 10,
+      "fleet:deep-water": 80
     }
   } 

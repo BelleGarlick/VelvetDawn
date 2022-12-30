@@ -3,6 +3,6 @@
     "textures": {"color": "#123057"},
     "neighbours": {
       "fleet:shallow-water": 1,
-      "fleet:deep-water": 1
+      "fleet:deep-water": 30
     }
   } 
