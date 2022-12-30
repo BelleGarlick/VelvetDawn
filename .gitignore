@@ -1,4 +1,6 @@
 *.DS_Store
 .idea/*
 *.pyc
-node_modules/*
+src/frontend/node_modules/*
+src/server/venv/*
+src/server/src/test/.pytest_cache/*

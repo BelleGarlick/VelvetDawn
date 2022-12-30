@@ -1,5 +1,4 @@
 {
-  "debug": true,
   "datapacks": ["civil-war", "gods"],
   "port": 666,
   "map": {
