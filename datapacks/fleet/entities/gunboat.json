@@ -1,0 +1,14 @@
+{
+    "name": "Gunboat",
+    "max_health": 60,
+    "movement": {
+        "range": 4
+      },
+    "combat": {
+        "damage": "20",
+        "range": 2
+    },
+    "textures": {
+      "background": "fleet:gunboat.png"
+    }
+  }

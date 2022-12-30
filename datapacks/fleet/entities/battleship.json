@@ -1,0 +1,14 @@
+{
+    "name": "Battleship",
+    "max_health": 200,
+    "movement": {
+        "range": 1
+      },
+    "combat": {
+        "damage": "100",
+        "range": 4
+    },
+    "textures": {
+      "background": "fleet:battleship.png"
+    }
+  }

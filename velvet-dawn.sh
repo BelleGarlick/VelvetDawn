@@ -47,4 +47,3 @@ then
 else
   echo "Missing argument: start, dev, dev-fe, build, test, test-server, test-frontend"
 fi
-
