@@ -11,7 +11,7 @@ def get_phase():
 
 
 def _set_phase(phase: Phase):
-    velvet_dawn.dao.set_value(Keys.PHASE, phase)
+    velvet_dawn.dao.set_value(Keys.PHASE, phase.value)
 
 
 def start_setup_phase(config: Config):

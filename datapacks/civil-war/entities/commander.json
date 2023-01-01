@@ -1,12 +1,14 @@
 {
   "name": "Commander",
   "commander": true,
-  "max_health": 200,
+  "health": {
+    "max": 200
+  },
   "movement": {
     "range": 3
   },
   "combat": {
-      "damage": 100
+      "attack": 100
   },
   "influence": [
     {

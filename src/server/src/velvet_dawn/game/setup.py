@@ -120,16 +120,15 @@ def place_entity(player: str, entity_id: str, x: int, y: int):
 
     # Finally, add the entity to the db
     entity_definition = datapacks.entities[entity_id]
-    db.session.add(DbEntity(
+    entity = DbEntity(
         player=player,
         entity_id=entity_id,
         pos_x=x,
-        pos_y=y,
-        attributes=entity_definition.attributes.db_json(),
-        movement_remaining=0,
-        movement_range=entity_definition.movement.range
-    ))
+        pos_y=y
+    )
+    db.session.add(entity)
     db.session.commit()
+    entity_definition.attributes.save_to_db(entity, entity_definition)
 
 
 def remove_entity(player_id: str, x: int, y: int):

@@ -2,17 +2,16 @@ from typing import List, Dict
 
 import velvet_dawn
 from velvet_dawn import errors
-from velvet_dawn.dao import db
 import velvet_dawn.map.neighbours
 from velvet_dawn.config import Config
 from velvet_dawn.models import Phase, Coordinate
-from velvet_dawn.dao.models import Player, Entity
+from velvet_dawn.dao.models import Player, UnitInstance
 
 
-def get_remaining_moves(entity: Entity):
+def get_remaining_moves(unit: UnitInstance):
     # TODO Test this when influence is done
     # TODO Add influence here and other mechanics here
-    return entity.movement_remaining
+    return unit.get_attribute("movement.remaining", _type=int, default=0)
 
 
 def move(player: Player, entity_pk: int, path: List[dict], config: Config):
@@ -41,15 +40,10 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
     remaining_moves = _validate_entity_traversing_path(entity, path, config)
 
     # Update the entity to the new position based on the path and the remaining moves
-    db.session.query(Entity).where(Entity.id == entity_pk).update({
-        Entity.movement_remaining: remaining_moves,
-        Entity.pos_x: path[-1]['x'],
-        Entity.pos_y: path[-1]['y']
-    })
-    db.session.commit()
+    entity.set_attribute("movement.remaining", remaining_moves)
 
 
-def _validate_entity_traversing_path(entity: Entity, path: List[Dict[str, int]], config: Config) -> int:
+def _validate_entity_traversing_path(entity: UnitInstance, path: List[Dict[str, int]], config: Config) -> int:
     """ Validate an entity's traversal path
 
     This function will raise exceptions if the path is invalid.

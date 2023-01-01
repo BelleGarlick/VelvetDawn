@@ -4,7 +4,9 @@
     "background": "civil-war:commander.png"
   },
   "commander": true,
-  "max_health": 500,
+  "health": {
+    "max": 500
+  },
   "movement": {
     "range": 4
   }

@@ -1,6 +1,6 @@
 from test.base_test import BaseTest
 from velvet_dawn import errors
-from velvet_dawn.models.datapacks import CustomAttributes
+from velvet_dawn.models.datapacks import Attributes
 
 
 class TestCustomAttributesParsing(BaseTest):
@@ -8,42 +8,30 @@ class TestCustomAttributesParsing(BaseTest):
     def test_attributes_parsing(self):
         # Missing id
         with self.assertRaises(errors.ValidationError):
-            CustomAttributes.load("", [{"name": "Fine Name"}])
+            Attributes().load("", [{}])
 
         # Malformed id
         with self.assertRaises(errors.ValidationError):
-            CustomAttributes.load("", [{"id": "%id", "name": "Fine Name"}])
-
-        # Duplicated id
-        with self.assertRaises(errors.ValidationError):
-            CustomAttributes.load("", [{"id": "id", "name": "Fine Name"}, {"id": "id", "name": "Fine Name"}])
-
-        # Missing name
-        with self.assertRaises(errors.ValidationError):
-            CustomAttributes.load("", [{"id": "example-id"}])
+            Attributes().load("", [{"id": "%id"}])
 
         # Malformed name
         with self.assertRaises(errors.ValidationError):
-            CustomAttributes.load("", [{"id": "example-id", "name": "$£@"}])
+            Attributes().load("", [{"id": "example-id", "name": "$£@"}])
 
         # Invalid default value
         with self.assertRaises(errors.ValidationError):
-            CustomAttributes.load("", [{"id": "example-id", "name": "Fine Name", "default": "False"}])
+            Attributes().load("", [{"id": "example-id", "name": "Fine Name", "default": "False"}])
 
         # Invalid icon
         with self.assertRaises(errors.ValidationError):
-            CustomAttributes.load("", [{"id": "example-id", "name": "Fine Name", "icon": False}])
-
-        # Invalid hidden
-        with self.assertRaises(errors.ValidationError):
-            CustomAttributes.load("", [{"id": "example-id", "name": "Fine Name", "hidden": "False"}])
+            Attributes().load("", [{"id": "example-id", "name": "Fine Name", "icon": False}])
 
         # Invalid key
         with self.assertRaises(errors.ValidationError):
-            CustomAttributes.load("", [{"id": "example-id", "name": "Fine Name", "invalid-key": "False"}])
+            Attributes().load("", [{"id": "example-id", "name": "Fine Name", "invalid-key": "False"}])
 
         # Valid attributes
-        CustomAttributes.load("", [
-            {"id": "example-id", "name": "Fine Name", "hidden": True, "icon": "an icon", "default": 100},
-            {"id": "example-id2", "name": "Fine Name", "hidden": True, "icon": "an icon", "default": 100},
+        Attributes().load("", [
+            {"id": "example-id", "name": "Fine Name", "icon": "an icon", "default": 100},
+            {"id": "example-id2", "name": "Fine Name", "icon": "an icon", "default": 100},
         ])

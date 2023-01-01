@@ -7,7 +7,7 @@ from velvet_dawn.dao import db
 from velvet_dawn import datapacks
 from velvet_dawn.logger import logger
 from velvet_dawn.models.coordinate import Coordinate
-from velvet_dawn.dao.models import KeyValues, Keys, Tile as DbTile
+from velvet_dawn.dao.models import KeyValues, Keys, TileInstance
 
 
 # TODO Comment everything to then try and optimise it
@@ -44,24 +44,30 @@ def new(config: Config):
         next_cell = get_next_tile(unchecked_cells)
     logger.info("Completed.")
 
-    db.session.query(DbTile).delete()
+    db.session.query(TileInstance).delete()
 
     # TODO Test that variants and colours are picked in test
+    tile_count = 0
+    tiles = []
     for col in range(len(map)):
         for row in range(len(map[0])):
             item = map[col][row].pop()
-            tile = datapacks.tiles[item]
-            db.session.add(DbTile(
-                x=col,
-                y=row,
-                tile_id=item,
-                texture_variant=tile.textures.choose_image(),
-                color=tile.textures.choose_color(),
-                attributes=tile.attributes.db_json()
-            ))
+            tiles.append(TileInstance(id=tile_count, x=col, y=row, tile_id=item))
+            tile_count += 1
 
+    db.session.bulk_save_objects(tiles)
     db.session.merge(KeyValues(key=Keys.MAP_WIDTH, value=str(config.map_width)))
     db.session.merge(KeyValues(key=Keys.MAP_HEIGHT, value=str(config.map_height)))
+    db.session.commit()
+
+    # Configure all tile attributes not that the tiles have been initiated
+    tile_attributes = []
+    for db_tile in db.session.query(TileInstance).all():
+        tile = datapacks.tiles[db_tile.tile_id]
+        tile.attributes.set("texture.color", value=tile.textures.choose_color())
+        tile.attributes.set("texture.background", value=tile.textures.choose_image())
+        tile_attributes += tile.attributes.get_db_objects(db_tile)
+    db.session.bulk_save_objects(tile_attributes)
     db.session.commit()
 
 

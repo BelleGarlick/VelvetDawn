@@ -5,8 +5,8 @@
     { "id": "wood", "name": "Wood", "default": 0, "icon": "civil-war:attributes.wood.png" },
     { "id": "clay", "name": "Clay", "default": 0, "icon": "civil-war:attributes.clay.png" }
   ],
-  "max_health": 50,
-  "combat": { "damage": 5 },
+  "health": { "max": 50 },
+  "combat": { "attack": 5 },
   "textures": { "background": "civil-war:hammer.png" },
   "actions": [
     {

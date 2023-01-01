@@ -1,9 +1,11 @@
 {
   "name": "General",
   "extends": ["civil-war:_max-health-upgrades"],
-  "max_health": 100,
+  "health": {
+    "max": 100
+  },
   "combat": {
-      "damage": 100
+      "attack": 100
   },
   "textures": {
     "background": "civil-war:general.png"

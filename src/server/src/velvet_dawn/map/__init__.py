@@ -1,10 +1,9 @@
-from typing import Union
+from typing import Optional
 
 import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import KeyValues, Keys, Tile , Entity
-from velvet_dawn import datapacks
+from velvet_dawn.dao.models import KeyValues, Keys, TileInstance, UnitInstance
 
 from velvet_dawn.map.creation import new
 from velvet_dawn.map.spawn import allocate_spawn_points, get_allocated_spawn_area, is_point_spawnable
@@ -28,7 +27,7 @@ def get(config: Config):
         "width": config.map_width,
         "height": config.map_height,
         "tiles": [
-            x.json() for x in db.session.query(Tile).all()
+            x.json() for x in db.session.query(TileInstance).all()
         ]
     }
 
@@ -49,7 +48,7 @@ def is_traversable(x: int, y: int) -> bool:
         If the tile is traversable
     """
     # First check if there is already an entity at that position
-    entity_at_position = db.session.query(Entity).where(Entity.pos_x == x, Entity.pos_y == y).one_or_none()
+    entity_at_position = db.session.query(UnitInstance).where(UnitInstance.pos_x == x, UnitInstance.pos_y == y).one_or_none()
     if entity_at_position:
         return False
 
@@ -57,18 +56,15 @@ def is_traversable(x: int, y: int) -> bool:
     if not db_tile:
         return False
 
-    tile = datapacks.tiles[db_tile.tile_id]
-
-    return tile.movement.traversable
+    return db_tile.get_attribute("movement.traversable", _type=bool, default=True)
 
 
-def get_tile(x, y) -> Union[Tile, None]:
-    return db.session.query(Tile)\
-        .where(Tile.x == x, Tile.y == y)\
+def get_tile(x, y) -> Optional[TileInstance]:
+    return db.session.query(TileInstance)\
+        .where(TileInstance.x == x, TileInstance.y == y)\
         .one_or_none()
 
 
-def get_tile_movement_weight(tile: Tile):
+def get_tile_movement_weight(tile: TileInstance):
     # TODO Incorporate influence or changes
-    tile_definition = velvet_dawn.datapacks.tiles[tile.tile_id]
-    return tile_definition.movement.weight
+    return tile.get_attribute("movement.weight", _type=int)

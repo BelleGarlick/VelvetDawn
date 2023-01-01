@@ -1,12 +1,14 @@
 {
   "name": "Peasants",
   "extends": ["civil-war:_max-health-upgrades"],
-  "max_health": 25,
+  "health": {
+    "max": 25
+  },
   "movement": {
     "range": 2
   },
   "combat": {
-      "damage": 5
+      "attack": 5
   },
   "textures": {
     "background": "civil-war:peasant.png"

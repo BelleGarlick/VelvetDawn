@@ -1,9 +1,13 @@
+import time
+
+import velvet_dawn.dao
 from velvet_dawn.dao import db
+from velvet_dawn.dao.models.attributes import UnitAttribute
 from velvet_dawn.dao.models.players import Player
 
 
-class Entity(db.Model):
-    __tablename__ = 'entities'
+class UnitInstance(db.Model):
+    __tablename__ = 'units'
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -15,11 +19,34 @@ class Entity(db.Model):
     pos_x = db.Column(db.Integer, nullable=False)
     pos_y = db.Column(db.Integer, nullable=False)
 
-    attributes = db.Column(db.JSON, nullable=False)
+    def get_attribute(self, key: str, _type=None, default=None):
+        value = db.session.query(UnitAttribute)\
+            .where(
+                UnitAttribute.instance_id == self.id,
+                UnitAttribute.key == key
+            ).one_or_none()
 
-    # Each turn the remaining movement will be set to the movement range which can be modified by other entities
-    movement_remaining = db.Column(db.Integer, nullable=False)
-    movement_range = db.Column(db.Integer, nullable=False)
+        if value:
+            return velvet_dawn.utils.parse_type(value.value, _type, default)
+
+        return default
+
+    def set_attribute(self, key: str, value, commit=True):
+        db.session.query(UnitAttribute)\
+            .where(
+                UnitAttribute.instance_id == self.id,
+                UnitAttribute.key == key
+            ).delete()
+
+        db.session.add(UnitAttribute(
+            instance_id=self.id,
+            key=key,
+            value=str(value),
+            update_time=int(time.time())
+        ))
+
+        if commit:
+            db.session.commit()
 
     def json(self):
         return {
@@ -30,9 +57,15 @@ class Entity(db.Model):
                 "x": self.pos_x,
                 "y": self.pos_y
             },
-            "movement": {
-                "remaining": self.movement_remaining,
-                "range": self.movement_range
-            },
-            "attributes": self.attributes
+            "attributes": {
+                attribute.key: attribute.value
+                for attribute in db.session.query(UnitAttribute).where(
+                    UnitAttribute.instance_id == self.id
+                ).all()
+            }
         }
+
+
+# TODO Remove this over time, is here for backwards compatibility
+Entity = UnitInstance
+Unit = UnitInstance

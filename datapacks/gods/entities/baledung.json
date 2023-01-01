@@ -4,7 +4,9 @@
   "textures": {
     "background": "civil-war:commander.png"
   },
-  "max_health": 500,
+  "health": {
+    "max": 500
+  },
   "movement": {
     "range": 4
   }

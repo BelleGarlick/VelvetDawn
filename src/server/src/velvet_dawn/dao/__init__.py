@@ -1,6 +1,9 @@
+import time
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+import velvet_dawn
 
 db = SQLAlchemy()
 app = Flask(__name__)
@@ -18,12 +21,8 @@ with app.app_context():
 def get_value(key: models.Keys, _type=None, default=None):
     value = db.session.query(models.KeyValues).get(key)
     if value:
-        if not _type: return value.value
-        elif _type == str: return value.value
-        elif _type == float: return float(value.value)
-        elif _type == int: return int(value.value)
-    else:
-        return default
+        return velvet_dawn.utils.parse_type(value.value, _type, default)
+    return default
 
 
 def set_value(key: models.Keys, value):

@@ -1,15 +1,16 @@
 {
   "name": "Cannons",
   "extends": ["civil-war:_max-health-upgrades"],
-  "max_health": 50,
+  "health": {
+    "max": 50
+  },
   "movement": {
     "range": 1
   },
   "combat": {
-      "damage": "200",
+      "attack": 200,
       "range": 6,
-      "radius": 2,
-      "cooldown": 4
+      "reload": 4
   },
   "tags": [
     "tag:heavy"

@@ -76,7 +76,7 @@ class TestUnitMovement(BaseTest):
                 {'x': first_pos['x'], 'y': first_pos['y'] + 1},
             ], test_config)
             unit = velvet_dawn.units.get_unit_by_id(entity.id)
-            self.assertEqual(2, unit.movement_remaining)
+            self.assertEqual(2, unit.get_attribute("movement.remaining", _type=int))
 
     def test_validate_entity_traversing_path(self):
         with app.app_context():
@@ -108,8 +108,7 @@ class TestUnitMovement(BaseTest):
 
             # Test tile not traversable
             tile = velvet_dawn.map.get_tile(first_pos['x'] + 1, first_pos['y'])
-            db.session.query(Tile).where(Tile.x == tile.x, Tile.y == tile.y).update({Tile.tile_id: "civil-war:deep-water"})
-            db.session.commit()
+            tile.set_attribute("movement.traversable", False)
             with self.assertRaises(errors.EntityMovementErrorTileNotTraversable):
                 velvet_dawn.units.movement._validate_entity_traversing_path(entity, [
                     first_pos,

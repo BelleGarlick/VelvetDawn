@@ -140,10 +140,8 @@ def begin_next_turn():
     players = velvet_dawn.players.list(team=new_team_turn)
     for player in players:
         for unit in velvet_dawn.units.list(player=player.name):
-            db.session.query(DbEntity).where(DbEntity.id == unit.id).update({
-                DbEntity.movement_remaining: unit.movement_range
-            })
-        db.session.commit()
+            unit.set_attribute("movement.remaining", unit.get_attribute("movement.range", default=1), commit=False)
+    db.session.commit()
 
     _update_turn_start_time()
 

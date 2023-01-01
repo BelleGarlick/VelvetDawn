@@ -56,7 +56,7 @@ class TestSetup(BaseTest):
     def test_place_setup_entity(self):
         with app.app_context():
             for tile in datapacks.tiles:
-                datapacks.tiles[tile].traversable = True
+                datapacks.tiles[tile].attributes.set("movement.traversable", value=True)
 
             config = Config().set_map_size(50, 50)
             velvet_dawn.game.phase._set_phase(Phase.Lobby)
