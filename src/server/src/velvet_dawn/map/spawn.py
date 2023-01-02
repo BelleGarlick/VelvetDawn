@@ -65,8 +65,8 @@ def allocate_spawn_points(config: Config):
         for p in spawn_area:
             db.session.add(SpawnArea(
                 team=teams[i].team_id,
-                pos_x=p.x,
-                pos_y=p.y,
+                x=p.x,
+                y=p.y,
             ))
         db.session.commit()
 
@@ -86,7 +86,7 @@ def is_point_spawnable(user: str, x: int, y: int):
     """ Check if the given point exists within the player's spawn territory """
     team = velvet_dawn.teams.get_team_for_player(user)
     item = db.session.query(SpawnArea) \
-        .where(SpawnArea.team == team.team_id, SpawnArea.pos_y == y, SpawnArea.pos_x == x) \
+        .where(SpawnArea.team == team.team_id, SpawnArea.y == y, SpawnArea.x == x) \
         .one_or_none()
 
     return bool(item)

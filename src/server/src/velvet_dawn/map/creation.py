@@ -24,7 +24,6 @@ def new(config: Config):
 
     tiles = datapacks.tiles.values()
 
-    # TODO This should be strings in a set not list
     map: List[List[Set[str]]] = [
         [{tile.id for tile in tiles} for _ in range(config.map_height)]
         for _ in range(config.map_width)

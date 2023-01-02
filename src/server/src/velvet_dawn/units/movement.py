@@ -43,8 +43,8 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
     # Update the entity to the new position based on the path and the remaining moves
     entity.set_attribute("movement.remaining", remaining_moves)
     db.session.query(UnitInstance).where(UnitInstance.id == entity.id).update({
-        UnitInstance.pos_x: path[-1]['x'],
-        UnitInstance.pos_y: path[-1]['y']
+        UnitInstance.x: path[-1]['x'],
+        UnitInstance.y: path[-1]['y']
     })
     db.session.commit()
 
@@ -67,7 +67,7 @@ def _validate_entity_traversing_path(entity: UnitInstance, path: List[Dict[str, 
     tiles = [velvet_dawn.map.get_tile(point['x'], point['y']) for point in path]
     remaining_moves = get_remaining_moves(entity)
 
-    if tiles[0].x != entity.pos_x or tiles[0].y != entity.pos_y:
+    if tiles[0].x != entity.x or tiles[0].y != entity.y:
         raise errors.EntityMovementErrorInvalidStartPos()
 
     for i, tile in enumerate(tiles):
@@ -80,7 +80,7 @@ def _validate_entity_traversing_path(entity: UnitInstance, path: List[Dict[str, 
 
         # If the player already exists in this tile then we don't need to
         # check if it's valid or decrement the remaining moves
-        if tile.x == entity.pos_x and tile.y == entity.pos_y:
+        if tile.x == entity.x and tile.y == entity.y:
             continue
 
         tile_definition = velvet_dawn.datapacks.tiles.get(tile.tile_id)

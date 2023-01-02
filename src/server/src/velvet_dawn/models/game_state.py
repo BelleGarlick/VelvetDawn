@@ -1,7 +1,7 @@
 import dataclasses
 from typing import List
 
-from velvet_dawn.dao.models import Player, Team, SpawnArea, Entity
+from velvet_dawn.dao.models import Player, Team, SpawnArea, UnitInstance
 from velvet_dawn.dao.models.attributes import UnitAttribute, TileAttribute
 from velvet_dawn.models.game_setup import GameSetup
 
@@ -31,7 +31,7 @@ class GameState:
     teams: List[Team]
     setup: GameSetup
     spawn_area: List[SpawnArea]
-    entities: List[Entity]
+    entities: List[UnitInstance]
     turn: TurnData
     unit_attr_changes: List[UnitAttribute]
     tile_attr_changes: List[TileAttribute]

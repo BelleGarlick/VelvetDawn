@@ -16,8 +16,16 @@ class UnitInstance(db.Model):
     entity_id = db.Column(db.Text, nullable=False)
 
     # Grid position
-    pos_x = db.Column(db.Integer, nullable=False)
-    pos_y = db.Column(db.Integer, nullable=False)
+    x = db.Column(db.Integer, nullable=False)
+    y = db.Column(db.Integer, nullable=False)
+
+    @property
+    def pos_x(self):
+        return self.x
+
+    @property
+    def pos_y(self):
+        return self.y
 
     def get_attribute(self, key: str, _type=None, default=None):
         value = db.session.query(UnitAttribute)\
@@ -59,12 +67,7 @@ class UnitInstance(db.Model):
             "player": self.player,
             "entity": self.entity_id,
             "position": {
-                "x": self.pos_x,
-                "y": self.pos_y
+                "x": self.x,
+                "y": self.y
             }
         }
-
-
-# TODO Remove this over time, is here for backwards compatibility
-Entity = UnitInstance
-Unit = UnitInstance

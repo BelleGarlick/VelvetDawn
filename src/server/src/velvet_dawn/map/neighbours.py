@@ -23,10 +23,19 @@ def get_neighbours(coord: Coordinate, config: Config):
         Coordinate(x=coord.x + 1, y=coord.y + 1 if is_odd else coord.y),
     ]
 
-    oords = [
-        coord for coord in coords
-        if 0 <= coord.x < config.map_width and 0 <= coord.y < config.map_height
-    ]
+    oords = list(filter(lambda coord: 0 <= coord.x < config.map_width and 0 <= coord.y < config.map_height, coords))
     __neighbour_cache[coord.__hash__()] = oords
 
     return oords
+
+
+# TODO Test
+def get_neighbours_in_range(current_tile, tile_range, config: Config):
+    neighbours = {current_tile}
+    for _ in range(tile_range):
+        new_neighbours = set()
+        for oord in neighbours:
+            # load all neighbours regardless of the map size as we'll filter later
+            new_neighbours.update(get_neighbours(oord, config=config))
+        neighbours.update(new_neighbours)
+    return neighbours

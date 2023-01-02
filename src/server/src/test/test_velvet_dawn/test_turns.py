@@ -88,11 +88,11 @@ class TestGameTurns(BaseTest):
 
             # Setup the game state
             velvet_dawn.datapacks.init(test_config)
-            velvet_dawn.map.new(config)
+            velvet_dawn.map.new(test_config)
             velvet_dawn.players.join("player1", "password")
             velvet_dawn.game.phase._set_phase(Phase.Lobby)
             velvet_dawn.game.setup.update_setup("civil-war:commander", 1)
-            velvet_dawn.game.phase.start_setup_phase(config)
+            velvet_dawn.game.phase.start_setup_phase(test_config)
             velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", test_config.map_width // 2, 0)
 
             unit = velvet_dawn.units.list("player1")[0]

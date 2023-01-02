@@ -81,8 +81,8 @@ class TestSetup(BaseTest):
             velvet_dawn.game.setup.update_setup("civil-war:musketeers", 2)
             velvet_dawn.game.phase._set_phase(Phase.Setup)
 
-            # Test creating twos commander is an issue and that a commander can be removed and readded
-            # also testing that removing an entity with no entity to remove will rause an error
+            # Test creating twos commander is an issue and that a commander can be removed and re-added
+            # also testing that removing an entity with no entity to remove will raise an error
             velvet_dawn.game.setup.place_entity("playerA", "civil-war:commander", 24, 0)
             with self.assertRaises(errors.ValidationError):
                 velvet_dawn.game.setup.place_entity("playerA", "civil-war:commander", 26, 0)

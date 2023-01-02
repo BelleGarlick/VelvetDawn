@@ -4,7 +4,7 @@ import velvet_dawn.teams
 from velvet_dawn import constants
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import Entity
+from velvet_dawn.dao.models import UnitInstance
 from velvet_dawn.dao.models.attributes import TileAttribute, UnitAttribute
 
 from velvet_dawn.models.game_state import GameState
@@ -28,7 +28,7 @@ def get_state(config: Config, user: str, full_state: bool = False):
     if current_phase == Phase.Setup:
         spawn_area = velvet_dawn.map.spawn.get_allocated_spawn_area(user)
 
-    entities = db.session.query(Entity).all()
+    entities = db.session.query(UnitInstance).all()
 
     # Get the latest attribute changes
     valid_update_time_bound = time.time() - constants.PARTIAL_GAME_STATE_TIME

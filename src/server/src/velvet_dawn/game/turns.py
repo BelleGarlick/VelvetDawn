@@ -5,7 +5,7 @@ from velvet_dawn import errors
 import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import Keys, Player, Team, Entity as DbEntity
+from velvet_dawn.dao.models import Keys, Player, Team
 from velvet_dawn.logger import logger
 from velvet_dawn.models.game_state import TurnData
 from velvet_dawn.models.phase import Phase

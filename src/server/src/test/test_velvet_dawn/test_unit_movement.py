@@ -78,8 +78,8 @@ class TestUnitMovement(BaseTest):
             unit = velvet_dawn.units.get_unit_by_id(entity.id)
             self.assertEqual(2, unit.get_attribute("movement.remaining", _type=int))
 
-            self.assertEqual(unit.pos_x, first_pos['x'])
-            self.assertEqual(unit.pos_y, first_pos['y'])
+            self.assertEqual(unit.x, first_pos['x'])
+            self.assertEqual(unit.y, first_pos['y'] + 1)
 
     def test_validate_entity_traversing_path(self):
         with app.app_context():

@@ -39,10 +39,10 @@ class TestMapSpawning(BaseTest):
 
             items = db.session.query(SpawnArea).all()
             self.assertEqual(2, len(items))
-            self.assertEqual(7, items[0].pos_x)
-            self.assertEqual(0, items[0].pos_y)
-            self.assertEqual(6, items[1].pos_x)
-            self.assertEqual(13, items[1].pos_y)
+            self.assertEqual(7, items[0].x)
+            self.assertEqual(0, items[0].y)
+            self.assertEqual(6, items[1].x)
+            self.assertEqual(13, items[1].y)
 
     def test_allocate_spawn_points_2(self):
         """ Same test as above but with different teams/sizes """
