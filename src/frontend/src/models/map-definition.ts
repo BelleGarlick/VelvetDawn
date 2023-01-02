@@ -4,11 +4,10 @@ export interface TileInstance {
 
     tileId: string
 
-    x: number
-    y: number,
-
-    color: string
-    texture: string | undefined
+    position: {
+        x: number
+        y: number
+    }
 }
 
 

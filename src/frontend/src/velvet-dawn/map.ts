@@ -26,6 +26,7 @@ export class VelvetDawnMap {
 
     // Tile entities
     private map: TileEntity[][] = []  // Store tile entities in grid
+    public tilesById: { [key: string]: TileEntity } = {}
     public tiles: TileEntity[];  // Store the same entity objects but in a list
 
     // Unit Entities
@@ -50,8 +51,9 @@ export class VelvetDawnMap {
             }
 
             this.tiles = mapDef.tiles.map((tile) => {
-                let tileEntity = new TileEntity(tile.id, tile.tileId, tile.x, tile.y, tile.color, tile.texture)
-                this.map[tile.x][tile.y] = tileEntity;
+                let tileEntity = new TileEntity(tile.id, tile.tileId, tile.position)
+                this.tilesById[tile.id] = tileEntity
+                this.map[tile.position.x][tile.position.y] = tileEntity;
                 return tileEntity
             })
         })
@@ -151,17 +153,17 @@ export class VelvetDawnMap {
                 const neighbours = this.getNeighbours(nextCell.position)
                 neighbours.forEach((tile) => {
                     const tileHash = hashPosition(tile.position)
-                    const tileDefinition = VelvetDawn.datapacks.tiles[tile.entityId];
+                    const isTraversable = tile.attributes['movement.traversable'] ?? true
+                    const movementWeight = tile.attributes['movement.weight'] ?? 1
 
                     const isNew = !checkedCoordinates.has(tileHash) && !uncheckedCoordinates.has(tileHash)
-                    const isTraversable = tileDefinition.movement.traversable
                         && this.getUnitAtPosition(tile.position) === undefined
 
                     if (isNew && isTraversable) {
                         uncheckedCoordinates.add(tileHash)
                         uncheckedCells.push({
                             position: tile.position,
-                            weight: nextCell.weight - tileDefinition.movement.weight,
+                            weight: nextCell.weight - movementWeight,
                             previous: nextCell
                         })
                     }
@@ -226,7 +228,6 @@ export class VelvetDawnMap {
             this.units[entityId] = unitEntity
             newMapEntities[VelvetDawnMap.hashCoordinate(serverEntity.position)] = unitEntity
             unitEntity.setPosition(serverEntity.position)
-            unitEntity.remainingMovement = serverEntity.movement.remaining
         });
 
         // Replace the instance map with the new one
@@ -239,6 +240,13 @@ export class VelvetDawnMap {
                 delete this.units[entityId]
                 delete this.unitInstanceMap[VelvetDawnMap.hashCoordinate(unit.getPosition())]
             }
+        })
+
+        state.tileAttrChanges.forEach((attrUpdate) => {
+            this.tilesById[attrUpdate.instanceId].attributes[attrUpdate.key] = attrUpdate.value
+        })
+        state.unitAttrChanges.forEach((attrUpdate) => {
+            this.units[attrUpdate.instanceId].attributes[attrUpdate.key] = attrUpdate.value
         })
     }
 

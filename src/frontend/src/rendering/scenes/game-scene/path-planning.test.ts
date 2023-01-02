@@ -34,23 +34,14 @@ const setupMap = async (): Promise<VelvetDawnMap> => {
     const map = new VelvetDawnMap();
     await map.init()
 
-    VelvetDawn.datapacks.tiles = {
-        "test:grass": {
-            id: "tile:grass",
-            name: "Grass",
-            movement: { weight: 1, traversable: true }
-        },
-        "test:void": {
-            id: "test:void",
-            name: "Void",
-            movement: { weight: 3, traversable: true }
-        },
-        "test:wall": {
-            id: "test:wall",
-            name: "Wall",
-            movement: { weight: 1, traversable: false }
-        }
-    }
+    map.updateState({
+        ...VelvetDawn.getState(),
+        tileAttrChanges: [
+            {instanceId: "1", key: "movement.weight", value: 3},
+            {instanceId: "3", key: "movement.weight", value: 3},
+            {instanceId: "4", key: "movement.traversable", value: false}
+        ]
+    })
 
     return new Promise((resolve) => {
         resolve(map)

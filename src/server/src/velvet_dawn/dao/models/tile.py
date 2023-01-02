@@ -31,12 +31,14 @@ class TileInstance(db.Model):
         return default
 
     def create_attribute_db_object(self, key, value):
-        return TileAttribute(
+        attr = TileAttribute(
             instance_id=self.id,
             key=key,
-            value=str(value),
             update_time=int(time.time())
         )
+        if value is not None:
+            attr.value = str(value)
+        return attr
 
     def set_attribute(self, key: str, value, commit=True):
         db.session.query(TileAttribute)\
@@ -52,19 +54,11 @@ class TileInstance(db.Model):
 
     def json(self):
         return {
-            "id": self.x * 10000 + self.y,
+            "id": self.id,
             "tileId": self.tile_id,
             "position": {
                 "x": self.x,
                 "y": self.y
-            },
-            "texture": self.texture_variant,
-            "color": self.color,
-            "attributes": {
-                attribute.key: attribute.value
-                for attribute in db.session.query(TileAttribute).where(
-                    TileAttribute.instance_id == self.id
-                ).all()
             }
         }
 

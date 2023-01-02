@@ -66,7 +66,8 @@ def new(config: Config):
         tile = datapacks.tiles[db_tile.tile_id]
         tile.attributes.set("texture.color", value=tile.textures.choose_color())
         tile.attributes.set("texture.background", value=tile.textures.choose_image())
-        tile_attributes += tile.attributes.get_db_objects(db_tile)
+        attrs = tile.attributes.get_db_objects(db_tile)
+        tile_attributes += attrs
     db.session.bulk_save_objects(tile_attributes)
     db.session.commit()
 

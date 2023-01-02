@@ -31,6 +31,16 @@ class UnitInstance(db.Model):
 
         return default
 
+    def create_attribute_db_object(self, key, value):
+        attr = UnitAttribute(
+            instance_id=self.id,
+            key=key,
+            update_time=int(time.time())
+        )
+        if value is not None:
+            attr.value = str(value)
+        return attr
+
     def set_attribute(self, key: str, value, commit=True):
         db.session.query(UnitAttribute)\
             .where(
@@ -38,12 +48,7 @@ class UnitInstance(db.Model):
                 UnitAttribute.key == key
             ).delete()
 
-        db.session.add(UnitAttribute(
-            instance_id=self.id,
-            key=key,
-            value=str(value),
-            update_time=int(time.time())
-        ))
+        db.session.add(self.create_attribute_db_object(key, value))
 
         if commit:
             db.session.commit()
@@ -56,12 +61,6 @@ class UnitInstance(db.Model):
             "position": {
                 "x": self.pos_x,
                 "y": self.pos_y
-            },
-            "attributes": {
-                attribute.key: attribute.value
-                for attribute in db.session.query(UnitAttribute).where(
-                    UnitAttribute.instance_id == self.id
-                ).all()
             }
         }
 

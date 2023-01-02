@@ -14,7 +14,7 @@ export class UnitEntity extends Entity {
     private lastPosition: Position | undefined = undefined;
     private portion: number = 1
 
-    public remainingMovement: number = 0
+    public attributes: { [key: string]: any } = {}
 
     constructor(id: number, entityId: string, player: string) {
         super(id, entityId)

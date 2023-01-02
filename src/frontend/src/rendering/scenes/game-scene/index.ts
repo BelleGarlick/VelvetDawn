@@ -50,7 +50,7 @@ export class GameScene extends Scene {
             if (mapEntity && mapEntity.player === VelvetDawn.loginDetails.username && VelvetDawn.isPlayersTurn()) {
                 // This is for own clause, will need another clause for non-player owned entities
                 this.selectedEntity = mapEntity;
-                this.pathPlanning.computePaths(this.clickedTile.position, mapEntity.remainingMovement)
+                this.pathPlanning.computePaths(this.clickedTile.position, mapEntity.attributes['movement.remaining'] ?? 0)
             }
             else if (mapEntity) {
                 this.selectedEntity = mapEntity;
@@ -100,7 +100,7 @@ export class GameScene extends Scene {
         if (this.selectedEntity
                 && VelvetDawn.isPlayersTurn()
                 && this.selectedEntity.player === VelvetDawn.loginDetails.username) {
-            this.pathPlanning.computePaths(this.selectedEntity.getPosition(), this.selectedEntity.remainingMovement)
+            this.pathPlanning.computePaths(this.selectedEntity.getPosition(), this.selectedEntity.attributes['movement.remaining'] ?? 0)
         }
 
         return null

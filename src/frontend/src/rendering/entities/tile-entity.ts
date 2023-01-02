@@ -22,16 +22,12 @@ export class TileEntity extends Entity {
 
     public isSpawnArea: boolean = false
 
-    private readonly textureVariant: string
-    private readonly color: string
+    public attributes: { [key: string]: any } = {}
 
-    constructor(instanceId: number, tileId: string, x: number, y: number, color: string, textureVariant: string) {
+    constructor(instanceId: number, tileId: string, position: Position) {
         super(instanceId, tileId)
 
-        this.position = {x: x, y: y};
-
-        this.color = color;
-        this.textureVariant = textureVariant;
+        this.position = position
     }
 
     render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): null {
@@ -59,12 +55,13 @@ export class TileEntity extends Entity {
         }
 
         ctx.globalAlpha = this.isSpawnArea ? 0.5 : 1
-        ctx.fillStyle = this.color
+        ctx.fillStyle = this.attributes['texture.color'] ?? "#ff6699"
         ctx.fillRect(imageStart, imageEnd, imageHeight, imageHeight)
 
         // Render texture
-        if (this.textureVariant) {
-            const texture = Textures.get(this.textureVariant)
+        const backgroundTexture = this.attributes['texture.background']
+        if (backgroundTexture) {
+            const texture = Textures.get(backgroundTexture)
             ctx.drawImage(
                 texture,
                 0, 0,

@@ -62,7 +62,7 @@ def get_game_state(user):
 @api_wrapper(return_state=True)
 def move_unit(user):
     try:
-        entity_pk = request.form.get("entity")
+        entity_pk = int(request.form.get("entity"))
         path = json.loads(request.form.get("path"))
     except Exception:
         raise errors.ValidationError(
@@ -89,7 +89,7 @@ def load_webpage():
         return file.read()
 
 
-@app.route("/app.js")
+@app.errorhandler(404)
 def load_app():
     path = Path(__file__).parent.parent.parent.parent.parent / "frontend" / "dist" / "app.js"
     with open(path) as file:

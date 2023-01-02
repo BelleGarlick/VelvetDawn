@@ -78,6 +78,9 @@ class TestUnitMovement(BaseTest):
             unit = velvet_dawn.units.get_unit_by_id(entity.id)
             self.assertEqual(2, unit.get_attribute("movement.remaining", _type=int))
 
+            self.assertEqual(unit.pos_x, first_pos['x'])
+            self.assertEqual(unit.pos_y, first_pos['y'])
+
     def test_validate_entity_traversing_path(self):
         with app.app_context():
             test_config, entity_position = setup_game()

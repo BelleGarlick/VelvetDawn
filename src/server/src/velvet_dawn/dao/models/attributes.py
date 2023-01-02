@@ -11,6 +11,13 @@ class UnitAttribute(db.Model):
 
     update_time = db.Column(db.Integer, nullable=False)
 
+    def json(self):
+        return {
+            "instanceId": self.instance_id,
+            "key": self.key,
+            "value": self.value
+        }
+
 
 class TileAttribute(db.Model):
     __tablename__ = 'tile_attributes'
@@ -21,3 +28,10 @@ class TileAttribute(db.Model):
     value = db.Column(db.String)
 
     update_time = db.Column(db.Integer, nullable=False)
+
+    def json(self):
+        return {
+            "instanceId": self.instance_id,
+            "key": self.key,
+            "value": self.value
+        }

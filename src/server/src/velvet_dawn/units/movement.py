@@ -4,6 +4,7 @@ import velvet_dawn
 from velvet_dawn import errors
 import velvet_dawn.map.neighbours
 from velvet_dawn.config import Config
+from velvet_dawn.dao import db
 from velvet_dawn.models import Phase, Coordinate
 from velvet_dawn.dao.models import Player, UnitInstance
 
@@ -41,6 +42,11 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
 
     # Update the entity to the new position based on the path and the remaining moves
     entity.set_attribute("movement.remaining", remaining_moves)
+    db.session.query(UnitInstance).where(UnitInstance.id == entity.id).update({
+        UnitInstance.pos_x: path[-1]['x'],
+        UnitInstance.pos_y: path[-1]['y']
+    })
+    db.session.commit()
 
 
 def _validate_entity_traversing_path(entity: UnitInstance, path: List[Dict[str, int]], config: Config) -> int:

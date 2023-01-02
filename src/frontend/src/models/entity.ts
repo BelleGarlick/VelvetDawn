@@ -6,8 +6,5 @@ export interface Entity {
     commander: boolean,
     textures: {
         background: string
-    },
-    movement: {
-        range: number
     }
 }

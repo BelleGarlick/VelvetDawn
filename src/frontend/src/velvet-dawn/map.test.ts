@@ -64,26 +64,13 @@ const setupMap = async (setupEntity: boolean): Promise<VelvetDawnMap> => {
             ...VelvetDawn.getState(),
             entities: {
                 0: {...blankEntity, id: 0, position: {x: 0, y: 0}}
-            }
+            },
+            tileAttrChanges: [
+                {instanceId: "1", key: "movement.weight", value: 3},
+                {instanceId: "3", key: "movement.weight", value: 3},
+                {instanceId: "4", key: "movement.traversable", value: false}
+            ]
         })
-
-    VelvetDawn.datapacks.tiles = {
-        "test:grass": {
-            id: "tile:grass",
-            name: "Grass",
-            movement: { weight: 1, traversable: true }
-        },
-        "test:void": {
-            id: "test:void",
-            name: "Void",
-            movement: { weight: 3, traversable: true }
-        },
-        "test:wall": {
-            id: "test:wall",
-            name: "Wall",
-            movement: { weight: 1, traversable: false }
-        }
-    }
 
     return new Promise((resolve) => {
         resolve(map)

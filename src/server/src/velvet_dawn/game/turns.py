@@ -141,7 +141,6 @@ def begin_next_turn():
     for player in players:
         for unit in velvet_dawn.units.list(player=player.name):
             unit.set_attribute("movement.remaining", unit.get_attribute("movement.range", default=1), commit=False)
-    db.session.commit()
 
     _update_turn_start_time()
 

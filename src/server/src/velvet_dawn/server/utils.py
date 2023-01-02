@@ -15,6 +15,7 @@ def api_wrapper(return_state: bool = False, host_only: bool = False):
         def wrapper(*args, **kwargs):
             username = request.form.get("username", request.args.get("username", None))
             password = request.form.get("password", request.args.get("password", None))
+            full_game_state = request.form.get("full-state", request.args.get("full-state", None))
 
             user = velvet_dawn.players.get_player(username)
             if not user:
@@ -30,7 +31,7 @@ def api_wrapper(return_state: bool = False, host_only: bool = False):
                 response = fun(*args, **kwargs)
 
                 if return_state:
-                    return velvet_dawn.game.get_state(config, username).json()
+                    return velvet_dawn.game.get_state(config, username, full_state=full_game_state == "true").json()
 
                 return response
 

@@ -7,9 +7,5 @@ export interface EntityInstance {
     position: {
         x: number,
         y: number
-    },
-    movement: {
-        remaining: number
-        range: number
     }
 }

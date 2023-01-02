@@ -17,6 +17,7 @@ export class VelvetDawn {
     public static mapWidth = 0
     public static mapHeight = 0
 
+    private static firstLoad: boolean = true
     private static state: GameState = createBlankState()
 
     public static map: VelvetDawnMap;
@@ -42,7 +43,11 @@ export class VelvetDawn {
     }
 
     static refreshGameState() {
-        return Api.game.getState().then(VelvetDawn.setState)
+        if (this.firstLoad) {
+            this.firstLoad = false
+            return Api.game.getState(true).then(VelvetDawn.setState)
+        } else
+            return Api.game.getState(false).then(VelvetDawn.setState)
     }
 
     static getPlayer(): Player {
