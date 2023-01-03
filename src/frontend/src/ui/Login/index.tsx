@@ -19,7 +19,7 @@ export function Login({ loginDetails, setLoginDetails, setView }: { loginDetails
             })
     }
 
-    // join()
+    join()
 
     return <>
         <Text>Welcome to Velvet Dawn</Text>

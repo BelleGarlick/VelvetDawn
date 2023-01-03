@@ -11,6 +11,9 @@
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/lab": "^5.0.0-alpha.114",
+    "@mui/material": "^5.11.3",
     "@types/react": "^17.0.40",
     "@types/react-dom": "^17.0.13",
     "axios": "^0.27.2",

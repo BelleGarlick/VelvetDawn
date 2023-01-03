@@ -182,6 +182,7 @@ export class Renderer {
 
     static startScene() {
         const renderer = Renderer.getInstance()
+        renderer.facade.recalculateConstants()
         renderer.getScene().onStart(renderer.facade)
     }
 }

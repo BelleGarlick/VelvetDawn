@@ -3,7 +3,7 @@ import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import * as Api from "api"
 import {LobbyUsers} from "./LobbyUsers";
 import {LobbyUnits} from "./LobbyUnits";
-import {ViewState, GameSetup} from "models";
+import {GameSetup, ViewState} from "models";
 import {Renderer} from "../../rendering/Renderer";
 
 
@@ -47,10 +47,15 @@ export function Lobby({ setView }: { setView: (x: ViewState) => void }) {
         {tab === 0 && <LobbyUsers state={state} />}
         {tab === 1 && <LobbyUnits setup={gameSetup} setSetup={setGameSetup} />}
 
-        {userIsAdmin && <button onClick={() => {
-            Api.setup.startSetup().then(x => {
-                VelvetDawn.setState(x)
-            })
-        }}>Start</button>}
+        {userIsAdmin && (<>
+            <button onClick={() => {
+                Api.setup.startSetup().then(x => {
+                    VelvetDawn.setState(x)
+                })
+            }}>Start</button>
+            <button onClick={() => {
+                setView(ViewState.DatapackEditor)
+            }}>Datapack Editor</button>
+        </>)}
     </>
 }

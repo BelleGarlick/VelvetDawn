@@ -8,6 +8,7 @@ import {ViewContainer} from "ui/ViewContainer";
 import {ViewState} from "models";
 import * as ReactDOM from 'react-dom';
 import {GameView} from "ui/GameView";
+import {DatapackEditor} from "ui/DatapackEditor";
 
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
 
     return <InitialResourceLoadingScreen>
         <>
+            {view === ViewState.DatapackEditor && <DatapackEditor />}
             {view === ViewState.Login && <ViewContainer>
                 <Login setView={setView} loginDetails={loginDetails} setLoginDetails={setLoginDetails}/>
             </ViewContainer>}
