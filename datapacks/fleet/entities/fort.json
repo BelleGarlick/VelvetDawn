@@ -9,7 +9,7 @@
       },
     "combat": {
       "range": 6,
-      "attack": "50",
+      "attack": 50,
       "defense": 0
     },
     "tags": [

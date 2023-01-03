@@ -9,7 +9,7 @@
       },
     "combat": {
       "range": 4,
-      "attack": "100",
+      "attack": 100,
       "defense": 0
     },
     "textures": {
