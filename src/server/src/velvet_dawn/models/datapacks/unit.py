@@ -80,7 +80,7 @@ def _parse_movement(unit_id: str, attributes: Attributes, data: dict):
     movement_range = data.get("range", constants.UNIT_DEFAULT_MOVEMENT_RANGE)
 
     # Validate
-    velvet_dawn.validations.is_int(movement_range, min=1, error_prefix=f"{unit_id} movement range")
+    velvet_dawn.validations.is_int(movement_range, min=0, error_prefix=f"{unit_id} movement range")
 
     # Set
     attributes.set("movement.remaining", value=0)
