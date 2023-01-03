@@ -1,4 +1,5 @@
 import * as React from "react";
+import {getResourceUrl} from "api/utils";
 
 
 export function ViewContainer({ children }: { children: React.ReactElement | React.ReactElement[] }) {
@@ -18,7 +19,7 @@ export function ViewContainer({ children }: { children: React.ReactElement | Rea
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             zIndex: '-1',
-            backgroundImage: 'url(https://i.pinimg.com/originals/17/b4/2a/17b42a875d9e3606898cd7bec266b6e1.jpg)'
+            backgroundImage: `url(${getResourceUrl('base:textures.ui.background.background.png')})`
         }}>
         </div>
 

@@ -1,8 +1,7 @@
-import { Perspective } from "rendering/perspective";
 import {Textures} from "../Textures";
 import {Entity} from "./entity";
-import {RenderingConstants} from "../scenes/scene";
 import {Position} from "models";
+import {RenderingFacade} from "../facade";
 
 
 export enum Highlight {
@@ -30,39 +29,39 @@ export class TileEntity extends Entity {
         this.position = position
     }
 
-    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): null {
+    render(facade: RenderingFacade): null {
         const {
             visible, imageStart, imageEnd, clipPoints, imageWidth, imageHeight
-        } = perspective.getTileRenderingConstants(this.position, constants);
+        } = facade.perspective.getTileRenderingConstants(this.position, facade.constants);
 
         if (!visible)
             return
 
-        ctx.save();
+        facade.ctx.save();
 
         // Create Hexagon to clip the image
-        ctx.beginPath();
-        ctx.moveTo(clipPoints[5].x, clipPoints[5].y);
+        facade.ctx.beginPath();
+        facade.ctx.moveTo(clipPoints[5].x, clipPoints[5].y);
         clipPoints.forEach(({x, y}) => {
-            ctx.lineTo(x, y);
+            facade.ctx.lineTo(x, y);
         })
-        ctx.closePath();
-        ctx.clip();
+        facade.ctx.closePath();
+        facade.ctx.clip();
 
         if (this.isSpawnArea) {
-            ctx.fillStyle = "#00ff00"
-            ctx.fillRect(imageStart, imageEnd, imageHeight, imageHeight)
+            facade.ctx.fillStyle = "#00ff00"
+            facade.ctx.fillRect(imageStart, imageEnd, imageHeight, imageHeight)
         }
 
-        ctx.globalAlpha = this.isSpawnArea ? 0.5 : 1
-        ctx.fillStyle = this.attributes['texture.color'] ?? "#ff6699"
-        ctx.fillRect(imageStart, imageEnd, imageHeight, imageHeight)
+        facade.ctx.globalAlpha = this.isSpawnArea ? 0.5 : 1
+        facade.ctx.fillStyle = this.attributes['texture.color'] ?? "#ff6699"
+        facade.ctx.fillRect(imageStart, imageEnd, imageHeight, imageHeight)
 
         // Render texture
         const backgroundTexture = this.attributes['texture.background']
         if (backgroundTexture) {
             const texture = Textures.get(backgroundTexture)
-            ctx.drawImage(
+            facade.ctx.drawImage(
                 texture,
                 0, 0,
                 texture.width, texture.height,
@@ -70,29 +69,29 @@ export class TileEntity extends Entity {
                 imageWidth, imageHeight
             )
         }
-        ctx.globalAlpha = 1
+        facade.ctx.globalAlpha = 1
 
         if (this.hovered) {
-            ctx.strokeStyle = "black"
-            ctx.lineWidth = 5
-            ctx.beginPath();
-            ctx.moveTo(clipPoints[5].x, clipPoints[5].y);
-            clipPoints.forEach(({x, y}) => ctx.lineTo(x, y));
-            ctx.closePath();
-            ctx.stroke();
+            facade.ctx.strokeStyle = "black"
+            facade.ctx.lineWidth = 5
+            facade.ctx.beginPath();
+            facade.ctx.moveTo(clipPoints[5].x, clipPoints[5].y);
+            clipPoints.forEach(({x, y}) => facade.ctx.lineTo(x, y));
+            facade.ctx.closePath();
+            facade.ctx.stroke();
         }
 
         if (this.selected) {
-            ctx.strokeStyle = "black"
-            ctx.lineWidth = 10
-            ctx.beginPath();
-            ctx.moveTo(clipPoints[5].x, clipPoints[5].y);
-            clipPoints.forEach(({x, y}) => ctx.lineTo(x, y));
-            ctx.closePath();
-            ctx.stroke();
+            facade.ctx.strokeStyle = "black"
+            facade.ctx.lineWidth = 10
+            facade.ctx.beginPath();
+            facade.ctx.moveTo(clipPoints[5].x, clipPoints[5].y);
+            clipPoints.forEach(({x, y}) => facade.ctx.lineTo(x, y));
+            facade.ctx.closePath();
+            facade.ctx.stroke();
         }
 
-        ctx.restore();
+        facade.ctx.restore();
 
         return null
     }

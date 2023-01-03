@@ -1,5 +1,5 @@
-import {Perspective} from "../../perspective";
 import {ButtonBase} from "./button-base";
+import {RenderingFacade} from "../../facade";
 
 
 export class Button extends ButtonBase {
@@ -15,15 +15,17 @@ export class Button extends ButtonBase {
         this.height = height
     }
 
-    public render(ctx: CanvasRenderingContext2D, perspective: Perspective): null {
-        ctx.fillStyle = "#ff0000"
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+    public render(facade: RenderingFacade): null {
+        facade.ctx.beginPath()
+        facade.ctx.fillStyle = "#ff0000"
+        facade.ctx.fillRect(this.x, this.y, this.width, this.height)
 
-        ctx.font = "40px 'Velvet Dawn'";
-        ctx.fillStyle = this._textColor
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(this._text, this.x + this.width / 2, this.y + this.height / 2)
+        facade.ctx.font = "40px 'Velvet Dawn'";
+        facade.ctx.fillStyle = this._textColor
+        facade.ctx.textAlign = 'center';
+        facade.ctx.textBaseline = 'middle';
+        facade.ctx.fillText(this._text, this.x + this.width / 2, this.y + this.height / 2)
+        facade.ctx.closePath()
 
         return null
     }

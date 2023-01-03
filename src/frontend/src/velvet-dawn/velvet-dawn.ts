@@ -12,10 +12,7 @@ export class VelvetDawn {
         password: "error",
     }
 
-    // Datapack Definitions
     public static datapacks = new Datapacks();
-    public static mapWidth = 0
-    public static mapHeight = 0
 
     private static firstLoad: boolean = true
     private static state: GameState = createBlankState()

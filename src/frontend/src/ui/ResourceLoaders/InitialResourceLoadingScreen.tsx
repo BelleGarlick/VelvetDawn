@@ -10,7 +10,6 @@ export function InitialResourceLoadingScreen({ children }: { children: React.Rea
     React.useEffect(() => {
         VelvetDawn.audioPlayers[MENU_AUDIO_ID] = new Audio(getResourceUrl(MENU_AUDIO_ID))
         const fontUrl = getResourceUrl(FONT_ID);
-        console.log(fontUrl)
         new FontFace('Velvet Dawn', `url(${fontUrl})`).load().then((loaded_face) => {
             // @ts-ignore
             document.fonts.add(loaded_face);

@@ -1,38 +1,37 @@
 import {RenderingConstants, Scene} from "../scene";
-import {Perspective} from "../../perspective";
-import {NextTurnButton} from "../../entities/buttons/next-turn-button";
 import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
 import {GameState} from "models";
 import {PathPlanning} from "./path-planning";
 import {UnitEntity} from "../../entities/unit-entity";
+import {GameViewSidebar} from "./sidebar";
+import {RenderingFacade} from "../../facade";
 
 
 export class GameScene extends Scene {
 
-    private nextTurnButton: NextTurnButton = null
+    private sidebar: GameViewSidebar
 
     private selectedEntity: UnitEntity;
     private pathPlanning = new PathPlanning();
 
-    onStart(constants: RenderingConstants): null {
+    /** Setup view components */
+    onStart(facade: RenderingFacade): null {
+        this.sidebar = new GameViewSidebar(facade.constants)
         this.turnBanner.title("Game Phase")
-        this.nextTurnButton = new NextTurnButton(constants);
 
         VelvetDawn.map.tiles.forEach(x => x.isSpawnArea = false)
 
         return null
     }
 
-    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, timeDelta: number): undefined {
-        this.renderTiles(ctx, perspective, constants)
-        this.pathPlanning.render(ctx, perspective, constants, this.hoveredTile?.position)
-        this.renderUnits(ctx, perspective, constants, timeDelta)
+    render(facade: RenderingFacade): undefined {
+        this.renderTiles(facade)
+        this.pathPlanning.render(facade.ctx, facade.perspective, facade.constants, this.hoveredTile?.position)
+        this.renderUnits(facade)
 
-        ctx.fillStyle = "#000000"
-        ctx.fillRect(constants.sidebarStart, 0, constants.sidebar, constants.height)
-
-        this.turnBanner.render(ctx, perspective, constants)
-        this.nextTurnButton.draw(ctx, perspective, constants, this.mousePosition)
+        this.turnBanner.render(facade)
+        this.sidebar.selectedEntity = this.selectedEntity
+        this.sidebar.render(facade)
 
         return undefined;
     }
@@ -68,10 +67,7 @@ export class GameScene extends Scene {
             }
 
         } else {
-            [this.nextTurnButton].forEach(button => {
-                if (button.isHovered({x, y}))
-                    button.performClick()
-            })
+            this.sidebar.clicked({x: x, y: y})
         }
 
         return null
@@ -80,7 +76,7 @@ export class GameScene extends Scene {
     keyboardInput(event: KeyboardEvent): null {
         // Ready up
         if (event.key === "Enter") {
-            this.nextTurnButton.performClick();
+            this.sidebar.nextTurnButton.performClick();
             event.preventDefault()
         }
 

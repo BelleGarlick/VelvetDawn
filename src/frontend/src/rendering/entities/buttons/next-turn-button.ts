@@ -4,6 +4,7 @@ import * as Api from "../../../api";
 import {RenderingConstants} from "../../scenes/scene";
 import {Perspective} from "../../perspective";
 import {Position} from "models";
+import {RenderingFacade} from "../../facade";
 
 
 export class NextTurnButton extends HexButton {
@@ -26,15 +27,15 @@ export class NextTurnButton extends HexButton {
             });
     }
 
-    draw(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, mousePosition: Position) {
+    draw(facade: RenderingFacade) {
         const playerReady = VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready
 
         this
-            .hovered(this.isHovered(mousePosition))
-            .setPos(constants.nextTurnButtonStartX, constants.nextTurnButtonStartY)
+            .hovered(this.isHovered(facade.mousePosition))
+            .setPos(facade.constants.nextTurnButtonStartX, facade.constants.nextTurnButtonStartY)
             .enabled(VelvetDawn.getState().setup.placedCommander)
             .text(playerReady ? "Unready" : "Ready")
             .backgroundColor(playerReady ? "#33bb00" : "#66dd00")
-            .render(ctx, perspective)
+            .render(facade)
     }
 }

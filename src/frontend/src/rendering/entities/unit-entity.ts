@@ -1,10 +1,9 @@
 import {Entity} from "./entity";
-import {Perspective} from "../perspective";
-import {RenderingConstants} from "../scenes/scene";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import {Textures} from "../Textures";
 import {Position} from "models";
 import * as geometry from '../../geometry'
+import {RenderingFacade} from "../facade";
 
 export class UnitEntity extends Entity {
 
@@ -22,20 +21,20 @@ export class UnitEntity extends Entity {
         this.player = player
     }
 
-    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, timeDelta: number): null {
+    render(facade: RenderingFacade): null {
         const entity = VelvetDawn.datapacks.entities[this.entityId]
         const texture = Textures.get(entity.textures.background)
 
-        ctx.fillStyle = "#000000"
-        const size = perspective.getUnitSize()
+        facade.ctx.fillStyle = "#000000"
+        const size = facade.perspective.getUnitSize()
 
-        let tilePosition = perspective.getTileCoordinates(this.position)
+        let tilePosition = facade.perspective.getTileCoordinates(this.position)
         if (this.lastPosition) {
-            let lastPos = perspective.getTileCoordinates(this.lastPosition)
+            let lastPos = facade.perspective.getTileCoordinates(this.lastPosition)
 
             const delta = geometry.sub(tilePosition, lastPos)
             const distance = geometry.length(delta)
-            const frameDistance = 5000 * constants.resolution * timeDelta
+            const frameDistance = 5000 * facade.constants.resolution * facade.timeDelta
             const portion = frameDistance / distance
             this.portion += portion
 
@@ -46,14 +45,12 @@ export class UnitEntity extends Entity {
             }
         }
 
-        ctx.drawImage(
+        facade.ctx.drawImage(
             texture,
             0, 0,
             texture.width, texture.height,
             tilePosition.x - size / 2, tilePosition.y - size / 2, size, size
         )
-
-        ctx.fill()
 
         return null
     }

@@ -12,15 +12,15 @@ jest.mock('api', () => {
                         width: 3,
                         height: 3,
                         tiles: [
-                            {id: 0, tileId: "test:grass", x: 0, y: 0, color: '#000000'},
-                            {id: 1, tileId: "test:void", x: 0, y: 1, color: '#000000'},
-                            {id: 2, tileId: "test:grass", x: 0, y: 2, color: '#000000'},
-                            {id: 3, tileId: "test:void", x: 1, y: 0, color: '#000000'},
-                            {id: 4, tileId: "test:wall", x: 1, y: 1, color: '#000000'},
-                            {id: 5, tileId: "test:grass", x: 1, y: 2, color: '#000000'},
-                            {id: 6, tileId: "test:grass", x: 2, y: 0, color: '#000000'},
-                            {id: 7, tileId: "test:grass", x: 2, y: 1, color: '#000000'},
-                            {id: 8, tileId: "test:grass", x: 2, y: 2, color: '#000000'},
+                            {id: 0, tileId: "test:grass", position: {x: 0, y: 0}, color: '#000000'},
+                            {id: 1, tileId: "test:void", position: {x: 0, y: 1}, color: '#000000'},
+                            {id: 2, tileId: "test:grass", position: {x: 0, y: 2}, color: '#000000'},
+                            {id: 3, tileId: "test:void", position: {x: 1, y: 0}, color: '#000000'},
+                            {id: 4, tileId: "test:wall", position: {x: 1, y: 1}, color: '#000000'},
+                            {id: 5, tileId: "test:grass", position: {x: 1, y: 2}, color: '#000000'},
+                            {id: 6, tileId: "test:grass", position: {x: 2, y: 0}, color: '#000000'},
+                            {id: 7, tileId: "test:grass", position: {x: 2, y: 1}, color: '#000000'},
+                            {id: 8, tileId: "test:grass", position: {x: 2, y: 2}, color: '#000000'},
                         ]
                     })
                 });
@@ -50,7 +50,7 @@ const setupMap = async (): Promise<VelvetDawnMap> => {
 
 // Test compute paths
 describe("Test compute paths", () => {
-    test("Compue paths create cache", async () => {
+    test("Compute paths create cache", async () => {
         const map = await setupMap()
 
         const pathPlanning = new PathPlanning(map);

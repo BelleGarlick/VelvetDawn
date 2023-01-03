@@ -1,33 +1,25 @@
 import {RenderingConstants, Scene} from "./scene";
-import {Perspective} from "../perspective";
 import {GameState} from "models";
+import {RenderingFacade} from "../facade";
 
 
 export class SpectatingScene extends Scene {
 
-    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, timeDelta: number): undefined {
-        this.renderTiles(ctx, perspective, constants)
-        this.renderUnits(ctx, perspective, constants, timeDelta)
-        this.turnBanner.render(ctx, perspective, constants)
+    render(facade: RenderingFacade): undefined {
+        this.renderTiles(facade)
+        this.renderUnits(facade)
+        this.turnBanner.render(facade)
 
         return undefined;
     }
 
-    onStart(constants: RenderingConstants): null {
+    onStart(facade: RenderingFacade): null {
         this.turnBanner.title("Spectating")
 
         return null
     }
 
-    clicked(constants: RenderingConstants, x: number, y: number): null {
-        return null
-    }
-
-    keyboardInput(event: KeyboardEvent): null {
-        return null
-    }
-
-    onStateUpdate(state: GameState): undefined {
-        return undefined;
-    }
+    clicked(constants: RenderingConstants, x: number, y: number): null { return null }
+    keyboardInput(event: KeyboardEvent): null { return null }
+    onStateUpdate(state: GameState): undefined { return undefined; }
 }

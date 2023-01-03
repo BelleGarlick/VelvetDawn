@@ -1,11 +1,12 @@
 import {TileEntity} from "../entities/tile-entity";
-import {Perspective} from "../perspective";
 import {TurnBanner} from "../entities/turn-banner";
-import {Position, GameState} from "models";
+import {GameState} from "models";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
+import {RenderingFacade} from "../facade";
 
 
 export interface RenderingConstants {
+    tabHeight: number;
     resolution: number
 
     width: number  // canvas width
@@ -26,35 +27,28 @@ export interface RenderingConstants {
 
 export abstract class Scene {
 
-    protected mousePosition: Position | undefined = undefined
-
     protected readonly turnBanner = new TurnBanner();
 
     public hoveredTile: TileEntity | undefined = undefined;
     protected clickedTile: TileEntity | undefined = undefined;
 
-    abstract onStart(constants: RenderingConstants): undefined;
+    abstract onStart(facade: RenderingFacade): undefined;
     abstract onStateUpdate(state: GameState): undefined;
 
-    abstract render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, timeDelta: number): undefined;
+    abstract render(facade: RenderingFacade): undefined;
 
     abstract clicked(renderingConstants: RenderingConstants, x: number, y: number): undefined
 
-    public setMousePosition(position: Position | undefined) {
-        this.mousePosition = position
-    }
-
     abstract keyboardInput(event: KeyboardEvent): null
 
-    protected renderTiles(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants) {
-        VelvetDawn.map.tiles.forEach(tile => tile.render(ctx, perspective, constants))
+    protected renderTiles(facade: RenderingFacade) {
+        VelvetDawn.map.tiles.forEach(tile => tile.render(facade))
     }
 
-    protected renderUnits(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, timeDelta: number) {
+    protected renderUnits(facade: RenderingFacade) {
         // TODO Entity culling and updating if pos is outside window + 1 border for animating
         VelvetDawn.map.allUnits().forEach(unit => {
-            unit.render(ctx, perspective, constants, timeDelta)
+            unit.render(facade)
         })
-
     }
 }

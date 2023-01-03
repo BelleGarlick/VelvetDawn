@@ -152,11 +152,13 @@ export class PathPlanning {
                     ctx.closePath();
                     ctx.clip();
 
+                    ctx.beginPath()
                     ctx.globalAlpha = 0.3
                     ctx.fillStyle = "#00ff00"
-                    ctx.rect(imageStart + 50, imageEnd + 50, imageWidth - 100, imageHeight - 100)
+                    ctx.rect(imageStart, imageEnd, imageWidth, imageHeight)
                     ctx.fill()
                     ctx.globalAlpha = 1
+                    ctx.closePath()
 
                     ctx.restore()
                 }
@@ -177,12 +179,14 @@ export class PathPlanning {
                     ctx.strokeStyle = "#ffffff"
                     ctx.lineWidth = 5 * constants.resolution
                     ctx.stroke()
+                    ctx.closePath()
 
                     path.forEach((pos, i) => {
                         if (i > 0) {
                             ctx.beginPath()
                             ctx.arc(pos.x, pos.y, 5 * constants.resolution, 0, 2 * Math.PI);
                             ctx.fill()
+                            ctx.closePath()
                         }
                     })
 

@@ -40,7 +40,7 @@ def _parse_health(unit_id: str, attributes: Attributes, data: dict):
         raise errors.ValidationError(f"{unit_id} max health must be greater than 0.")
 
     # Set values
-    attributes.set("health", "Health", value=0, icon="base:textures.ui.icons.health")
+    attributes.set("health", "Health", value=max_health, icon="base:textures.ui.icons.health.png")
     attributes.set("health.regen", value=regen)
     attributes.set("health.max", value=max_health)
 
@@ -64,8 +64,8 @@ def _parse_combat(unit_id: str, attributes: Attributes, data: dict):
     velvet_dawn.validations.is_int(combat_reload, min=0, error_prefix=f"{unit_id} combat reload")
 
     # Set
-    attributes.set("combat.attack", "Attack", value=combat_attack, icon="base:textures.ui.icons.attack")
-    attributes.set("combat.defense", "Defense", value=combat_defense, icon="base:textures.ui.icons.defense")
+    attributes.set("combat.attack", "Attack", value=combat_attack, icon="base:textures.ui.icons.attack.png")
+    attributes.set("combat.defense", "Defense", value=combat_defense, icon="base:textures.ui.icons.defense.png")
     attributes.set("combat.range", value=combat_range)
     attributes.set("combat.reload", value=combat_reload)
 

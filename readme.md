@@ -16,4 +16,4 @@ The app should now be running on `http://localhost:666/`, where you will be able
 Resources:
     textures: https://opengameart.org/users/kenney    
     ![kenney](https://kenney.nl/data/oga/donation.png)  
-    font.wav: https://typeverything.com/project/botanist    
+    font.woff: https://fonts.google.com/specimen/Yeon+Sung

@@ -6,5 +6,10 @@ export interface Entity {
     commander: boolean,
     textures: {
         background: string
-    }
+    },
+    attributes: {
+        icon: string | undefined
+        name: string | undefined
+        id: string
+    }[]
 }

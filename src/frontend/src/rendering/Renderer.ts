@@ -4,9 +4,9 @@ import {SetupPhase} from "./scenes/setup";
 import {RenderingConstants, Scene} from "./scenes/scene";
 import {GameScene} from "./scenes/game-scene";
 import {SpectatingScene} from "./scenes/spectating-scene";
+import {RenderingFacade} from "./facade";
 
 
-const SIDEBAR_WIDTH = 300
 const RESOLUTION = 2
 
 
@@ -30,6 +30,7 @@ class DebugOptions {
     }
 
     render(ctx: CanvasRenderingContext2D, constants: RenderingConstants) {
+        const state = VelvetDawn.getState()
         let total = 0
         this.rates.forEach(x => total += x);
         total /= this.rates.length
@@ -42,6 +43,7 @@ class DebugOptions {
         ctx.textAlign = "left"
         ctx.font = "40px arial";
         ctx.fillText(`Render Times: ${this.lastRenderTime} ${renderRate} ${framesPerSecond}`, 10, constants.height - 10)
+        ctx.fillText(`Attribute updates: ${state.unitAttrChanges.length + state.tileAttrChanges.length}`, 10, constants.height - 60)
     }
 
     public getLastRenderTime() {
@@ -61,6 +63,8 @@ export class Renderer {
 
     private debugOptions  = new DebugOptions();
 
+    public facade = new RenderingFacade()
+
     public static getInstance() {
         return this.instance;
     }
@@ -72,8 +76,7 @@ export class Renderer {
 
         const start = new Date().getTime()
 
-        const constants = Renderer.getConstants()
-        this.updateScene(constants);
+        this.updateScene();
 
         const ctx = this.canvas.getContext('2d');
         this.canvas.width = window.innerWidth * RESOLUTION
@@ -81,12 +84,18 @@ export class Renderer {
         this.canvas.style.width = window.innerWidth + "px"
         this.canvas.style.height = window.innerHeight + "px"
 
+        this.facade.ctx = ctx;
+        this.facade.perspective = this.perspective
+        this.facade.timeDelta = this.debugOptions.getLastRenderTime() / 1000
+        this.facade.recalculateConstants()
+
         ctx.fillStyle = "#66d9e8"
-        ctx.fillRect(0, 0, constants.width, constants.height)
+        ctx.fillRect(0, 0, this.facade.width, this.facade.height)
 
-        this.scene.render(ctx, this.perspective, Renderer.getConstants(), this.debugOptions.getLastRenderTime() / 1000)
 
-        this.debugOptions.render(ctx, constants)
+        this.scene.render(this.facade)
+
+        this.debugOptions.render(ctx, this.facade.constants)
 
         const end = new Date().getTime()
         this.debugOptions.update(start, end);
@@ -108,19 +117,16 @@ export class Renderer {
                 this.perspective.yOffset += mousePos.y - evY
             }
             mousePos = {x: evX, y: evY}
+            this.facade.mousePosition = mousePos
 
             if (this.scene.hoveredTile) {
                 this.scene.hoveredTile.hovered = false
             }
             this.scene.hoveredTile = this.perspective.getTileFromMouse(mousePos.x, mousePos.y)
             this.scene.hoveredTile.hovered = true
-
-            this.scene.setMousePosition(mousePos)
         }
 
-        this.canvas.onmouseleave = () => {
-            this.scene.setMousePosition(undefined)
-        }
+        this.canvas.onmouseleave = () => this.facade.mousePosition = undefined
 
         let mouseDownPos = {x: 0, y: 0}
         this.canvas.onmousedown = (event) => {
@@ -135,7 +141,7 @@ export class Renderer {
             mouseDown = false
             const distance = Math.hypot(evY - mouseDownPos.y, evX - mouseDownPos.x)
             if (distance < 10) {
-                this.scene.clicked(Renderer.getConstants(), evX, evY)
+                this.scene.clicked(this.facade.constants, evX, evY)
             }
         }
 
@@ -151,54 +157,31 @@ export class Renderer {
         return this.scene;
     }
 
-    static getConstants(): RenderingConstants {
-        const width = window.innerWidth * RESOLUTION
-        const sidebarWidth = Renderer.getInstance().getScene() instanceof SpectatingScene
-            ? 0
-            : SIDEBAR_WIDTH * RESOLUTION;
-
-        const sidebarPadding = 10 * RESOLUTION
-        const sidebarStart = width - sidebarWidth
-        const height = window.innerHeight * RESOLUTION
-
-        const buttonHeight = 50 * RESOLUTION
-
-        return {
-            resolution: RESOLUTION,
-
-            width: width,
-            height: height,
-            sidebar: sidebarWidth,
-            sidebarPadding: sidebarPadding,
-            sidebarStart: sidebarStart,
-
-            buttonSpacing: 10 * RESOLUTION,
-            buttonHeight: buttonHeight,
-            buttonWidth: sidebarWidth - sidebarPadding - sidebarPadding,
-            nextTurnButtonStartX: sidebarStart + sidebarPadding,
-            nextTurnButtonStartY: height - buttonHeight - sidebarPadding
-        }
-    }
-
-    private updateScene(constants: RenderingConstants) {
+    private updateScene() {
+        this.facade.recalculateConstants()
         const phase = VelvetDawn.getState().phase
 
         // Check if the player is just spectating
         if (VelvetDawn.getPlayer().spectating) {
             if (!(this.scene instanceof SpectatingScene)) {
                 this.scene = new SpectatingScene()
-                this.scene.onStart(constants)
+                this.scene.onStart(this.facade)
             }
         }
 
         else if (phase === "setup" && !(this.scene instanceof SetupPhase)) {
             this.scene = new SetupPhase()
-            this.scene.onStart(constants)
+            this.scene.onStart(this.facade)
         }
 
         else if (phase === "game" && !(this.scene instanceof GameScene)) {
             this.scene = new GameScene()
-            this.scene.onStart(constants)
+            this.scene.onStart(this.facade)
         }
+    }
+
+    static startScene() {
+        const renderer = Renderer.getInstance()
+        renderer.getScene().onStart(renderer.facade)
     }
 }

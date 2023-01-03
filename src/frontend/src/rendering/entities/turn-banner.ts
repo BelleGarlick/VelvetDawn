@@ -1,7 +1,6 @@
 import {Renderable} from "./renderable";
-import {Perspective} from "../perspective";
-import {RenderingConstants} from "../scenes/scene";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
+import {RenderingFacade} from "../facade";
 
 export class TurnBanner extends Renderable {
 
@@ -12,41 +11,43 @@ export class TurnBanner extends Renderable {
         return this;
     }
 
-    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants): null {
-        const screenWidth = constants.width - constants.sidebar
-        const bannerMargin = 20 * constants.resolution
-        const width = Math.min(600 * constants.resolution, screenWidth - bannerMargin);
+    render(facade: RenderingFacade): null {
+        const screenWidth = facade.constants.width - facade.constants.sidebar
+        const bannerMargin = 20 * facade.constants.resolution
+        const width = Math.min(600 * facade.constants.resolution, screenWidth - bannerMargin);
         const height = 110;
         const centerX = screenWidth / 2
         const bannerStart = centerX - width / 2
         const startY = bannerMargin
 
-        const points = perspective.computeHexPoints(width, height);
+        const points = facade.perspective.computeHexPoints(width, height);
 
-        ctx.beginPath();
-        ctx.moveTo(points[5].x + bannerStart, points[5].y + startY);
+        facade.ctx.beginPath();
+        facade.ctx.moveTo(points[5].x + bannerStart, points[5].y + startY);
         points.forEach(({x, y}) => {
-            ctx.lineTo(bannerStart + x,startY + y);
+            facade.ctx.lineTo(bannerStart + x,startY + y);
         })
-        ctx.closePath();
-        ctx.fillStyle = "#000000"
-        ctx.fill();
-        ctx.strokeStyle = "#ffffff"
-        ctx.lineWidth = 2
-        ctx.stroke();
+        facade.ctx.closePath();
+        facade.ctx.fillStyle = "#000000"
+        facade.ctx.fill();
+        facade.ctx.strokeStyle = "#ffffff"
+        facade.ctx.lineWidth = 2
+        facade.ctx.stroke();
 
-        ctx.fillStyle = "#ffffff"
-        ctx.textBaseline = "middle"
-        ctx.textAlign = "center"
-        ctx.font = "40px 'Velvet Dawn'";
-        ctx.fillText(this._title, centerX, bannerMargin + 38)
+        facade.ctx.fillStyle = "#ffffff"
+        facade.ctx.textBaseline = "middle"
+        facade.ctx.textAlign = "center"
+        facade.ctx.font = "40px 'Velvet Dawn'";
+        facade.ctx.fillText(this._title, centerX, bannerMargin + 38)
 
-        ctx.fillStyle = "#ffffff"
-        ctx.textBaseline = "middle"
-        ctx.textAlign = "center"
-        ctx.font = "26px arial";
+        facade.ctx.fillStyle = "#ffffff"
+        facade.ctx.textBaseline = "middle"
+        facade.ctx.textAlign = "center"
+        facade.ctx.font = "26px arial";
 
-        ctx.fillText(this.getSubtitle(), centerX, bannerMargin + 86)
+        facade.ctx.fillText(this.getSubtitle(), centerX, bannerMargin + 86)
+        facade.ctx.closePath()
+        facade.ctx.restore()
 
         return null;
     }

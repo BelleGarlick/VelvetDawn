@@ -38,7 +38,7 @@ export abstract class ButtonBase extends Renderable {
 
     public performClick() {
         if (this.func && this._enabled) {
-            VelvetDawn.audioPlayers[`base:audio.buttons.button${Math.ceil(Math.random() * 4)}.mp3`].play()
+            ButtonBase.playAudio()
             this.func()
         }
     }
@@ -98,5 +98,9 @@ export abstract class ButtonBase extends Renderable {
             && x <= this.x + this.width
             && y >= this.y
             && y <= this.y + this.height;
+    }
+
+    static playAudio() {
+        VelvetDawn.audioPlayers[`base:audio.buttons.button${Math.ceil(Math.random() * 4)}.mp3`].play()
     }
 }

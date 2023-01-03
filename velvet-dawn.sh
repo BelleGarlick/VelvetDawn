@@ -38,7 +38,6 @@ then
   # Test all
   export PYTHONPATH=src/server/src:$PYTHONPATH
   python -m pytest
-
 elif [ $1 = "test-frontend" ]
 then
   cd src/frontend

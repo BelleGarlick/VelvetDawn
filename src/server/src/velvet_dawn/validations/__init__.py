@@ -16,7 +16,7 @@ def is_int(value: int, min=None, max=None, error_prefix: str = None):
 
 def is_number(value: Union[int, float], min=None, max=None, error_prefix: str = None):
     if not isinstance(value, int) and not isinstance(value, float):
-        raise errors.ValidationError(f"{error_prefix} must be an integer.")
+        raise errors.ValidationError(f"{error_prefix} must be a number.")
 
     if min is not None and value < min:
         raise errors.ValidationError(f"{error_prefix} must greater than {min}.")

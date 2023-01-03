@@ -25,7 +25,7 @@ export function Lobby({ setView }: { setView: (x: ViewState) => void }) {
             if (VelvetDawn.getState().phase !== "lobby") {
                 setView(ViewState.Game)
 
-                Renderer.getInstance().getScene().onStart(Renderer.getConstants())
+                Renderer.startScene()
                 clearInterval(time)
             }
         }, 1000)
