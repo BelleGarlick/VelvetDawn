@@ -1,8 +1,8 @@
 {
-    "name": "Deep Water",
-    "textures": {"color": "#123057"},
-    "neighbours": {
-      "fleet:shallow-water": 1,
-      "fleet:deep-water": 30
+  "name": "Deep Water",
+  "textures": {"color": "#123057"},
+  "neighbours": {
+    "fleet:shallow-water": 1,
+    "fleet:deep-water": 30
     }
   } 
