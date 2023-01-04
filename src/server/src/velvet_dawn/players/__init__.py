@@ -60,3 +60,25 @@ def join(player_name: str, password: str):
     teams.auto_update_teams()
 
     return player
+
+
+def get_friendly_enemy_players_breakdown(for_team: str):
+    """ Get the sets of friendly and enemy players from
+    the perspective of the given team. Spectators are
+    not included
+
+    Args:
+        for_team: The team to get the split for
+
+    Returns:
+        tuple of the set if friendly and enemy teams
+    """
+    friendly_players = set()
+    enemy_players = set()
+    for player in list(exclude_spectators=True):
+        if player.team == for_team:
+            friendly_players.add(player.name)
+        else:
+            enemy_players.add(player.name)
+
+    return friendly_players, enemy_players

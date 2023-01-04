@@ -97,9 +97,9 @@ def check_end_turn_case(config: Config):
     if _check_all_players_ready(current_phase):
         logger.info("All players ready!")
         if current_phase == Phase.Setup:
-            phase.start_game_phase()
+            phase.start_game_phase(config)
         elif current_phase == Phase.GAME:
-            begin_next_turn()
+            begin_next_turn(config)
 
     current_time = time.time()
     start_time = velvet_dawn.dao.get_value(Keys.TURN_START, _type=float)
@@ -109,17 +109,20 @@ def check_end_turn_case(config: Config):
     if current_time > start_time + allowed_turn_time:
         logger.info(f"{allowed_turn_time} has elapsed in setup, moving to next turn")
         if current_phase == Phase.Setup:
-            phase.start_game_phase()
+            phase.start_game_phase(config)
         elif current_phase == Phase.GAME:
-            begin_next_turn()
+            begin_next_turn(config)
 
 
-def begin_next_turn():
+def begin_next_turn(config: Config):
     """ Start the next turn by:
          - Marking all players as not ready
          - Set the next team's turn
          - Update the turn timer
          - Updating the remaining movement of all entities to their range
+
+    Args:
+        config: Game config
     """
     teams: List[Team] = sorted(velvet_dawn.teams.list(exclude_spectators=True), key=lambda t: t.team_id)
 
@@ -128,7 +131,13 @@ def begin_next_turn():
 
     # Find the next team's turn
     # If current none, default to the last team for when looped through, else loop through and find the next iteration
-    current_turn = velvet_dawn.dao.get_value(Keys.ACTIVE_TURN, default=teams[-1].team_id)
+    current_turn = velvet_dawn.dao.get_value(Keys.ACTIVE_TURN)
+
+    # If there is a turn, then trigger the end turn actions, otherwise it means there
+    # is no turn as the game has only just begin
+    if current_turn: _trigger_on_turn_end_actions(config, current_turn)
+    else: current_turn = teams[-1].team_id
+
     new_team_turn = None
     for i, team in enumerate(teams):
         if team.team_id == current_turn:
@@ -142,7 +151,54 @@ def begin_next_turn():
         for unit in velvet_dawn.units.list(player=player.name):
             unit.set_attribute("movement.remaining", unit.get_attribute("movement.range", default=1), commit=False)
 
+    # Trigger all on turn begins
+    _trigger_on_turn_being_actions(config, new_team_turn)
+
     _update_turn_start_time()
+
+
+def _trigger_on_turn_being_actions(config: Config, new_team_turn: str):
+    """ Trigger all entity/tile turn begin actions
+
+    Testing for this exists in the triggers test suite
+
+    Args:
+        config: Game config
+        new_team_turn: The team who's turn is starting
+    """
+    friendly_players, enemy_players = velvet_dawn.players.get_friendly_enemy_players_breakdown(for_team=new_team_turn)
+
+    for unit in velvet_dawn.units.list():
+        entity_definition = velvet_dawn.datapacks.entities[unit.entity_id]
+
+        entity_definition.triggers.on_turn(unit, config)
+        if unit.player in friendly_players: entity_definition.triggers.on_friendly_turn(unit, config)
+        if unit.player in enemy_players: entity_definition.triggers.on_enemy_turn(unit, config)
+
+    for tile in velvet_dawn.map.list_tiles():
+        velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_turn(tile, config)
+
+
+def _trigger_on_turn_end_actions(config: Config, old_team_turn):
+    """ Trigger all entity/tile turn end actions
+
+    Testing for this exists in the triggers test suite
+
+    Args:
+        config: Game config
+        old_team_turn: The team who's turn is ending
+    """
+    friendly_players, enemy_players = velvet_dawn.players.get_friendly_enemy_players_breakdown(for_team=old_team_turn)
+
+    for unit in velvet_dawn.units.list():
+        entity_definition = velvet_dawn.datapacks.entities[unit.entity_id]
+
+        entity_definition.triggers.on_turn_end(unit, config)
+        if unit.player in friendly_players: entity_definition.triggers.on_friendly_turn_end(unit, config)
+        if unit.player in enemy_players: entity_definition.triggers.on_enemy_turn_end(unit, config)
+
+    for tile in velvet_dawn.map.list_tiles():
+        velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_turn_end(tile, config)
 
 
 def _check_all_players_ready(current_phase: Phase) -> bool:

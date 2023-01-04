@@ -10,6 +10,12 @@
   "combat": {
       "attack": 100
   },
+  "triggers": {
+    "turn": [
+      { "modify": "tile.texture.color", "set": "#000000" },
+      { "modify": "self.health", "add": 10 }
+    ]
+  },
   "influence": [
     {
       "notes": "This would mean local enemies within range 10 have less health",

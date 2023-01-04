@@ -26,7 +26,7 @@ def add_entity_during_setup(user):
     x = int(request.form.get("x"))
     y = int(request.form.get("y"))
 
-    velvet_dawn.game.setup.place_entity(user.name, entity, x, y)
+    velvet_dawn.game.setup.place_entity(user.name, entity, x, y, config)
 
 
 @setup_blueprint.route("/remove/", methods=["POST"])

@@ -67,13 +67,13 @@ class TestSetup(BaseTest):
 
             # Test random entity throws error
             with self.assertRaises(errors.UnknownEntityError):
-                velvet_dawn.game.setup.place_entity("playerA", "dsjakdksla", 0, 0)
+                velvet_dawn.game.setup.place_entity("playerA", "dsjakdksla", 0, 0, config)
 
             # Test trying to place a commander and entity not in the setup definition
             with self.assertRaises(errors.EntityMissingFromSetupDefinition) as e:
-                velvet_dawn.game.setup.place_entity("playerA", "civil-war:commander", 25, 0)
+                velvet_dawn.game.setup.place_entity("playerA", "civil-war:commander", 25, 0, config)
             with self.assertRaises(errors.EntityMissingFromSetupDefinition) as e:
-                velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 25, 0)
+                velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 25, 0, config)
 
             # Update the setup definition to allow a commander and two muskets
             velvet_dawn.game.phase._set_phase(Phase.Lobby)
@@ -83,27 +83,27 @@ class TestSetup(BaseTest):
 
             # Test creating twos commander is an issue and that a commander can be removed and re-added
             # also testing that removing an entity with no entity to remove will raise an error
-            velvet_dawn.game.setup.place_entity("playerA", "civil-war:commander", 24, 0)
+            velvet_dawn.game.setup.place_entity("playerA", "civil-war:commander", 24, 0, config)
             with self.assertRaises(errors.ValidationError):
-                velvet_dawn.game.setup.place_entity("playerA", "civil-war:commander", 26, 0)
+                velvet_dawn.game.setup.place_entity("playerA", "civil-war:commander", 26, 0, config)
             with self.assertRaises(errors.ValidationError):
                 velvet_dawn.game.setup.remove_entity("playerA", 26, 0)
             velvet_dawn.game.setup.remove_entity("playerA", 24, 0)
-            velvet_dawn.game.setup.place_entity("playerA", "civil-war:commander", 26, 0)
+            velvet_dawn.game.setup.place_entity("playerA", "civil-war:commander", 26, 0, config)
 
             # Test placing and placing in same pos and placing too many
-            velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 24, 1)
+            velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 24, 1, config)
             with self.assertRaises(errors.ValidationError):  # Placing two items in same cell
-                velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 24, 1)
-            velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 23, 1)
+                velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 24, 1, config)
+            velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 23, 1, config)
             with self.assertRaises(errors.ValidationError):  # too many places
-                velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 24, 2)
+                velvet_dawn.game.setup.place_entity("playerA", "civil-war:musketeers", 24, 2, config)
 
             # Test is not validated until player b has been setup
             self.assertFalse(velvet_dawn.game.setup.validate_player_setups())
 
-            velvet_dawn.game.setup.place_entity("playerB", "civil-war:musketeers", 25, 49)
-            velvet_dawn.game.setup.place_entity("playerB", "civil-war:musketeers", 24, 49)
-            velvet_dawn.game.setup.place_entity("playerB", "civil-war:commander", 26, 49)
+            velvet_dawn.game.setup.place_entity("playerB", "civil-war:musketeers", 25, 49, config)
+            velvet_dawn.game.setup.place_entity("playerB", "civil-war:musketeers", 24, 49, config)
+            velvet_dawn.game.setup.place_entity("playerB", "civil-war:commander", 26, 49, config)
 
             self.assertTrue(velvet_dawn.game.setup.validate_player_setups())

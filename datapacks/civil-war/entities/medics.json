@@ -7,18 +7,13 @@
   "combat": {
       "attack": 10
   },
-  "triggers": [
-    {
-      "on": "turn",
-      "condition": { "if": "self.health", "greater_than": 10 },
-      "modifies": { "add": 10 }
-    },
-    {
-      "on": "turn",
-      "condition": { "if": "self.health", "less_than": 11 },
-      "modifies": { "add": 20 }
-    }
-  ],
+  "triggers": {
+    "turn": [{
+      "conditions": [],
+      "modify": "local.health",
+      "add": 10
+    }]
+  },
   "textures": {
     "background": "civil-war:medic.png"
   }

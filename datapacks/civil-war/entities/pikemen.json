@@ -10,16 +10,14 @@
   "combat": {
       "attack": 25
   },
-  "triggers": [
-    {
-      "on": "attack",
-      "effects": {
-        "modifier": "target[civil-war:cavalry].health",
-        "sub": 10
-      },
-      "notes": "Allows for a stronger attack to cavalry"
-    }
-  ],
+  "triggers": {
+    "enter": [{ "modify": "tile.texture.color", "set": "#000000" }],
+    "leave": [{ "modify": "tile.texture.color", "set": "#00ff00" }],
+    "attack": [{
+      "modify": "local[id=civil-war:cavalry].health",
+      "subtract": 10
+    }]
+  },
   "textures": {
     "background": "civil-war:pikeman.png"
   }

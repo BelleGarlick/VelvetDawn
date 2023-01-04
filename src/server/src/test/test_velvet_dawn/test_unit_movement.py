@@ -26,9 +26,9 @@ def setup_game() -> Tuple[Config, Tuple[int, int]]:
     velvet_dawn.game.phase._set_phase(Phase.Lobby)
     velvet_dawn.game.setup.update_setup("civil-war:commander", 1)
     velvet_dawn.game.phase.start_setup_phase(test_config)
-    velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", entity_position[0], entity_position[1])
-    velvet_dawn.game.setup.place_entity("player2", "civil-war:commander", entity_position[0], 18)
-    velvet_dawn.game.phase.start_game_phase()
+    velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", entity_position[0], entity_position[1], test_config)
+    velvet_dawn.game.setup.place_entity("player2", "civil-war:commander", entity_position[0], 18, test_config)
+    velvet_dawn.game.phase.start_game_phase(test_config)
 
     return test_config, entity_position
 
@@ -51,13 +51,13 @@ class TestUnitMovement(BaseTest):
                 ], test_config)
             velvet_dawn.game.phase._set_phase(Phase.GAME)
 
-            velvet_dawn.game.turns.begin_next_turn()
+            velvet_dawn.game.turns.begin_next_turn(test_config)
             with self.assertRaises(errors.InvalidTurnError):
                 velvet_dawn.units.movement.move(player1, entity.id, [
                     {'x': first_pos['x'], 'y': first_pos['y']},
                     {'x': first_pos['x'], 'y': first_pos['y'] + 1},
                 ], test_config)
-            velvet_dawn.game.turns.begin_next_turn()
+            velvet_dawn.game.turns.begin_next_turn(test_config)
 
             with self.assertRaises(errors.ItemNotFoundError):
                 velvet_dawn.units.movement.move(player1, -1, [

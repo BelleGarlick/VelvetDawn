@@ -34,6 +34,8 @@ def _parse_movement(tile_id: str, attributes: Attributes, data: dict):
 
 class Tile(Taggable):
     def __init__(self, id: str, name: str):
+        from velvet_dawn.mechanics.triggers import Triggers
+
         super().__init__()
 
         self.id: str = id
@@ -42,6 +44,7 @@ class Tile(Taggable):
         self.textures = TileTextures()
 
         self.attributes = Attributes()
+        self.triggers = Triggers()
 
     def json(self):
         # Textures not returned, since they're returned in the entity instance,
@@ -69,6 +72,7 @@ class Tile(Taggable):
         tile.textures = TileTextures.load(tile_id, data.get('textures', {}))
 
         tile.attributes.load(tile_id, data.get('attributes', []))
+        tile.triggers.load(tile_id, Tile, data.get("triggers", {}))
 
         tile._load_tags(data)
 

@@ -17,16 +17,16 @@ class TestSelfSelectors(BaseTest):
 
             # Test one unit is loaded, placed in the setup
             self.assertEqual(1, len(selector.get_selection(unit, self.get_test_config())))
-            self.assertTrue(selector.function_equals(unit, "civil-war:commander", self.get_test_config()))
+            self.assertTrue(selector.function_equals(unit, "testing:commander", self.get_test_config()))
 
             # check attr options
             selector = selectors.get_selector(unit.entity_id, Unit, "self.health.max")
-            self.assertEqual(200, unit.get_attribute("health.max", _type=int))
+            self.assertEqual(100, unit.get_attribute("health.max", _type=int))
             selector.function_add(unit, 3, self.get_test_config())
-            self.assertEqual(203, unit.get_attribute("health.max", _type=int))
+            self.assertEqual(103, unit.get_attribute("health.max", _type=int))
             selector.function_subtract(unit, 10, self.get_test_config())
-            self.assertEqual(193, unit.get_attribute("health.max", _type=int))
+            self.assertEqual(93, unit.get_attribute("health.max", _type=int))
             selector.function_multiply(unit, 5, self.get_test_config())
-            self.assertEqual(193 * 5, unit.get_attribute("health.max", _type=int))
+            self.assertEqual(93 * 5, unit.get_attribute("health.max", _type=int))
             selector.function_set(unit, "example", self.get_test_config())
             self.assertTrue(selector.function_equals(unit, "example", self.get_test_config()))

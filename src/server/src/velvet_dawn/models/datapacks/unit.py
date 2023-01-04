@@ -23,17 +23,12 @@ def _parse_health(unit_id: str, attributes: Attributes, data: dict):
             raise errors.ValidationError(f"Invalid health key '{key}' on '{unit_id}'")
 
     # Extract
-    regen = data.get("regen", constants.UNIT_DEFAULT_HEALTH_REGEN)
     max_health = data.get("max", constants.UNIT_DEFAULT_HEALTH_MAX)
 
     # Validate
-    velvet_dawn.validations.is_number(regen, min=0, error_prefix=f"{unit_id} health regen")
     velvet_dawn.validations.is_number(max_health, min=0, error_prefix=f"{unit_id} max health")
 
     # Validate
-    if not isinstance(regen, int) and not isinstance(regen, float):
-        raise errors.ValidationError(f"{unit_id} health regen must be a number.")
-
     if not isinstance(max_health, int) and not isinstance(max_health, float):
         raise errors.ValidationError(f"{unit_id} max health must be a number.")
     if max_health <= 0:
@@ -41,7 +36,6 @@ def _parse_health(unit_id: str, attributes: Attributes, data: dict):
 
     # Set values
     attributes.set("health", "Health", value=max_health, icon="base:textures.ui.icons.health.png")
-    attributes.set("health.regen", value=regen)
     attributes.set("health.max", value=max_health)
 
 
@@ -68,6 +62,8 @@ def _parse_combat(unit_id: str, attributes: Attributes, data: dict):
     attributes.set("combat.defense", "Defense", value=combat_defense, icon="base:textures.ui.icons.defense.png")
     attributes.set("combat.range", value=combat_range)
     attributes.set("combat.reload", value=combat_reload)
+    attributes.set("combat.can-attack", value=False)
+    attributes.set("combat.cooldown", value=0)  # set to 0 so that can-attack will be trigger to on
 
 
 def _parse_movement(unit_id: str, attributes: Attributes, data: dict):
@@ -107,6 +103,8 @@ class EntityTextures:
 
 class Unit(Taggable):
     def __init__(self, id: str, name: str):
+        from velvet_dawn.mechanics.triggers import Triggers
+
         super().__init__()
 
         self.id = id
@@ -116,6 +114,7 @@ class Unit(Taggable):
 
         self.attributes = Attributes()
         self.textures = EntityTextures()
+        self.triggers = Triggers()
 
     def json(self):
         return {
@@ -142,6 +141,7 @@ class Unit(Taggable):
         _parse_combat(id, unit.attributes, data.get("combat", {}))
 
         unit.attributes.load(id, data.get('attributes', []))
+        unit.triggers.load(id, Unit, data.get('triggers', {}))
 
         unit._load_tags(data)
 

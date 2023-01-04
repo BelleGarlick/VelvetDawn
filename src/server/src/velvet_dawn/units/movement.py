@@ -6,7 +6,7 @@ import velvet_dawn.map.neighbours
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.models import Phase, Coordinate
-from velvet_dawn.dao.models import Player, UnitInstance
+from velvet_dawn.dao.models import Player, UnitInstance, TileInstance
 
 
 def get_remaining_moves(unit: UnitInstance):
@@ -40,6 +40,9 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
     # Validate correct path and calculate remaining moves
     remaining_moves = _validate_entity_traversing_path(entity, path, config)
 
+    # Run leave movement triggers
+    trigger_on_leave_actions(entity, velvet_dawn.map.get_tile(entity.x, entity.y), config)
+
     # Update the entity to the new position based on the path and the remaining moves
     entity.set_attribute("movement.remaining", remaining_moves)
     db.session.query(UnitInstance).where(UnitInstance.id == entity.id).update({
@@ -47,6 +50,13 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
         UnitInstance.y: path[-1]['y']
     })
     db.session.commit()
+
+    # Run enter movement triggers
+    trigger_on_enter_actions(
+        velvet_dawn.units.get_unit_at_position(path[-1]['x'], path[-1]['y']),
+        velvet_dawn.map.get_tile(path[-1]['x'], path[-1]['y']),
+        config
+    )
 
 
 def _validate_entity_traversing_path(entity: UnitInstance, path: List[Dict[str, int]], config: Config) -> int:
@@ -96,3 +106,39 @@ def _validate_entity_traversing_path(entity: UnitInstance, path: List[Dict[str, 
         remaining_moves -= velvet_dawn.map.get_tile_movement_weight(tile)
 
     return remaining_moves
+
+
+def trigger_on_leave_actions(unit_instance: UnitInstance, tile_instance: TileInstance, config: Config):
+    """ Trigger on leave actions
+
+    This occurs when an entity leaves a tile, both the tile and
+    unit will be called here
+
+    This function is testing as part of the trigger testing suite
+    not movement suite
+
+    Args:
+        unit_instance: The unit to trigger on
+        tile_instance: The tile to trigger on
+        config: Game config
+    """
+    velvet_dawn.datapacks.entities[unit_instance.entity_id].triggers.on_leave(unit_instance, config)
+    velvet_dawn.datapacks.tiles[tile_instance.tile_id].triggers.on_leave(tile_instance, config)
+
+
+def trigger_on_enter_actions(unit_instance: UnitInstance, tile_instance: TileInstance, config: Config):
+    """ Trigger on enter actions
+
+    This occurs when an entity enters a tile, both the tile and
+    unit will be called here
+
+    This function is testing as part of the trigger testing suite
+    not movement suite
+
+    Args:
+        unit_instance: The unit to trigger on
+        tile_instance: The tile to trigger on
+        config: Game config
+    """
+    velvet_dawn.datapacks.entities[unit_instance.entity_id].triggers.on_enter(unit_instance, config)
+    velvet_dawn.datapacks.tiles[tile_instance.tile_id].triggers.on_enter(tile_instance, config)

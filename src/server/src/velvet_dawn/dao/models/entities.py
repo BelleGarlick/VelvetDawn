@@ -1,8 +1,8 @@
 import time
+from sqlalchemy.orm import relationship
 
 import velvet_dawn.dao
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models.attributes import UnitAttribute
 from velvet_dawn.dao.models.players import Player
 
 
@@ -19,6 +19,8 @@ class UnitInstance(db.Model):
     x = db.Column(db.Integer, nullable=False)
     y = db.Column(db.Integer, nullable=False)
 
+    attributes = relationship("UnitAttribute", cascade="all, delete")
+
     @property
     def pos_x(self):
         return self.x
@@ -28,6 +30,8 @@ class UnitInstance(db.Model):
         return self.y
 
     def get_attribute(self, key: str, _type=None, default=None):
+        from velvet_dawn.dao.models.attributes import UnitAttribute
+
         value = db.session.query(UnitAttribute)\
             .where(
                 UnitAttribute.instance_id == self.id,
@@ -40,6 +44,8 @@ class UnitInstance(db.Model):
         return default
 
     def create_attribute_db_object(self, key, value):
+        from velvet_dawn.dao.models.attributes import UnitAttribute
+
         attr = UnitAttribute(
             instance_id=self.id,
             key=key,
@@ -50,6 +56,8 @@ class UnitInstance(db.Model):
         return attr
 
     def set_attribute(self, key: str, value, commit=True):
+        from velvet_dawn.dao.models.attributes import UnitAttribute
+        
         db.session.query(UnitAttribute)\
             .where(
                 UnitAttribute.instance_id == self.id,

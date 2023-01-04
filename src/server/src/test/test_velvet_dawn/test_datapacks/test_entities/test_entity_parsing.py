@@ -9,13 +9,9 @@ class TestUnitParsing(BaseTest):
     def test_unit_health(self):
         # Type is wrong
         with self.assertRaises(errors.ValidationError):
-            velvet_dawn.models.unit._parse_health("", Attributes(), {"regen": "dsa"})
-        with self.assertRaises(errors.ValidationError):
             velvet_dawn.models.unit._parse_health("", Attributes(), {"max": "dsa"})
 
         # Must be at least 0
-        with self.assertRaises(errors.ValidationError):
-            velvet_dawn.models.unit._parse_health("", Attributes(), {"regen": -1})
         with self.assertRaises(errors.ValidationError):
             velvet_dawn.models.unit._parse_health("", Attributes(), {"max": -1})
 
@@ -27,11 +23,9 @@ class TestUnitParsing(BaseTest):
         attributes = Attributes()
         velvet_dawn.models.unit._parse_health("", attributes, {
             "max": 1000,
-            "regen": 5,
             "notes": "Example"
         })
         self.assertEqual(1000, attributes.attributes['health.max'].default)
-        self.assertEqual(5, attributes.attributes['health.regen'].default)
 
     def test_unit_combat(self):
         # Type is wrong

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 import velvet_dawn
 from velvet_dawn.config import Config
@@ -57,6 +57,10 @@ def is_traversable(x: int, y: int) -> bool:
         return False
 
     return db_tile.get_attribute("movement.traversable", _type=bool, default=True)
+
+
+def list_tiles() -> List[TileInstance]:
+    return db.session.query(TileInstance).all()
 
 
 def get_tile(x, y) -> Optional[TileInstance]:

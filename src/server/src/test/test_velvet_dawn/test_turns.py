@@ -46,7 +46,7 @@ class TestGameTurns(BaseTest):
 
             velvet_dawn.players.join("player1", "password")
             velvet_dawn.players.join("player2", "password")
-            velvet_dawn.game.phase.start_game_phase()
+            velvet_dawn.game.phase.start_game_phase(test_config)
             velvet_dawn.game.turns._update_turn_start_time()
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
@@ -65,7 +65,7 @@ class TestGameTurns(BaseTest):
         with app.app_context():
             velvet_dawn.players.join("player1", "password")
             velvet_dawn.players.join("player2", "password")
-            velvet_dawn.game.phase.start_game_phase()
+            velvet_dawn.game.phase.start_game_phase(config)
 
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
@@ -93,12 +93,12 @@ class TestGameTurns(BaseTest):
             velvet_dawn.game.phase._set_phase(Phase.Lobby)
             velvet_dawn.game.setup.update_setup("civil-war:commander", 1)
             velvet_dawn.game.phase.start_setup_phase(test_config)
-            velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", test_config.map_width // 2, 0)
+            velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", test_config.map_width // 2, 0, config)
 
             unit = velvet_dawn.units.list("player1")[0]
             self.assertEqual(0, unit.get_attribute("movement.remaining", _type=int))
 
-            velvet_dawn.game.phase.start_game_phase()
+            velvet_dawn.game.phase.start_game_phase(test_config)
 
             self.assertEqual(
                 unit.get_attribute("movement.remaining", _type=int),
@@ -112,7 +112,7 @@ class TestGameTurns(BaseTest):
             velvet_dawn.players.join("player2", "password")
             self.assertIsNone(velvet_dawn.game.turns.get_active_turn(Phase.Setup))
 
-            velvet_dawn.game.phase.start_game_phase()
+            velvet_dawn.game.phase.start_game_phase(config)
 
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
@@ -121,7 +121,7 @@ class TestGameTurns(BaseTest):
 
             velvet_dawn.game.turns.ready("player1")
 
-            velvet_dawn.game.turns.begin_next_turn()
+            velvet_dawn.game.turns.begin_next_turn(config)
 
             players = velvet_dawn.players.list()
             for player in players:
@@ -132,7 +132,7 @@ class TestGameTurns(BaseTest):
                 velvet_dawn.game.turns.get_active_turn(Phase.GAME)
             )
 
-            velvet_dawn.game.turns.begin_next_turn()
+            velvet_dawn.game.turns.begin_next_turn(config)
 
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
@@ -152,7 +152,7 @@ class TestGameTurns(BaseTest):
             velvet_dawn.game.turns.ready("player3")
             self.assertTrue(velvet_dawn.game.turns._check_all_players_ready(Phase.Setup))
 
-            velvet_dawn.game.phase.start_game_phase()
+            velvet_dawn.game.phase.start_game_phase(config)
 
             velvet_dawn.game.turns.ready("player2")
             self.assertFalse(velvet_dawn.game.turns._check_all_players_ready(Phase.GAME))

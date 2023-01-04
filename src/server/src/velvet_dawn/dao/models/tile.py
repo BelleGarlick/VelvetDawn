@@ -1,8 +1,9 @@
 import time
 
+from sqlalchemy.orm import relationship
+
 import velvet_dawn
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models.attributes import TileAttribute
 
 
 class TileInstance(db.Model):
@@ -16,9 +17,13 @@ class TileInstance(db.Model):
     x = db.Column(db.Integer)
     y = db.Column(db.Integer)
 
+    attributes = relationship("TileAttribute", cascade="all, delete")
+
     db.UniqueConstraint(x, y)
 
     def get_attribute(self, key: str, _type=None, default=None):
+        from velvet_dawn.dao.models.attributes import TileAttribute
+
         value = db.session.query(TileAttribute) \
             .where(
                 TileAttribute.instance_id == self.id,
@@ -31,6 +36,8 @@ class TileInstance(db.Model):
         return default
 
     def create_attribute_db_object(self, key, value):
+        from velvet_dawn.dao.models.attributes import TileAttribute
+
         attr = TileAttribute(
             instance_id=self.id,
             key=key,
@@ -41,6 +48,8 @@ class TileInstance(db.Model):
         return attr
 
     def set_attribute(self, key: str, value, commit=True):
+        from velvet_dawn.dao.models.attributes import TileAttribute
+
         db.session.query(TileAttribute)\
             .where(
                 TileAttribute.instance_id == self.id,

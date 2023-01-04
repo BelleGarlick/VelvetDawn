@@ -34,7 +34,7 @@ export class GameViewSidebar {
         this.sidebarBackground = new Rectangle()
         this.nextTurnButton = new NextTurnButton(constants);
         this.unitTabs = new TabButtons(
-            ["Actions", "Upgrades", "Info"],
+            ["Abilities", "Upgrades", "Info"],
             (tab) => this.tab = tab
         );
     }

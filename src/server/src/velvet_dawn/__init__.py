@@ -1,1 +1,2 @@
-from . import map, players, teams, game, datapacks, units, utils, validations, models
+from . import map, players, teams, game, datapacks, units, utils, validations, models, mechanics
+

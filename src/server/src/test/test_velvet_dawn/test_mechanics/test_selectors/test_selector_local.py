@@ -27,7 +27,7 @@ class TestLocalSelectors(BaseTest):
 
             # One enemy
             self.assertEqual(1, len(selector.get_selection(unit, self.get_test_config())))
-            self.assertTrue(selector.function_equals(unit, "civil-war:commander", self.get_test_config()))
+            self.assertTrue(selector.function_equals(unit, "testing:commander", self.get_test_config()))
 
     def test_selector_local_friendlies(self):
         with app.app_context():

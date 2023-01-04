@@ -10,21 +10,6 @@
   "tags": [
     "tag:heavy"
   ],
-  "triggers": [
-    {
-      "on": "death",
-      "conditions": [
-        { "attribute": "self.health", "greater_than": "5" }
-      ],
-      "modifiers": [
-        { "target": "self.health", "add": 5 }
-      ]
-    },
-    { "on": "move" },
-    { "on": "spawn" },
-    { "on": "kill" },
-    { "on": "attack" }
-  ],
   "textures": {
     "background": "civil-war:cavalry.png"
   }

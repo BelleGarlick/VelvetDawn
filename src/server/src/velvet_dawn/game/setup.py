@@ -1,6 +1,7 @@
 from typing import List
 
 import velvet_dawn
+from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import UnitInstance, EntitySetup
 from velvet_dawn import datapacks, errors
@@ -89,7 +90,7 @@ def is_setup_valid(player):
     return bool(get_setup(player).commanders)
 
 
-def place_entity(player: str, entity_id: str, x: int, y: int):
+def place_entity(player: str, entity_id: str, x: int, y: int, config: Config):
     if velvet_dawn.game.phase.get_phase() != Phase.Setup:
         raise errors.ValidationError("Game setup may only be changed during game setup")
 
@@ -128,6 +129,9 @@ def place_entity(player: str, entity_id: str, x: int, y: int):
     db.session.add(entity)
     db.session.commit()
     entity_definition.attributes.save_to_db(entity, entity_definition)
+
+    # Trigger on spawn
+    entity_definition.triggers.on_spawn(entity, config)
 
 
 def remove_entity(player_id: str, x: int, y: int):

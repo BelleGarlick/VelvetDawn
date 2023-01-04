@@ -3,16 +3,10 @@
   "neighbours": {
     "civil-war:grass": 1
   },
-  "triggers": [
-    {
-      "on": "turn",
-      "condition": [
-        { "target": "random", "greaterThan": 0.95 },
-        { "target": "self.entity", "equals": null }
-      ],
-      "spawns": "civil-war:peasants"
-    }
-  ],
+  "triggers": {
+    "turn": [
+    ]
+  },
   "textures": {
     "color": ["#858a8c", "#757a7c"],
     "image": [

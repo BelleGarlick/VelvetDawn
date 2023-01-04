@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List
 
+from velvet_dawn import errors
 from velvet_dawn.config import Config
 from velvet_dawn.logger import logger
 from velvet_dawn.models.datapacks.unit import Entity
@@ -33,8 +34,12 @@ tags: Dict[str, List[Taggable]] = {}
 
 
 def init(config: Config):
-    for datapack in os.listdir(_BUILT_IN_DATAPACK_PATH):
-        _load_datapack(_BUILT_IN_DATAPACK_PATH / datapack)
+    # TODO Test that testing pack will load
+    _load_datapack(_BUILT_IN_DATAPACK_PATH / "base")
+
+    if "__testing__" in config.datapacks:
+        _load_datapack(_BUILT_IN_DATAPACK_PATH / "testing")
+        config.datapacks.remove("__testing__")
 
     for datapack in config.datapacks:
         _load_datapack(_DATAPACKS_PATH / datapack)
@@ -45,8 +50,7 @@ def _load_datapack(datapack_path: Path):
     datapack = datapack_path.stem
 
     if not datapack_path.exists():
-        logging.error(f"Datapack '{datapack}' not found.")
-        sys.exit(1)
+        raise errors.ValidationError(f"Datapack '{datapack}' not found.")
 
     _load_resources(datapack_path / 'resources')
     _load_tiles(datapack_path / 'tiles')
