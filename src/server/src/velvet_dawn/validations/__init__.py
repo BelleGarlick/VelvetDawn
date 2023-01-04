@@ -4,7 +4,9 @@ from velvet_dawn import errors
 
 
 def is_int(value: int, min=None, max=None, error_prefix: str = None):
-    if not isinstance(value, int):
+    try:
+        value = int(value)
+    except:
         raise errors.ValidationError(f"{error_prefix} must be an integer.")
 
     if min is not None and value < min:
@@ -15,7 +17,9 @@ def is_int(value: int, min=None, max=None, error_prefix: str = None):
 
 
 def is_number(value: Union[int, float], min=None, max=None, error_prefix: str = None):
-    if not isinstance(value, int) and not isinstance(value, float):
+    try:
+        value = float(value)
+    except:
         raise errors.ValidationError(f"{error_prefix} must be a number.")
 
     if min is not None and value < min:

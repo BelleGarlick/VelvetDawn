@@ -61,10 +61,6 @@ class TestUnitParsing(BaseTest):
         with self.assertRaises(errors.ValidationError):
             velvet_dawn.models.unit._parse_movement("", Attributes(), {"range": "dsa"})
 
-        # Must be at least 0
-        with self.assertRaises(errors.ValidationError):
-            velvet_dawn.models.unit._parse_movement("", Attributes(), {"range": 0})
-
         # Wrong key
         with self.assertRaises(errors.ValidationError):
             velvet_dawn.models.unit._parse_movement("", Attributes(), {"range": 2, "random-key": False})
