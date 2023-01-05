@@ -1,9 +1,7 @@
 import {HexButton} from "./hex-button";
 import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
-import * as Api from "../../../api";
+import * as Api from "api";
 import {RenderingConstants} from "../../scenes/scene";
-import {Perspective} from "../../perspective";
-import {Position} from "models";
 import {RenderingFacade} from "../../facade";
 
 
@@ -30,11 +28,16 @@ export class NextTurnButton extends HexButton {
     draw(facade: RenderingFacade) {
         const playerReady = VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready
 
+        const placedCommander = VelvetDawn.getState().setup.placedCommander
+        let buttonText = playerReady ? "Unready" : "Ready"
+        if (!placedCommander)
+            buttonText = "Place a Commander"
+
         this
             .hovered(this.isHovered(facade.mousePosition))
             .setPos(facade.constants.nextTurnButtonStartX, facade.constants.nextTurnButtonStartY)
-            .enabled(VelvetDawn.getState().setup.placedCommander)
-            .text(playerReady ? "Unready" : "Ready")
+            .enabled(placedCommander)
+            .text(buttonText)
             .backgroundColor(playerReady ? "#33bb00" : "#66dd00")
             .render(facade)
     }
