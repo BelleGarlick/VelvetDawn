@@ -21,6 +21,10 @@ class ActionModifierFunction(enum.Enum):
     ADD = 1
     SUB = 2
     MUL = 3
+    RESET = 4
+
+    ADD_TAG = 5
+    REMOVE_TAG = 6
 
 
 """ The key:function map defined in the datapack dictionary """
@@ -31,7 +35,13 @@ KeyMap = {
     "subtract": ActionModifierFunction.SUB,
     "mul": ActionModifierFunction.MUL,
     "multiply": ActionModifierFunction.MUL,
+    "reset": ActionModifierFunction.RESET,
+    "add-tag": ActionModifierFunction.ADD_TAG,
+    "remove-tag": ActionModifierFunction.REMOVE_TAG,
 }
+
+
+NON_ATTRIBUTE_MODIFIERS = {ActionModifierFunction.ADD_TAG, ActionModifierFunction.REMOVE_TAG}
 
 
 class ActionModify(Action):
@@ -60,14 +70,22 @@ class ActionModify(Action):
         # TODO Conditions
         action.selector = velvet_dawn.mechanics.selectors.get_selector(id, parent_type, data['modify'])
 
-        if action.selector.attribute is None:
-            raise errors.ValidationError(
-                f"Modify actions must ensure the selectors modify an attribute not '{data['modify']}")
-
+        # Find the key used and update the function (we already verify there is a key above)
+        function_key = None
         for key in data:
             if key in KeyMap:
+                function_key = key
                 action.function_value = data[key]
                 action.function = KeyMap[key]
+
+        if action.function in NON_ATTRIBUTE_MODIFIERS:
+            if action.selector.attribute is not None:
+                raise errors.ValidationError(
+                    f"Action '{function_key}' tags cannot be performed on a selector with attributes '{data['modify']}")
+        else:
+            if action.selector.attribute is None:
+                raise errors.ValidationError(
+                    f"Modify actions must ensure the selectors modify an attribute not '{data['modify']}")
 
         return action
 
@@ -84,6 +102,15 @@ class ActionModify(Action):
 
         elif self.function == ActionModifierFunction.SUB:
             self.selector.function_subtract(instance, self.function_value, config)
+
+        elif self.function == ActionModifierFunction.RESET:
+            self.selector.function_reset(instance, self.function_value, config)
+
+        elif self.function == ActionModifierFunction.ADD_TAG:
+            self.selector.function_add_tag(instance, self.function_value, config)
+
+        elif self.function == ActionModifierFunction.REMOVE_TAG:
+            self.selector.function_remove_tag(instance, self.function_value, config)
 
         else:
             raise errors.ValidationError(f"Unknown action function type: '{self.function}'")

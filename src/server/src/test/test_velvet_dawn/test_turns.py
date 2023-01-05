@@ -96,13 +96,13 @@ class TestGameTurns(BaseTest):
             velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", test_config.map_width // 2, 0, config)
 
             unit = velvet_dawn.units.list("player1")[0]
-            self.assertEqual(0, unit.get_attribute("movement.remaining", _type=int))
+            self.assertEqual(0, unit.get_attribute("movement.remaining"))
 
             velvet_dawn.game.phase.start_game_phase(test_config)
 
             self.assertEqual(
-                unit.get_attribute("movement.remaining", _type=int),
-                unit.get_attribute("movement.range", _type=int)
+                unit.get_attribute("movement.remaining"),
+                unit.get_attribute("movement.range")
             )
 
     def test_begin_next_turn_and_get_active_turn(self):

@@ -7,6 +7,9 @@
     "civil-war:woods": 1,
     "civil-war:marsh": 2
   },
+  "tags": [
+    "common-ground"
+  ],
   "textures": {
     "color": ["#2da849", "#2dab49", "#2da449"],
     "image": {

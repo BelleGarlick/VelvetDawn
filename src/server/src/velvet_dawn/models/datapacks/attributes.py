@@ -4,11 +4,8 @@ from typing import Dict, Optional, Union
 import velvet_dawn
 from velvet_dawn import errors
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import UnitInstance
+from velvet_dawn.dao.models import UnitInstance, TileInstance
 from velvet_dawn.logger import logger
-
-
-# TODO Update documentation, wiki and tests
 
 
 """ Custom Attributes
@@ -124,16 +121,16 @@ class Attributes:
 
         self.attributes[id] = attr
 
-    def get_db_objects(self, instance: Union[UnitInstance, UnitInstance]):
+    def get_db_objects(self, instance: Union[UnitInstance, TileInstance]):
         """ Extract the new db objects, this function exists to allow
         for bulk attribute insertion when generating the map.
         """
         return [
-            instance.create_attribute_db_object(attribute.id, attribute.default)
+            instance.create_db_attribute_obj(attribute.id, attribute.default)
             for attribute in self.attributes.values()
         ]
 
-    def save_to_db(self, instance: Union[UnitInstance, UnitInstance], commit=True):
+    def save_to_db(self, instance: Union[UnitInstance, TileInstance], commit=True):
         """ Store the attributes in the db """
         for attribute in self.attributes.values():
             instance.set_attribute(attribute.id, attribute.default, commit=False)

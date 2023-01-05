@@ -43,12 +43,12 @@ class TestTriggers(BaseTest):
             set_commander_trigger('turn')
 
             unit = velvet_dawn.units.list()[0]
-            self.assertNotEqual(0.1, unit.get_attribute("health", _type=float))
+            self.assertNotEqual(0.1, unit.get_attribute("health"))
 
             # Begin turn should trigger the health update
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
-            self.assertEqual(0.1, unit.get_attribute("health", _type=float))
+            self.assertEqual(0.1, unit.get_attribute("health"))
 
     def test_trigger_turn_end(self):
         with app.app_context():
@@ -56,12 +56,12 @@ class TestTriggers(BaseTest):
             set_commander_trigger('turn-end')
 
             unit = velvet_dawn.units.list()[0]
-            self.assertNotEqual(0.1, unit.get_attribute("health", _type=float))
+            self.assertNotEqual(0.1, unit.get_attribute("health"))
 
             # On turn end will update the health
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
-            self.assertEqual(0.1, unit.get_attribute("health", _type=float))
+            self.assertEqual(0.1, unit.get_attribute("health"))
 
     def test_trigger_friendly_turn(self):
         with app.app_context():
@@ -71,20 +71,20 @@ class TestTriggers(BaseTest):
             player_a_commander = velvet_dawn.units.list()[0]
             player_b_commander = velvet_dawn.units.list()[2]
 
-            self.assertNotEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertNotEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertNotEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertNotEqual(0.1, player_b_commander.get_attribute("health"))
 
             # On turn end will start player_b's turn so player_a will not update
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
-            self.assertNotEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertNotEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertEqual(0.1, player_b_commander.get_attribute("health"))
 
             # Back to player a
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
-            self.assertEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertEqual(0.1, player_b_commander.get_attribute("health"))
 
     def test_trigger_friendly_turn_end(self):
         with app.app_context():
@@ -94,20 +94,20 @@ class TestTriggers(BaseTest):
             player_a_commander = velvet_dawn.units.list()[0]
             player_b_commander = velvet_dawn.units.list()[2]
 
-            self.assertNotEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertNotEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertNotEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertNotEqual(0.1, player_b_commander.get_attribute("health"))
 
             # On turn end will end player_a's turn so player_b will not update
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
-            self.assertEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertNotEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertNotEqual(0.1, player_b_commander.get_attribute("health"))
 
             # End player_b
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
-            self.assertEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertEqual(0.1, player_b_commander.get_attribute("health"))
 
     def test_trigger_enemy_turn(self):
         with app.app_context():
@@ -117,20 +117,20 @@ class TestTriggers(BaseTest):
             player_a_commander = velvet_dawn.units.list()[0]
             player_b_commander = velvet_dawn.units.list()[2]
 
-            self.assertNotEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertNotEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertNotEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertNotEqual(0.1, player_b_commander.get_attribute("health"))
 
             # On turn end will start player_b's so player_a's (enemy turn) will begin
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
-            self.assertEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertNotEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertNotEqual(0.1, player_b_commander.get_attribute("health"))
 
             # Back to player a
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
-            self.assertEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertEqual(0.1, player_b_commander.get_attribute("health"))
 
     def test_trigger_enemy_turn_end(self):
         with app.app_context():
@@ -140,20 +140,20 @@ class TestTriggers(BaseTest):
             player_a_commander = velvet_dawn.units.list()[0]
             player_b_commander = velvet_dawn.units.list()[2]
 
-            self.assertNotEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertNotEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertNotEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertNotEqual(0.1, player_b_commander.get_attribute("health"))
 
             # On turn end will end player_a's so player_b's (enemy turn) will end
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
-            self.assertNotEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertNotEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertEqual(0.1, player_b_commander.get_attribute("health"))
 
             # End player_b
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
-            self.assertEqual(0.1, player_a_commander.get_attribute("health", _type=float))
-            self.assertEqual(0.1, player_b_commander.get_attribute("health", _type=float))
+            self.assertEqual(0.1, player_a_commander.get_attribute("health"))
+            self.assertEqual(0.1, player_b_commander.get_attribute("health"))
 
     def test_trigger_enter(self):
         with app.app_context():
@@ -171,7 +171,7 @@ class TestTriggers(BaseTest):
             )
 
             new_tile = velvet_dawn.map.get_tile(commander.x, commander.y)
-            self.assertEqual(0.1, new_tile.get_attribute("test", _type=float))
+            self.assertEqual(0.1, new_tile.get_attribute("test"))
 
     def test_trigger_leave(self):
         with app.app_context():
@@ -189,7 +189,7 @@ class TestTriggers(BaseTest):
             )
 
             new_tile = velvet_dawn.map.get_tile(commander.x - 1, commander.y)
-            self.assertEqual(0.1, new_tile.get_attribute("test", _type=float))
+            self.assertEqual(0.1, new_tile.get_attribute("test"))
 
     def test_trigger_spawn(self):
         with app.app_context():
@@ -207,7 +207,7 @@ class TestTriggers(BaseTest):
             velvet_dawn.game.setup.place_entity("player1", "testing:commander", 15, 0, config)
 
             commander = velvet_dawn.units.list()[0]
-            self.assertEqual(0.1, commander.get_attribute("health", _type=float))
+            self.assertEqual(0.1, commander.get_attribute("health"))
 
     def test_trigger_game_begin(self):
         with app.app_context():
@@ -226,7 +226,7 @@ class TestTriggers(BaseTest):
             velvet_dawn.game.phase.start_game_phase(config)
 
             commander = velvet_dawn.units.list()[0]
-            self.assertEqual(0.1, commander.get_attribute("health", _type=float))
+            self.assertEqual(0.1, commander.get_attribute("health"))
 
     # def test_trigger_death(self):
     #     with app.app_context():

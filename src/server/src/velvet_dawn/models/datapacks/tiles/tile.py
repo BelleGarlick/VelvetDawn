@@ -3,7 +3,7 @@ from typing import Dict
 import velvet_dawn
 from velvet_dawn import errors
 from velvet_dawn.models.datapacks.attributes import Attributes
-from velvet_dawn.models.datapacks.taggable import Taggable
+from velvet_dawn.models.datapacks.tags import Tags
 from .tile_textures import TileTextures
 
 VALID_TILE_KEYS = [
@@ -32,7 +32,7 @@ def _parse_movement(tile_id: str, attributes: Attributes, data: dict):
     attributes.set("movement.weight", value=weight)
 
 
-class Tile(Taggable):
+class Tile:
     def __init__(self, id: str, name: str):
         from velvet_dawn.mechanics.triggers import Triggers
 
@@ -43,6 +43,7 @@ class Tile(Taggable):
         self.neighbours: Dict[str, int] = {}
         self.textures = TileTextures()
 
+        self.tags = Tags()
         self.attributes = Attributes()
         self.triggers = Triggers()
 
@@ -74,6 +75,6 @@ class Tile(Taggable):
         tile.attributes.load(tile_id, data.get('attributes', []))
         tile.triggers.load(tile_id, Tile, data.get("triggers", {}))
 
-        tile._load_tags(data)
+        tile.tags.load(tile_id, data.get('tags', []))
 
         return tile

@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import sys
 from pathlib import Path
 from typing import Dict, List
 
@@ -10,7 +9,6 @@ from velvet_dawn.config import Config
 from velvet_dawn.logger import logger
 from velvet_dawn.models.datapacks.unit import Entity
 from velvet_dawn.models.datapacks.resource import Resource, ResourceType
-from velvet_dawn.models.datapacks.taggable import Taggable
 from velvet_dawn.models.datapacks.tiles.tile import Tile
 
 
@@ -29,8 +27,6 @@ _abstract_definitions: Dict[str, dict] = {}
 tiles: Dict[str, Tile] = {}
 entities: Dict[str, Entity] = {}
 resources: Dict[str, Resource] = {}
-
-tags: Dict[str, List[Taggable]] = {}
 
 
 def init(config: Config):
@@ -62,7 +58,6 @@ def get(id: str, entities_only=False, tiles_only=False, resources_only=False):
     if tiles_only: return tiles.get(id)
     if resources_only: return resources.get(id)
 
-    if id in tags:return tags[id]
     if id in entities: return entities[id]
     if id in tiles: return tiles[id]
     if id in resources: return resources[id]

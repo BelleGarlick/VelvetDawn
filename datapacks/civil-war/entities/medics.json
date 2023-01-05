@@ -8,11 +8,11 @@
       "attack": 10
   },
   "triggers": {
-    "turn": [{
-      "conditions": [],
-      "modify": "local.health",
-      "add": 10
-    }]
+    "friendly-turn": [
+      { "modify": "local.health", "add": 10 },
+      { "modify": "self.health", "add": 5 }
+    ],
+    "notes": "Todo: add { 'particles': 'civil-war:health', 'on': 'local.health' },"
   },
   "textures": {
     "background": "civil-war:medic.png"

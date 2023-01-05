@@ -57,12 +57,37 @@ class TestActionModify(BaseTest):
             action_sub = ActionModify.from_dict("id", Unit, {"modify": "self.health", "subtract": 5})
             action_mul = ActionModify.from_dict("id", Unit, {"modify": "self.health", "multiply": 2})
 
-            self.assertEqual(100, unit.get_attribute("health", _type=int))
+            # Test resetting and reset to a default if the attribute doens't exists
+            action_reset = ActionModify.from_dict("id", Unit, {"modify": "self.health", "reset": 0})
+            action_reset_other = ActionModify.from_dict("id", Unit, {"modify": "self.healthy", "reset": 9})
+
+            self.assertEqual(100, unit.get_attribute("health"))
 
             action_set.run(unit, self.get_test_config())
             action_add.run(unit, self.get_test_config())
             action_sub.run(unit, self.get_test_config())
             action_mul.run(unit, self.get_test_config())
 
-            self.assertEqual(110, unit.get_attribute("health", _type=int))
+            self.assertEqual(110, unit.get_attribute("health"))
+
+            action_reset.run(unit, self.get_test_config())
+            action_reset_other.run(unit, self.get_test_config())
+
+            self.assertEqual(100, unit.get_attribute("health"))
+            self.assertEqual(9, unit.get_attribute("healthy"))
+
+    def test_modifier_tags(self):
+        with app.app_context():
+            self.setup_game()
+
+            unit = velvet_dawn.units.list()[0]
+
+            action_add_tag = ActionModify.from_dict("id", Unit, {"modify": "self", "add-tag": "tagg"})
+            action_remove_tag = ActionModify.from_dict("id", Unit, {"modify": "self", "remove-tag": "tagg"})
+
+            self.assertFalse(unit.has_tag("tag:tagg"))
+            action_add_tag.run(unit, self.get_test_config())
+            self.assertTrue(unit.has_tag("tag:tagg"))
+            action_remove_tag.run(unit, self.get_test_config())
+            self.assertFalse(unit.has_tag("tag:tagg"))
 

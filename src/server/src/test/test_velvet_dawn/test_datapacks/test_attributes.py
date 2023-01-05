@@ -3,7 +3,7 @@ from velvet_dawn import errors
 from velvet_dawn.models.datapacks import Attributes
 
 
-class TestCustomAttributesParsing(BaseTest):
+class TestAttributesParsing(BaseTest):
 
     def test_attributes_parsing(self):
         # Missing id

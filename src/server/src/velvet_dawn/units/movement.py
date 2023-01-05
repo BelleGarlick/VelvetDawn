@@ -12,7 +12,7 @@ from velvet_dawn.dao.models import Player, UnitInstance, TileInstance
 def get_remaining_moves(unit: UnitInstance):
     # TODO Test this when influence is done
     # TODO Add influence here and other mechanics here
-    return unit.get_attribute("movement.remaining", _type=int, default=0)
+    return unit.get_attribute("movement.remaining", default=0)
 
 
 def move(player: Player, entity_pk: int, path: List[dict], config: Config):

@@ -8,6 +8,7 @@ from velvet_dawn import datapacks, errors
 from velvet_dawn.models.game_setup import GameSetup
 from velvet_dawn.models.phase import Phase
 
+
 """ velvet_dawn.game.setup
 
 This module handles the entity setup for the games. There
@@ -128,7 +129,8 @@ def place_entity(player: str, entity_id: str, x: int, y: int, config: Config):
     )
     db.session.add(entity)
     db.session.commit()
-    entity_definition.attributes.save_to_db(entity, entity_definition)
+    entity_definition.attributes.save_to_db(entity)
+    entity_definition.tags.save_to_db(entity)
 
     # Trigger on spawn
     entity_definition.triggers.on_spawn(entity, config)

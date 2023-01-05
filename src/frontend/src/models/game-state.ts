@@ -34,8 +34,7 @@ export interface GameState {
         x: number,
         y: number
     }[],
-    unitAttrChanges: Attribute[],
-    tileAttrChanges: Attribute[]
+    attrChanges: Attribute[]
 }
 
 
@@ -58,7 +57,6 @@ export const createBlankState = (): GameState => {
         },
         entities: {},
         spawnArea: [],
-        unitAttrChanges: [],
-        tileAttrChanges: []
+        attrChanges: []
     }
 }

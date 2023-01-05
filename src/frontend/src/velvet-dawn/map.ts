@@ -242,12 +242,14 @@ export class VelvetDawnMap {
             }
         })
 
-        state.tileAttrChanges.forEach((attrUpdate) => {
-            this.tilesById[attrUpdate.instanceId].attributes[attrUpdate.key] = attrUpdate.value
-        })
-        state.unitAttrChanges.forEach((attrUpdate) => {
-            this.units[attrUpdate.instanceId].attributes[attrUpdate.key] = attrUpdate.value
-        })
+        state.attrChanges.forEach((attrUpdate) => {
+            if (attrUpdate.parent === "tile")
+                this.tilesById[attrUpdate.instanceId].attributes[attrUpdate.key] = attrUpdate.value
+            else if (attrUpdate.parent === "unit")
+                this.units[attrUpdate.instanceId].attributes[attrUpdate.key] = attrUpdate.value
+            else
+                console.error("Unknown attribute upgrade " + attrUpdate.parent)
+        });
     }
 
     /** Used to store positions in the dict, this will

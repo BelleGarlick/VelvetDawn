@@ -1,6 +1,6 @@
 import velvet_dawn
 from .attributes import Attributes
-from velvet_dawn.models.datapacks.taggable import Taggable
+from velvet_dawn.models.datapacks.tags import Tags
 from ... import errors, constants
 
 
@@ -101,7 +101,7 @@ class EntityTextures:
         }
 
 
-class Unit(Taggable):
+class Unit:
     def __init__(self, id: str, name: str):
         from velvet_dawn.mechanics.triggers import Triggers
 
@@ -112,6 +112,7 @@ class Unit(Taggable):
         self.max_health = 100
         self.commander = False
 
+        self.tags = Tags()
         self.attributes = Attributes()
         self.textures = EntityTextures()
         self.triggers = Triggers()
@@ -140,10 +141,9 @@ class Unit(Taggable):
         _parse_movement(id, unit.attributes, data.get("movement", {}))
         _parse_combat(id, unit.attributes, data.get("combat", {}))
 
+        unit.tags.load(id, data.get('tags', []))
         unit.attributes.load(id, data.get('attributes', []))
         unit.triggers.load(id, Unit, data.get('triggers', {}))
-
-        unit._load_tags(data)
 
         return unit
 

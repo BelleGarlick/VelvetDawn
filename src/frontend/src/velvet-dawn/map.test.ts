@@ -65,10 +65,10 @@ const setupMap = async (setupEntity: boolean): Promise<VelvetDawnMap> => {
             entities: {
                 0: {...blankEntity, id: 0, position: {x: 0, y: 0}}
             },
-            tileAttrChanges: [
-                {instanceId: "1", key: "movement.weight", value: 3},
-                {instanceId: "3", key: "movement.weight", value: 3},
-                {instanceId: "4", key: "movement.traversable", value: false}
+            attrChanges: [
+                {instanceId: "1", parent: 'tile', key: "movement.weight", value: 3},
+                {instanceId: "3", parent: 'tile', key: "movement.weight", value: 3},
+                {instanceId: "4", parent: 'tile', key: "movement.traversable", value: false}
             ]
         })
 

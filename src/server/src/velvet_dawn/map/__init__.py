@@ -56,7 +56,7 @@ def is_traversable(x: int, y: int) -> bool:
     if not db_tile:
         return False
 
-    return db_tile.get_attribute("movement.traversable", _type=bool, default=True)
+    return db_tile.get_attribute("movement.traversable", default=True)
 
 
 def list_tiles() -> List[TileInstance]:
@@ -71,4 +71,4 @@ def get_tile(x, y) -> Optional[TileInstance]:
 
 def get_tile_movement_weight(tile: TileInstance):
     # TODO Incorporate influence or changes
-    return tile.get_attribute("movement.weight", _type=int)
+    return tile.get_attribute("movement.weight")

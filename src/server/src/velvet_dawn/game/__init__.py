@@ -5,7 +5,7 @@ from velvet_dawn import constants
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import UnitInstance
-from velvet_dawn.dao.models.attributes import TileAttribute, UnitAttribute
+from velvet_dawn.dao.models.attributes import Attribute
 
 from velvet_dawn.models.game_state import GameState
 from velvet_dawn.models.mode import Mode
@@ -32,12 +32,8 @@ def get_state(config: Config, user: str, full_state: bool = False):
 
     # Get the latest attribute changes
     valid_update_time_bound = time.time() - constants.PARTIAL_GAME_STATE_TIME
-    unit_attr_changes = [
-        attr for attr in db.session.query(UnitAttribute).all()
-        if full_state or attr.update_time > valid_update_time_bound
-    ]
-    tile_attribute_changes = [
-        attr for attr in db.session.query(TileAttribute).all()
+    attr_changes = [
+        attr for attr in db.session.query(Attribute).all()
         if full_state or attr.update_time > valid_update_time_bound
     ]
 
@@ -49,6 +45,5 @@ def get_state(config: Config, user: str, full_state: bool = False):
         setup=velvet_dawn.game.setup.get_setup(user),
         spawn_area=spawn_area,
         entities=entities,
-        unit_attr_changes=unit_attr_changes,
-        tile_attr_changes=tile_attribute_changes
+        attr_changes=attr_changes,
     )

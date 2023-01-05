@@ -71,17 +71,32 @@ class Selector(ABC):
 
     def function_add(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
         for item in self.get_selection(instance, config):
-            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0, _type=int) + value, commit=False)
+            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) + value, commit=False)
         db.session.commit()
 
     def function_subtract(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
         for item in self.get_selection(instance, config):
-            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0, _type=int) - value, commit=False)
+            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) - value, commit=False)
+        db.session.commit()
+
+    def function_reset(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
+        for item in self.get_selection(instance, config):
+            item.reset_attribute(self.attribute, value, commit=False)
         db.session.commit()
 
     def function_multiply(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
         for item in self.get_selection(instance, config):
-            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0, _type=int) * value, commit=False)
+            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) * value, commit=False)
+        db.session.commit()
+
+    def function_add_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
+        for item in self.get_selection(instance, config):
+            item.add_tag(value, commit=False)
+        db.session.commit()
+
+    def function_remove_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
+        for item in self.get_selection(instance, config):
+            item.remove_tag(value, commit=False)
         db.session.commit()
 
     def function_equals(self, instance: Union[TileInstance, UnitInstance], value, config: Config):
@@ -93,7 +108,7 @@ class Selector(ABC):
 
         for item in self.get_selection(instance, config):
             if self.attribute:
-                equal = equal and item.get_attribute(self.attribute, default=None, _type=type(value)) == value
+                equal = equal and item.get_attribute(self.attribute, default=None) == value
             else:
                 parent_id = item.tile_id if isinstance(item, TileInstance) else item.entity_id
                 equal = equal and parent_id == value

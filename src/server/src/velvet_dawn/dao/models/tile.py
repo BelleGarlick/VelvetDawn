@@ -1,8 +1,5 @@
-import time
-
 from sqlalchemy.orm import relationship
 
-import velvet_dawn
 from velvet_dawn.dao import db
 
 
@@ -17,49 +14,42 @@ class TileInstance(db.Model):
     x = db.Column(db.Integer)
     y = db.Column(db.Integer)
 
-    attributes = relationship("TileAttribute", cascade="all, delete")
+    attributes = relationship("Attribute", cascade="all, delete")
+    tags = relationship("Tag", cascade="all, delete")
 
     db.UniqueConstraint(x, y)
 
-    def get_attribute(self, key: str, _type=None, default=None):
-        from velvet_dawn.dao.models.attributes import TileAttribute
+    def create_db_attribute_obj(self, key: str, value):
+        from velvet_dawn.dao.models.attributes import AttributeParent, create_attribute_db_object
+        return create_attribute_db_object(self.id, AttributeParent.Tile, key, value)
 
-        value = db.session.query(TileAttribute) \
-            .where(
-                TileAttribute.instance_id == self.id,
-                TileAttribute.key == key
-            ).one_or_none()
+    def set_attribute(self, key, value, commit=True):
+        from velvet_dawn.dao.models.attributes import AttributeParent, set_attribute
+        return set_attribute(self.id, AttributeParent.Tile, key, value, commit=commit)
 
-        if value:
-            return velvet_dawn.utils.parse_type(value.value, _type, default)
+    def get_attribute(self, key, default=None):
+        from velvet_dawn.dao.models.attributes import AttributeParent, get_attribute
+        return get_attribute(self.id, AttributeParent.Tile, key, default=default)
 
-        return default
+    def reset_attribute(self, key, value_if_not_exists):
+        from velvet_dawn.dao.models.attributes import AttributeParent, reset_attribute
+        reset_attribute(self.id, AttributeParent.Tile, key, value_if_not_exists)
 
-    def create_attribute_db_object(self, key, value):
-        from velvet_dawn.dao.models.attributes import TileAttribute
+    def create_db_tag_obj(self, tag):
+        from velvet_dawn.dao.models.tags import TagParent, create_tag_obj
+        return create_tag_obj(self.id, TagParent.Tile, tag)
 
-        attr = TileAttribute(
-            instance_id=self.id,
-            key=key,
-            update_time=int(time.time())
-        )
-        if value is not None:
-            attr.value = str(value)
-        return attr
+    def add_tag(self, tag, commit=True):
+        from velvet_dawn.dao.models.tags import TagParent, add_tag
+        add_tag(self.id, TagParent.Tile, tag, commit=commit)
 
-    def set_attribute(self, key: str, value, commit=True):
-        from velvet_dawn.dao.models.attributes import TileAttribute
+    def remove_tag(self, tag, commit=True):
+        from velvet_dawn.dao.models.tags import TagParent, remove_tag
+        remove_tag(self.id, TagParent.Tile, tag, commit=commit)
 
-        db.session.query(TileAttribute)\
-            .where(
-                TileAttribute.instance_id == self.id,
-                TileAttribute.key == key
-            ).delete()
-
-        db.session.add(self.create_attribute_db_object(key, value))
-
-        if commit:
-            db.session.commit()
+    def has_tag(self, tag: str):
+        from velvet_dawn.dao.models.tags import TagParent, has_tag
+        return has_tag(self.id, TagParent.Tile, tag)
 
     def json(self):
         return {

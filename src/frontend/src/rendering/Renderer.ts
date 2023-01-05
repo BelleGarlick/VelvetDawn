@@ -43,7 +43,7 @@ class DebugOptions {
         ctx.textAlign = "left"
         ctx.font = "40px arial";
         ctx.fillText(`Render Times: ${this.lastRenderTime} ${renderRate} ${framesPerSecond}`, 10, constants.height - 10)
-        ctx.fillText(`Attribute updates: ${state.unitAttrChanges.length + state.tileAttrChanges.length}`, 10, constants.height - 60)
+        ctx.fillText(`Attribute updates: ${state.attrChanges.length}`, 10, constants.height - 60)
     }
 
     public getLastRenderTime() {

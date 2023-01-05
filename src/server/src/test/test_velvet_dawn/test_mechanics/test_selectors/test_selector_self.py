@@ -21,12 +21,12 @@ class TestSelfSelectors(BaseTest):
 
             # check attr options
             selector = selectors.get_selector(unit.entity_id, Unit, "self.health.max")
-            self.assertEqual(100, unit.get_attribute("health.max", _type=int))
+            self.assertEqual(100, unit.get_attribute("health.max"))
             selector.function_add(unit, 3, self.get_test_config())
-            self.assertEqual(103, unit.get_attribute("health.max", _type=int))
+            self.assertEqual(103, unit.get_attribute("health.max"))
             selector.function_subtract(unit, 10, self.get_test_config())
-            self.assertEqual(93, unit.get_attribute("health.max", _type=int))
+            self.assertEqual(93, unit.get_attribute("health.max"))
             selector.function_multiply(unit, 5, self.get_test_config())
-            self.assertEqual(93 * 5, unit.get_attribute("health.max", _type=int))
+            self.assertEqual(93 * 5, unit.get_attribute("health.max"))
             selector.function_set(unit, "example", self.get_test_config())
             self.assertTrue(selector.function_equals(unit, "example", self.get_test_config()))
