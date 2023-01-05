@@ -137,7 +137,7 @@ export class GameViewSidebar {
             ctx.fill()
         })
 
-        return top + (Math.floor(attributes.length / 3) * (size + facade.constants.sidebarPadding))
+        return top + (Math.ceil(attributes.length / 3) * (size + facade.constants.sidebarPadding))
     }
 
     /** Called when the user clicks within the sidebar
