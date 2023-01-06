@@ -1,5 +1,6 @@
 {
     "name": "Battleship",
+    "commander": true,
     "health": {
       "max": 200,
       "regen": 10

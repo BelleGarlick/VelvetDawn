@@ -1,15 +1,35 @@
+export PYTHONPATH=src/server/src:$PYTHONPATH
+
+# Setup optional flags -c -d -p
+clean="false"
+datapack=""
+port=""
+while getopts 'cd:p:' flag; do
+  case "${flag}" in
+    c) clean="true" ;;
+    d) data_pack="${OPTARG}" ;;
+    p) port="${OPTARG}" ;;
+    *) error "Unexpected option ${flag}" ;;
+  esac
+done
+shift $(($OPTIND-1))
 echo $1
+
+# If the '-c' flag is used:
+if [ ${clean} = "true" ]
+then
+  # Drop all tables from the game database
+  python src/server/src/velvet_dawn/dao/clean.py
+fi
 
 if [ $1 = "start" ]
 then
   # Start the server in prod mode
-  export PYTHONPATH=src/server/src:$PYTHONPATH
   python src/server/src/velvet_dawn/server/app.py
 
 elif [ $1 = "dev" ]
 then
   # Start the server in dev mode
-  export PYTHONPATH=src/server/src:$PYTHONPATH
   export DEV=true
   python src/server/src/velvet_dawn/server/app.py
 
@@ -28,7 +48,6 @@ then
 elif [ $1 = "test" ]
 then
   # Test all
-  export PYTHONPATH=src/server/src:$PYTHONPATH
   python -m pytest
   cd src/frontend
   npm run test
@@ -36,7 +55,6 @@ then
 elif [ $1 = "test-server" ]
 then
   # Test all
-  export PYTHONPATH=src/server/src:$PYTHONPATH
   python -m pytest
 elif [ $1 = "test-frontend" ]
 then
