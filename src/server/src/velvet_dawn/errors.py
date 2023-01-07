@@ -58,8 +58,3 @@ class InvalidTurnError(ValidationError):
 class ItemNotFoundError(ValidationError):
     def __init__(self, item_id):
         ValidationError.__init__(self, f"Item not found '{item_id}'")
-
-
-class InvalidSelectorFilter(ValidationError):
-    def __init__(self, selector, filter_name):
-        ValidationError.__init__(self, f"Filter '{filter_name}' may not be applied to selector '{selector}'")

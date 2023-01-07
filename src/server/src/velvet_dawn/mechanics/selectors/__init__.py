@@ -1,19 +1,29 @@
-from typing import Dict, Type, Union
+from typing import Optional
 
 from velvet_dawn import errors
-from velvet_dawn.models.datapacks.unit import Unit
-from velvet_dawn.models.datapacks.tiles import Tile
-from .selector import Selector, SelectorParentType
+
+from .selector import Selector
 from .selector_self import SelectorSelf
-from .selector_local import (
-    SelectorLocal,
-    SelectorLocalUnits,
-    SelectorLocalEnemies,
-    SelectorLocalFriendlies,
-    SelectorLocalTiles
+from .selector_world import SelectorWorld
+from .selector_tiles import SelectorTile, SelectorTiles
+from .selector_closest import (
+    SelectorClosest,
+    SelectorClosestTile,
+    SelectorClosestEnemy,
+    SelectorClosestFriendly
 )
-from .selector_tile import SelectorTile
-from .selector_unit import SelectorUnit
+from .selector_commanders import (
+    SelectorCommander,
+    SelectorCommanders,
+    SelectorFriendlyCommanders,
+    SelectorEnemyCommanders
+)
+from .selector_units import (
+    SelectorUnit,
+    SelectorUnits,
+    SelectorFriendlies,
+    SelectorEnemies
+)
 
 
 """ Selectors module
@@ -25,57 +35,64 @@ is called for.
 """
 
 
-SELECTORS = [
-    SelectorSelf(), SelectorLocal(), SelectorLocalUnits(), SelectorLocalEnemies(), SelectorLocalFriendlies(),
-    SelectorLocalTiles(), SelectorTile(), SelectorUnit()
-]
-
-TILE_SELECTOR_MAP: Dict[str, Selector] = {
+SELECTORS = {
     selector.selector_name: selector
-    for selector in SELECTORS
-    if selector.parent_type in {SelectorParentType.ANY, SelectorParentType.TILE}
-}
-
-UNIT_SELECTOR_MAP: Dict[str, Selector] = {
-    selector.selector_name: selector
-    for selector in SELECTORS
-    if selector.parent_type in {SelectorParentType.ANY, SelectorParentType.UNIT}
+    for selector in [
+        SelectorSelf(), SelectorWorld(), SelectorTile(), SelectorTiles(),
+        SelectorClosest(), SelectorClosestTile(), SelectorClosestEnemy(), SelectorClosestFriendly(),
+        SelectorCommander(), SelectorCommanders(), SelectorFriendlyCommanders(), SelectorEnemyCommanders(),
+        SelectorUnit(), SelectorUnits(), SelectorFriendlies(), SelectorEnemies()
+    ]
 }
 
 
-def get_selector(entity_id: str, parent_type: Union[Type[Unit], Type[Tile]], selector_string: str) -> Selector:
-    """ Get selector for the given parent_type
+# todo more documenation and testing
+def get_selector(entity_id: str, selector_string: str) -> Selector:
+    """ Parse a selector string.
+
+    This works by separating out the chains, setting the
+    tags and setting the attributes
 
     Args:
         entity_id: Shown to the user if an error is raised
-        parent_type: The type to load for
         selector_string: String to parse
 
     Returns:
         The parsed selector.
     """
-    # TODO Use regex to check in correct format
-    # Parse the selectors
-    if "[" in selector_string:
-        selector_name, filters_and_attributes = selector_string.split("[")
-        filters, attribute = filters_and_attributes.split("]")
-        attribute = attribute[1:]
-        filters = filters.replace(" ", "").split(",") if filters else None
+    selector_string = selector_string.replace(" ", "")
 
-    else:
-        tokens = selector_string.split(".")
-        filters = None
-        selector_name = tokens[0]
-        attribute = ".".join(tokens[1:])
+    head: Optional[Selector] = None
+    last: Optional[Selector] = None
 
-    # Load selector for the given type
-    selector = None
-    if parent_type == Unit:
-        selector = UNIT_SELECTOR_MAP.get(selector_name)
-    if parent_type == Tile:
-        selector = TILE_SELECTOR_MAP.get(selector_name)
+    for chain in selector_string.split(">"):
+        # Parse the selectors
+        if "[" in chain:
+            selector_name, filters_and_attributes = chain.split("[")
+            filters, attribute = filters_and_attributes.split("]")
+            attribute = attribute[1:]
+            filters = filters.replace(" ", "").split(",") if filters else None
 
-    if not selector:
-        raise errors.ValidationError(f"Selector '{selector_name}' cannot be used on '{entity_id}'")
+        else:
+            tokens = chain.split(".")
+            filters = None
+            selector_name = tokens[0]
+            attribute = ".".join(tokens[1:])
 
-    return selector.instantiate(selector_string, filters, attribute if attribute else None)
+        # Load selector for the given type
+        selector = SELECTORS.get(selector_name)
+        if not selector:
+            raise errors.ValidationError(f"Selector '{selector_name}' cannot be used on '{entity_id}'")
+
+        selector = selector.instantiate(selector_string, filters, attribute if attribute else None)
+
+        if head is None: head = selector
+        if last is not None: last.chained_selector = selector
+        last = selector
+
+        head.attribute = attribute if attribute else None
+
+    if head is None:
+        raise errors.ValidationError(f"Problem with selector '{selector_string}' detected.")
+
+    return head

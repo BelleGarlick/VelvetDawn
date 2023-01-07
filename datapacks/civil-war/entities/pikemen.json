@@ -14,7 +14,7 @@
     "enter": [{ "modify": "tile.texture.color", "set": "#000000" }],
     "leave": [{ "modify": "tile.texture.color", "set": "#00ff00" }],
     "attack": [{
-      "modify": "local[id=civil-war:cavalry].health",
+      "modify": "unit[id=civil-war:cavalry].health",
       "subtract": 10
     }]
   },

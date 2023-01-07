@@ -1,11 +1,11 @@
 from typing import Union, List
 
-from velvet_dawn.dao.models import Tile
+from velvet_dawn.dao.models import TileInstance
 from velvet_dawn.dao.models import UnitInstance
-from .selector import SelectorParentType, Selector
-from ...config import Config
+from .selector import Selector
+from ...dao.models.world_instance import WorldInstance
 
-""" Selector 'self' for unit and tiles
+""" Selector 'self' modifies what ever is calling it
 
 Some examples:
  - {"targets": "self", "set": "civil-war:okay"}
@@ -24,12 +24,11 @@ class SelectorSelf(Selector):
     def __init__(self):
         Selector.__init__(
             self,
-            selector_name="self",
-            parent_type=SelectorParentType.ANY
+            selector_name="self"
         )
 
     def new(self):
         return SelectorSelf()
 
-    def get_selection(self, instance: Union[Tile, UnitInstance], config: Config) -> List[Union[UnitInstance, Tile]]:
-        return [instance]
+    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[Union[UnitInstance, TileInstance, WorldInstance]]:
+        return self.filters.filter(instance, [instance])

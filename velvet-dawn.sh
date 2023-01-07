@@ -1,4 +1,8 @@
+#!/bin/bash
+
+
 export PYTHONPATH=src/server/src:$PYTHONPATH
+
 
 # Setup optional flags -c -d -p
 clean="false"
@@ -14,6 +18,7 @@ while getopts 'cd:p:' flag; do
 done
 shift $(($OPTIND-1))
 echo $1
+
 
 # If the '-c' flag is used:
 if [ ${clean} = "true" ]
@@ -56,6 +61,7 @@ elif [ $1 = "test-server" ]
 then
   # Test all
   python -m pytest
+
 elif [ $1 = "test-frontend" ]
 then
   cd src/frontend

@@ -1,12 +1,14 @@
 import re
-from typing import List, Optional
+from typing import List, Optional, Union
 
+import velvet_dawn
 from velvet_dawn import errors, constants
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import Player
+from velvet_dawn.dao.models import Player, UnitInstance, TileInstance
 
 
 # noinspection PyShadowingBuiltins
+from velvet_dawn.dao.models.world_instance import WorldInstance
 
 
 def list(team: str = None, exclude_spectators: bool = False) -> List[Player]:
@@ -80,5 +82,21 @@ def get_friendly_enemy_players_breakdown(for_team: str):
             friendly_players.add(player.name)
         else:
             enemy_players.add(player.name)
+
+    return friendly_players, enemy_players
+
+
+def split_players_by_instance(instance: Union[UnitInstance, TileInstance, WorldInstance]):
+    """ Get the sets of friendly and enemy players from the
+    perspective of the given instance
+    """
+    if isinstance(instance, UnitInstance):
+        player = velvet_dawn.players.get_player(instance.player)
+        friendly_players, enemy_players = velvet_dawn.players.get_friendly_enemy_players_breakdown(player.team)
+
+    else:
+        team = velvet_dawn.game.turns.get_active_turn(velvet_dawn.game.phase.get_phase())
+        friendly_players = {player.name for player in velvet_dawn.players.list() if player.team == team}
+        enemy_players = {player.name for player in velvet_dawn.players.list() if player.team != team}
 
     return friendly_players, enemy_players

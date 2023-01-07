@@ -8,10 +8,11 @@ class UnitInstance(db.Model):
     __tablename__ = 'units'
 
     id = db.Column(db.Integer, primary_key=True)
+    entity_id = db.Column(db.Text, nullable=False)
+
+    commander = db.Column(db.Boolean, nullable=False)
 
     player = db.Column(db.Text, db.ForeignKey(Player.name), nullable=False)
-
-    entity_id = db.Column(db.Text, nullable=False)
 
     # Grid position
     x = db.Column(db.Integer, nullable=False)

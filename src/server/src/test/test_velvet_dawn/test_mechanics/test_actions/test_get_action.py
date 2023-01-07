@@ -10,7 +10,7 @@ class TestGetAction(BaseTest):
 
     def test_get_actions(self):
         with app.app_context():
-            action = velvet_dawn.mechanics.actions.get_action("0", Unit, {
+            action = velvet_dawn.mechanics.actions.get_action("0", {
                 "modify": "self.health",
                 "set": "x"
             })
@@ -18,7 +18,7 @@ class TestGetAction(BaseTest):
 
             # Invalid action
             with self.assertRaises(errors.ValidationError):
-                velvet_dawn.mechanics.actions.get_action("0", Unit, {
+                velvet_dawn.mechanics.actions.get_action("0", {
                     "random key": "self.health",
                 })
 

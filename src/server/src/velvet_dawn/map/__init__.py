@@ -72,3 +72,10 @@ def get_tile(x, y) -> Optional[TileInstance]:
 def get_tile_movement_weight(tile: TileInstance):
     # TODO Incorporate influence or changes
     return tile.get_attribute("movement.weight")
+
+
+def get_distance(to, closest):
+    # TODO Test this is correct
+    dcol = abs(to.x - closest.x)
+    drow = abs(to.y - closest.y)
+    return dcol + max(0, (drow - dcol))

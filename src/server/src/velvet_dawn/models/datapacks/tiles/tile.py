@@ -73,7 +73,7 @@ class Tile:
         tile.textures = TileTextures.load(tile_id, data.get('textures', {}))
 
         tile.attributes.load(tile_id, data.get('attributes', []))
-        tile.triggers.load(tile_id, Tile, data.get("triggers", {}))
+        tile.triggers.load(tile_id, data.get("triggers", {}))
 
         tile.tags.load(tile_id, data.get('tags', []))
 

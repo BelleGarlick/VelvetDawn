@@ -1,4 +1,4 @@
-from velvet_dawn.dao.models.tile import Tile, TileInstance
+from velvet_dawn.dao.models.tile import TileInstance
 from velvet_dawn.dao.models.teams import Team
 from velvet_dawn.dao.models.entity_setup import *
 from velvet_dawn.dao.models.players import Player

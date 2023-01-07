@@ -1,0 +1,77 @@
+import velvet_dawn
+from test.base_test import BaseTest
+from velvet_dawn.dao import app
+from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.mechanics import selectors
+
+
+class TestFilteredSelectors(BaseTest):
+
+    def test_filter_parsing(self):
+        # Test selectors work
+        selector = selectors.get_selector(
+            "0", "unit[id=10,tag=dsa,range=100]>commanders[id=4,tag=10]")
+
+        self.assertIsInstance(selector, selectors.SelectorUnit)
+        self.assertIsInstance(selector.chained_selector, selectors.SelectorCommanders)
+
+        self.assertIn('10', selector.filters.allowed_ids)
+        self.assertIn('tag:dsa', selector.filters.allowed_tags)
+        self.assertEqual(100, selector.filters.max_range)
+        self.assertIsNone(selector.filters.min_range)
+
+        self.assertIn('4', selector.chained_selector.filters.allowed_ids)
+        self.assertIn('tag:10', selector.chained_selector.filters.allowed_tags)
+        self.assertNotIn('10', selector.chained_selector.filters.allowed_tags)
+        self.assertIsNone(selector.chained_selector.filters.max_range)
+        self.assertIsNone(selector.chained_selector.filters.min_range)
+
+    def test_filters_id(self):
+        with app.app_context():
+            self.setup_game()
+
+            selector_1 = selectors.get_selector('world', "units[tag=tag:test-tag1]")
+            selector_2 = selectors.get_selector('world', "units[tag=x]")
+
+            self.assertEqual(2, len(selector_1.get_selection(WorldInstance())))
+            self.assertEqual(0, len(selector_2.get_selection(WorldInstance())))
+
+    def test_filters_tags(self):
+        with app.app_context():
+            self.setup_game()
+
+            selector_1 = selectors.get_selector('world', "units[id=testing:commander]")
+            selector_2 = selectors.get_selector('world', "units[id=civil-war:cavalry]")
+            selector_3 = selectors.get_selector('world', "units[id=testing:commander, id=civil-war:cavalry]")
+
+            self.assertEqual(2, len(selector_1.get_selection(WorldInstance())))
+            self.assertEqual(1, len(selector_2.get_selection(WorldInstance())))
+            self.assertEqual(3, len(selector_3.get_selection(WorldInstance())))
+
+    def test_filters_max_range(self):
+        with app.app_context():
+            self.setup_game()
+
+            unit = velvet_dawn.units.get_unit_at_position(15, 0)
+
+            selector_range_0 = selectors.get_selector(unit.entity_id, "tiles[range=0]")
+            selector_range_1 = selectors.get_selector(unit.entity_id, "tiles[range=1]")
+            selector_range_2 = selectors.get_selector(unit.entity_id, "tiles[range=2]")
+
+            self.assertEqual(1, len(selector_range_0.get_selection(unit)))
+            self.assertEqual(6, len(selector_range_1.get_selection(unit)))
+            self.assertEqual(15, len(selector_range_2.get_selection(unit)))
+
+    def test_filters_min_range(self):
+        with app.app_context():
+            self.setup_game()
+
+            unit = velvet_dawn.units.get_unit_at_position(15, 0)
+
+            selector_range_0 = selectors.get_selector(unit.entity_id, "tiles[min-range=0]")
+            selector_range_1 = selectors.get_selector(unit.entity_id, "tiles[min-range=1]")
+            selector_range_2 = selectors.get_selector(unit.entity_id, "tiles[min-range=2]")
+
+            self.assertEqual(589, len(selector_range_0.get_selection(unit)))
+            self.assertEqual(588, len(selector_range_1.get_selection(unit)))
+            self.assertEqual(583, len(selector_range_2.get_selection(unit)))

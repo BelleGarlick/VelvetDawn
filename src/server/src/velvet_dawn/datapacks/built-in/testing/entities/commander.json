@@ -1,4 +1,5 @@
 {
   "name": "Testing Commander",
-  "commander": true
+  "commander": true,
+  "tags": ["test-tag1"]
 }

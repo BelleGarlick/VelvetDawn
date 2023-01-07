@@ -135,7 +135,7 @@ def begin_next_turn(config: Config):
 
     # If there is a turn, then trigger the end turn actions, otherwise it means there
     # is no turn as the game has only just begin
-    if current_turn: _trigger_on_turn_end_actions(config, current_turn)
+    if current_turn: _trigger_on_turn_end_actions(current_turn)
     else: current_turn = teams[-1].team_id
 
     new_team_turn = None
@@ -152,18 +152,17 @@ def begin_next_turn(config: Config):
             unit.set_attribute("movement.remaining", unit.get_attribute("movement.range", default=1), commit=False)
 
     # Trigger all on turn begins
-    _trigger_on_turn_being_actions(config, new_team_turn)
+    _trigger_on_turn_being_actions(new_team_turn)
 
     _update_turn_start_time()
 
 
-def _trigger_on_turn_being_actions(config: Config, new_team_turn: str):
+def _trigger_on_turn_being_actions(new_team_turn: str):
     """ Trigger all entity/tile turn begin actions
 
     Testing for this exists in the triggers test suite
 
     Args:
-        config: Game config
         new_team_turn: The team who's turn is starting
     """
     friendly_players, enemy_players = velvet_dawn.players.get_friendly_enemy_players_breakdown(for_team=new_team_turn)
@@ -171,21 +170,20 @@ def _trigger_on_turn_being_actions(config: Config, new_team_turn: str):
     for unit in velvet_dawn.units.list():
         entity_definition = velvet_dawn.datapacks.entities[unit.entity_id]
 
-        entity_definition.triggers.on_turn(unit, config)
-        if unit.player in friendly_players: entity_definition.triggers.on_friendly_turn(unit, config)
-        if unit.player in enemy_players: entity_definition.triggers.on_enemy_turn(unit, config)
+        entity_definition.triggers.on_turn(unit)
+        if unit.player in friendly_players: entity_definition.triggers.on_friendly_turn(unit)
+        if unit.player in enemy_players: entity_definition.triggers.on_enemy_turn(unit)
 
     for tile in velvet_dawn.map.list_tiles():
-        velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_turn(tile, config)
+        velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_turn(tile)
 
 
-def _trigger_on_turn_end_actions(config: Config, old_team_turn):
+def _trigger_on_turn_end_actions(old_team_turn):
     """ Trigger all entity/tile turn end actions
 
     Testing for this exists in the triggers test suite
 
     Args:
-        config: Game config
         old_team_turn: The team who's turn is ending
     """
     friendly_players, enemy_players = velvet_dawn.players.get_friendly_enemy_players_breakdown(for_team=old_team_turn)
@@ -193,12 +191,12 @@ def _trigger_on_turn_end_actions(config: Config, old_team_turn):
     for unit in velvet_dawn.units.list():
         entity_definition = velvet_dawn.datapacks.entities[unit.entity_id]
 
-        entity_definition.triggers.on_turn_end(unit, config)
-        if unit.player in friendly_players: entity_definition.triggers.on_friendly_turn_end(unit, config)
-        if unit.player in enemy_players: entity_definition.triggers.on_enemy_turn_end(unit, config)
+        entity_definition.triggers.on_turn_end(unit)
+        if unit.player in friendly_players: entity_definition.triggers.on_friendly_turn_end(unit)
+        if unit.player in enemy_players: entity_definition.triggers.on_enemy_turn_end(unit)
 
     for tile in velvet_dawn.map.list_tiles():
-        velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_turn_end(tile, config)
+        velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_turn_end(tile)
 
 
 def _check_all_players_ready(current_phase: Phase) -> bool:

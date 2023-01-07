@@ -41,7 +41,7 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
     remaining_moves = _validate_entity_traversing_path(entity, path, config)
 
     # Run leave movement triggers
-    trigger_on_leave_actions(entity, velvet_dawn.map.get_tile(entity.x, entity.y), config)
+    trigger_on_leave_actions(entity, velvet_dawn.map.get_tile(entity.x, entity.y))
 
     # Update the entity to the new position based on the path and the remaining moves
     entity.set_attribute("movement.remaining", remaining_moves)
@@ -54,8 +54,7 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
     # Run enter movement triggers
     trigger_on_enter_actions(
         velvet_dawn.units.get_unit_at_position(path[-1]['x'], path[-1]['y']),
-        velvet_dawn.map.get_tile(path[-1]['x'], path[-1]['y']),
-        config
+        velvet_dawn.map.get_tile(path[-1]['x'], path[-1]['y'])
     )
 
 
@@ -108,7 +107,7 @@ def _validate_entity_traversing_path(entity: UnitInstance, path: List[Dict[str, 
     return remaining_moves
 
 
-def trigger_on_leave_actions(unit_instance: UnitInstance, tile_instance: TileInstance, config: Config):
+def trigger_on_leave_actions(unit_instance: UnitInstance, tile_instance: TileInstance):
     """ Trigger on leave actions
 
     This occurs when an entity leaves a tile, both the tile and
@@ -120,13 +119,12 @@ def trigger_on_leave_actions(unit_instance: UnitInstance, tile_instance: TileIns
     Args:
         unit_instance: The unit to trigger on
         tile_instance: The tile to trigger on
-        config: Game config
     """
-    velvet_dawn.datapacks.entities[unit_instance.entity_id].triggers.on_leave(unit_instance, config)
-    velvet_dawn.datapacks.tiles[tile_instance.tile_id].triggers.on_leave(tile_instance, config)
+    velvet_dawn.datapacks.entities[unit_instance.entity_id].triggers.on_leave(unit_instance)
+    velvet_dawn.datapacks.tiles[tile_instance.tile_id].triggers.on_leave(tile_instance)
 
 
-def trigger_on_enter_actions(unit_instance: UnitInstance, tile_instance: TileInstance, config: Config):
+def trigger_on_enter_actions(unit_instance: UnitInstance, tile_instance: TileInstance):
     """ Trigger on enter actions
 
     This occurs when an entity enters a tile, both the tile and
@@ -138,7 +136,6 @@ def trigger_on_enter_actions(unit_instance: UnitInstance, tile_instance: TileIns
     Args:
         unit_instance: The unit to trigger on
         tile_instance: The tile to trigger on
-        config: Game config
     """
-    velvet_dawn.datapacks.entities[unit_instance.entity_id].triggers.on_enter(unit_instance, config)
-    velvet_dawn.datapacks.tiles[tile_instance.tile_id].triggers.on_enter(tile_instance, config)
+    velvet_dawn.datapacks.entities[unit_instance.entity_id].triggers.on_enter(unit_instance)
+    velvet_dawn.datapacks.tiles[tile_instance.tile_id].triggers.on_enter(tile_instance)

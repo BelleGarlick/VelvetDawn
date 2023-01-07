@@ -122,10 +122,11 @@ def place_entity(player: str, entity_id: str, x: int, y: int, config: Config):
     # Finally, add the entity to the db
     entity_definition = datapacks.entities[entity_id]
     entity = UnitInstance(
+        x=x,
+        y=y,
         player=player,
         entity_id=entity_id,
-        x=x,
-        y=y
+        commander=entity_definition.commander
     )
     db.session.add(entity)
     db.session.commit()
@@ -133,7 +134,7 @@ def place_entity(player: str, entity_id: str, x: int, y: int, config: Config):
     entity_definition.tags.save_to_db(entity)
 
     # Trigger on spawn
-    entity_definition.triggers.on_spawn(entity, config)
+    entity_definition.triggers.on_spawn(entity)
 
 
 def remove_entity(player_id: str, x: int, y: int):

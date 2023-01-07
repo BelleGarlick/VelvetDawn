@@ -1,47 +1,24 @@
-import dataclasses
-import enum
 from abc import ABC
-from typing import List, Union
+from typing import List, Union, Optional
 
-from velvet_dawn import errors
-from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import UnitInstance, TileInstance
 
-
-# todo not requals function
-
-
-class SelectorParentType(enum.Enum):
-    ANY = 0
-    UNIT = 1
-    TILE = 2
-
-
-@dataclasses.dataclass
-class Filter:
-    key: str
-    value: str
-
-    @property
-    def value_float(self): return float(self.value)
+from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.mechanics.selectors.filters import Filters
 
 
 class Selector(ABC):
     def __init__(
             self,
             selector_name: str,
-            parent_type: SelectorParentType,
-            valid_filters: List[str] = None
     ):
-        if not valid_filters: valid_filters = []
-
         self.full_selector = None
         self.attribute = None
         self.selector_name = selector_name
-        self.parent_type = parent_type
-        self.filters: List[Filter] = []
-        self.__valid_filters = valid_filters
+        self.filters: Filters = Filters()
+
+        self.chained_selector: Optional[Selector] = None
 
     def new(self) -> 'Selector':
         raise NotImplementedError()
@@ -54,59 +31,71 @@ class Selector(ABC):
         if filters:
             for filter in filters:
                 key, value = filter.split("=")
-                if key not in self.__valid_filters:
-                    raise errors.InvalidSelectorFilter(full_selector, key)
-                new_copy.filters.append(Filter(key, value))
+                new_copy.filters.add_filter(key, value)
 
         return new_copy
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance], config: Config) -> List[Union[UnitInstance, TileInstance]]:
+    def get_selection(
+            self,
+            instance: Union[TileInstance, UnitInstance, WorldInstance]
+    ) -> List[Union[UnitInstance, TileInstance, WorldInstance]]:
         raise NotImplementedError()
 
-    def function_set(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
-        # TODO Check if valid and has attribute
-        for item in self.get_selection(instance, config):
+    def get_chained_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[Union[UnitInstance, TileInstance, WorldInstance]]:
+        direct_selection = self.get_selection(instance)
+
+        if not self.chained_selector:
+            return direct_selection
+
+        chained_selection = set()
+        for item in direct_selection:
+            chained_selection.update(self.chained_selector.get_chained_selection(item))
+
+        return list(chained_selection)
+
+    def function_set(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+        for item in self.get_chained_selection(instance):
             item.set_attribute(self.attribute, value, commit=False)
         db.session.commit()
 
-    def function_add(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
-        for item in self.get_selection(instance, config):
+    def function_add(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+        for item in self.get_chained_selection(instance):
             item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) + value, commit=False)
         db.session.commit()
 
-    def function_subtract(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
-        for item in self.get_selection(instance, config):
+    def function_subtract(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+        for item in self.get_chained_selection(instance):
             item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) - value, commit=False)
         db.session.commit()
 
-    def function_reset(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
-        for item in self.get_selection(instance, config):
+    def function_reset(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+        for item in self.get_chained_selection(instance):
             item.reset_attribute(self.attribute, value, commit=False)
         db.session.commit()
 
-    def function_multiply(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
-        for item in self.get_selection(instance, config):
+    def function_multiply(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+        for item in self.get_chained_selection(instance):
             item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) * value, commit=False)
         db.session.commit()
 
-    def function_add_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
-        for item in self.get_selection(instance, config):
+    def function_add_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+        for item in self.get_chained_selection(instance):
             item.add_tag(value, commit=False)
         db.session.commit()
 
-    def function_remove_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float], config: Config):
-        for item in self.get_selection(instance, config):
+    def function_remove_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+        for item in self.get_chained_selection(instance):
             item.remove_tag(value, commit=False)
         db.session.commit()
 
-    def function_equals(self, instance: Union[TileInstance, UnitInstance], value, config: Config):
+    def function_equals(self, instance: Union[TileInstance, UnitInstance], value):
         equal = True
 
-        instances = self.get_selection(instance, config)
+        instances = self.get_chained_selection(instance)
         if not instances:
             return False
 
-        for item in self.get_selection(instance, config):
+        for item in instances:
             if self.attribute:
                 equal = equal and item.get_attribute(self.attribute, default=None) == value
             else:

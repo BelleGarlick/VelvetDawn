@@ -5,9 +5,6 @@ from velvet_dawn.dao import db
 from velvet_dawn.dao.models import TileInstance, UnitInstance
 
 
-# TODO Create add_tag / remove_tag functions in modify action
-
-
 class Tags:
     def __init__(self):
         self.tags = set()

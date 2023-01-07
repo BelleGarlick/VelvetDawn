@@ -143,7 +143,7 @@ class Unit:
 
         unit.tags.load(id, data.get('tags', []))
         unit.attributes.load(id, data.get('attributes', []))
-        unit.triggers.load(id, Unit, data.get('triggers', {}))
+        unit.triggers.load(id, data.get('triggers', {}))
 
         return unit
 

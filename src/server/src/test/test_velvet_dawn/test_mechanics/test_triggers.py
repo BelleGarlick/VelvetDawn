@@ -1,7 +1,6 @@
 import velvet_dawn.datapacks
 from velvet_dawn.dao import app
 from test.base_test import BaseTest
-from velvet_dawn.models import Unit
 
 
 """ Test all triggers are executed correctly
@@ -15,7 +14,7 @@ executed.
 def set_commander_trigger(trigger_name: str):
     """ Assign a trigger on the given trigger name """
     velvet_dawn.datapacks.entities['testing:commander'].triggers._triggers[trigger_name] = [
-        velvet_dawn.mechanics.actions.get_action("0", Unit, {
+        velvet_dawn.mechanics.actions.get_action("0", {
             "modify": "self.health",
             "set": 0.1
         })
@@ -25,7 +24,7 @@ def set_commander_trigger(trigger_name: str):
 def set_commander_tile_trigger(trigger_name: str):
     """ Assign a trigger to a tile on the given trigger name """
     velvet_dawn.datapacks.entities['testing:commander'].triggers._triggers[trigger_name] = [
-        velvet_dawn.mechanics.actions.get_action("0", Unit, {
+        velvet_dawn.mechanics.actions.get_action("0", {
             "modify": "tile.test",
             "set": 0.1
         })

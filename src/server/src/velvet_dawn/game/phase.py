@@ -32,9 +32,9 @@ def start_game_phase(config: Config):
 
     # Trigger game start
     for unit in velvet_dawn.units.list():
-        velvet_dawn.datapacks.entities[unit.entity_id].triggers.on_game_start(unit, config)
+        velvet_dawn.datapacks.entities[unit.entity_id].triggers.on_game_start(unit)
     for tile in velvet_dawn.map.list_tiles():
-        velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_game_start(tile, config)
+        velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_game_start(tile)
 
     velvet_dawn.game.turns.begin_next_turn(config)
 

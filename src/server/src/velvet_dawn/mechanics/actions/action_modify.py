@@ -55,7 +55,7 @@ class ActionModify(Action):
         self.function_value = 0
 
     @staticmethod
-    def from_dict(id: str, parent_type: Union[Type[Unit], Type[Tile]], data: dict):
+    def from_dict(id: str, data: dict):
         """ Parse the dict of tile/unit data to construct this action """
         if 'modify' not in data:
             raise errors.ValidationError("Modify functions must contain a 'modify' selector")
@@ -68,7 +68,7 @@ class ActionModify(Action):
         # Construct the action and it's function
         action = ActionModify()
         # TODO Conditions
-        action.selector = velvet_dawn.mechanics.selectors.get_selector(id, parent_type, data['modify'])
+        action.selector = velvet_dawn.mechanics.selectors.get_selector(id, data['modify'])
 
         # Find the key used and update the function (we already verify there is a key above)
         function_key = None
@@ -89,28 +89,28 @@ class ActionModify(Action):
 
         return action
 
-    def run(self, instance: Union[TileInstance, UnitInstance], config: Config):
+    def run(self, instance: Union[TileInstance, UnitInstance]):
         """ Execute the attribute """
         if self.function == ActionModifierFunction.SET:
-            self.selector.function_set(instance, self.function_value, config)
+            self.selector.function_set(instance, self.function_value)
 
         elif self.function == ActionModifierFunction.ADD:
-            self.selector.function_add(instance, self.function_value, config)
+            self.selector.function_add(instance, self.function_value)
 
         elif self.function == ActionModifierFunction.MUL:
-            self.selector.function_multiply(instance, self.function_value, config)
+            self.selector.function_multiply(instance, self.function_value)
 
         elif self.function == ActionModifierFunction.SUB:
-            self.selector.function_subtract(instance, self.function_value, config)
+            self.selector.function_subtract(instance, self.function_value)
 
         elif self.function == ActionModifierFunction.RESET:
-            self.selector.function_reset(instance, self.function_value, config)
+            self.selector.function_reset(instance, self.function_value)
 
         elif self.function == ActionModifierFunction.ADD_TAG:
-            self.selector.function_add_tag(instance, self.function_value, config)
+            self.selector.function_add_tag(instance, self.function_value)
 
         elif self.function == ActionModifierFunction.REMOVE_TAG:
-            self.selector.function_remove_tag(instance, self.function_value, config)
+            self.selector.function_remove_tag(instance, self.function_value)
 
         else:
             raise errors.ValidationError(f"Unknown action function type: '{self.function}'")

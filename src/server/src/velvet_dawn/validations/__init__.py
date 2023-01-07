@@ -3,7 +3,7 @@ from typing import Union
 from velvet_dawn import errors
 
 
-def is_int(value: int, min=None, max=None, error_prefix: str = None):
+def is_int(value, min=None, max=None, error_prefix: str = None):
     try:
         value = int(value)
     except:
@@ -16,7 +16,7 @@ def is_int(value: int, min=None, max=None, error_prefix: str = None):
         raise errors.ValidationError(f"{error_prefix} must smaller than {max}.")
 
 
-def is_number(value: Union[int, float], min=None, max=None, error_prefix: str = None):
+def is_number(value, min=None, max=None, error_prefix: str = None):
     try:
         value = float(value)
     except:

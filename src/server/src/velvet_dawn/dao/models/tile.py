@@ -19,6 +19,10 @@ class TileInstance(db.Model):
 
     db.UniqueConstraint(x, y)
 
+    @property
+    def entity_id(self):
+        return self.tile_id
+
     def create_db_attribute_obj(self, key: str, value):
         from velvet_dawn.dao.models.attributes import AttributeParent, create_attribute_db_object
         return create_attribute_db_object(self.id, AttributeParent.Tile, key, value)
@@ -60,6 +64,3 @@ class TileInstance(db.Model):
                 "y": self.y
             }
         }
-
-
-Tile = TileInstance
