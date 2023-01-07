@@ -55,7 +55,8 @@ class Triggers:
         """ Execute each action in a given list of triggers """
         if trigger_name in self._triggers:
             for action in self._triggers[trigger_name]:
-                action.run(instance)
+                if action.can_run(instance):
+                    action.run(instance)
 
     def on_turn(self, instance: Union[UnitInstance, TileInstance]):
         self._run_trigger("turn", instance)

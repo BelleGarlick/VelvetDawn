@@ -1,13 +1,11 @@
 import enum
-from typing import Union, Type, Optional
+from typing import Union, Optional
 
 import velvet_dawn.mechanics.selectors
 from velvet_dawn import errors
-from velvet_dawn.config import Config
 from velvet_dawn.dao.models import TileInstance, UnitInstance
 from velvet_dawn.mechanics.actions.action import Action
 from velvet_dawn.mechanics.selectors import Selector
-from velvet_dawn.models import Unit, Tile
 
 
 """ The action modify class, responsible for modifying 
@@ -67,7 +65,6 @@ class ActionModify(Action):
 
         # Construct the action and it's function
         action = ActionModify()
-        # TODO Conditions
         action.selector = velvet_dawn.mechanics.selectors.get_selector(id, data['modify'])
 
         # Find the key used and update the function (we already verify there is a key above)

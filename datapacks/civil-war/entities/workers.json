@@ -46,8 +46,8 @@
       "description": "Build a fortress with improve the health, health regen and defence of a unit inside the fortress.",
       "condition": [
         { "if": "tile", "equals": "civil-war:grass" },
-        { "if": "self.attributes.clay", "greaterThan": 3 },
-        { "if": "self.attributes.wood", "greaterThan": 3 }
+        { "if": "self.attributes.clay", "gt": 3 },
+        { "if": "self.attributes.wood", "gt": 3 }
       ],
       "then": [{ "target": "tile", "set": "civil-war:fortress" }]
     }

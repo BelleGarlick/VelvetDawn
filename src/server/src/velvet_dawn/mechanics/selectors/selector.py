@@ -89,17 +89,52 @@ class Selector(ABC):
         db.session.commit()
 
     def function_equals(self, instance: Union[TileInstance, UnitInstance], value):
-        equal = True
-
+        """ Compare if the given value is equal the selectors' id / attribute value """
         instances = self.get_chained_selection(instance)
         if not instances:
             return False
 
         for item in instances:
-            if self.attribute:
-                equal = equal and item.get_attribute(self.attribute, default=None) == value
-            else:
-                parent_id = item.tile_id if isinstance(item, TileInstance) else item.entity_id
-                equal = equal and parent_id == value
+            if self.attribute: 
+                if item.get_attribute(self.attribute, default=None) != value:
+                    return False
+            elif item.entity_id != value:
+                return False
 
-        return equal
+        return True
+
+    def function_less_than(self, instance: Union[TileInstance, UnitInstance], value):
+        """ Compare if the entities attribute is less than a given value """
+        instances = self.get_chained_selection(instance)
+        if not instances or not self.attribute:
+            return False
+
+        for item in instances:
+            if item.get_attribute(self.attribute, default=None) >= int(value):
+                return False
+
+        return True
+
+    def function_less_than_equals(self, instance: Union[TileInstance, UnitInstance], value):
+        """ Compare if the entities attribute is less/equal than a given value """
+        instances = self.get_chained_selection(instance)
+        if not instances or not self.attribute:
+            return False
+
+        for item in instances:
+            if item.get_attribute(self.attribute, default=None) > int(value):
+                return False
+
+        return True
+
+    def function_has_tag(self, instance: Union[TileInstance, UnitInstance], value: str):
+        """ Check if the selection has a given tag """
+        instances = self.get_chained_selection(instance)
+        if not instances:
+            return False
+
+        for item in instances:
+            if not item.has_tag(value):
+                return False
+
+        return True

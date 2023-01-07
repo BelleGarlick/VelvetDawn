@@ -1,3 +1,4 @@
+import velvet_dawn.mechanics.conditionals
 from velvet_dawn import errors
 from velvet_dawn.mechanics.actions.action import Action
 from velvet_dawn.mechanics.actions.action_modify import ActionModify
@@ -25,8 +26,16 @@ def get_action(id: str, data: dict) -> Action:
     if not isinstance(data, dict):
         raise errors.ValidationError(f"Invalid actionable in {id}. '{data}' must be a dictionary")
 
+    built_action = None
     if "modify" in data:
-        return ActionModify.from_dict(id, data)
+        built_action = ActionModify.from_dict(id, data)
 
-    else:
+    # Create the comparison objects
+    conditions = data.get("conditions", [])
+    for condition in conditions:
+        built_action.conditions.append(velvet_dawn.mechanics.conditionals.get_conditional(id, condition))
+
+    if not built_action:
         raise errors.ValidationError(f"Invalid action '{data}' on {id}")
+
+    return built_action
