@@ -4,7 +4,6 @@ import velvet_dawn
 from velvet_dawn.dao.models import UnitInstance, TileInstance
 from .selector import Selector
 from ...dao.models.world_instance import WorldInstance
-from ...models import Tile
 
 """ Selector 'tile' references the tile the current unit is in
 
@@ -43,5 +42,5 @@ class SelectorTiles(Selector):
     def new(self):
         return SelectorTiles()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[Tile]:
+    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[TileInstance]:
         return self.filters.filter(instance, velvet_dawn.map.list_tiles())

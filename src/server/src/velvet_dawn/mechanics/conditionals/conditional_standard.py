@@ -34,4 +34,7 @@ class ConditionalStandard(Conditional):
         if self.function == Comparison.HAS_TAG:
             return self.selector.function_has_tag(instance, self.function_value)
 
+        if self.function == Comparison.NOT_HAS_TAG:
+            return not self.selector.function_has_tag(instance, self.function_value)
+
         return False

@@ -17,6 +17,7 @@ class Comparison(enum.Enum):
     GREATER_THAN = 4
     GREATER_THAN_EQUAL = 5
     HAS_TAG = 6
+    NOT_HAS_TAG = 7
 
 
 # Comparison keys
@@ -27,7 +28,7 @@ OPERATORS = {
     "less-than-equals": Comparison.LESS_THAN_EQUAL, "lte": Comparison.LESS_THAN_EQUAL,
     "greater-than": Comparison.GREATER_THAN, "gt": Comparison.GREATER_THAN,
     "greater-than-equals": Comparison.GREATER_THAN_EQUAL, "gte": Comparison.GREATER_THAN_EQUAL,
-    "tagged": Comparison.HAS_TAG
+    "tagged": Comparison.HAS_TAG, "not-tagged": Comparison.NOT_HAS_TAG
 }
 
 
@@ -77,9 +78,9 @@ class Conditional:
         if self.function in NUMBERS_ONLY_OPERATORS:
             velvet_dawn.validations.is_int(self.function_value, error_prefix=f"Conditional in {id} with operation '{operator_key}' comparison")
 
-        if self.selector.attribute is not None and self.function == Comparison.HAS_TAG:
+        if self.selector.attribute is not None and (self.function == Comparison.HAS_TAG or self.function == Comparison.NOT_HAS_TAG):
             raise errors.ValidationError(f"Cannot compare tags on this selector with an attribute on '{id}'.")
-        if self.function == Comparison.HAS_TAG and not self.has_tag_enabled:
+        if (self.function == Comparison.HAS_TAG or self.function == Comparison.NOT_HAS_TAG) and not self.has_tag_enabled:
             raise errors.ValidationError(f"Cannot compare tags using a '{self.keyword}' comparison method on '{id}'")
 
         return self

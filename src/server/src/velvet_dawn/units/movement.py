@@ -5,7 +5,8 @@ from velvet_dawn import errors
 import velvet_dawn.map.neighbours
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
-from velvet_dawn.models import Phase, Coordinate
+from velvet_dawn.models.phase import Phase
+from velvet_dawn.models.coordinate import Coordinate
 from velvet_dawn.dao.models import Player, UnitInstance, TileInstance
 
 

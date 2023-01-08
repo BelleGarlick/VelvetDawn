@@ -1,7 +1,5 @@
 from test.base_test import BaseTest
-from velvet_dawn import errors
 from velvet_dawn.dao.models.world_instance import WorldInstance
-from velvet_dawn.models import Tile, Entity
 from velvet_dawn.mechanics import selectors
 
 

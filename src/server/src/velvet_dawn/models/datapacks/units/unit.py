@@ -1,10 +1,12 @@
 import velvet_dawn
-from .attributes import Attributes
+from velvet_dawn.models.datapacks.attributes import Attributes
 from velvet_dawn.models.datapacks.tags import Tags
-from ... import errors, constants
+from velvet_dawn import errors, constants
 
 
 # List of all available keys allowed on an entity
+from velvet_dawn.models.datapacks.units.upgrades import Upgrades
+
 VALID_ENTITY_KEYS = [
     "id", "name", "abstract", "extends", "upgrades", "health",
     "movement", "combat", "tags", "notes", "textures", "triggers",
@@ -102,12 +104,12 @@ class EntityTextures:
 
 
 class Unit:
-    def __init__(self, id: str, name: str):
+    def __init__(self, parent_id: str, name: str):
         from velvet_dawn.mechanics.triggers import Triggers
 
         super().__init__()
 
-        self.id = id
+        self.id = parent_id
         self.name = name
         self.max_health = 100
         self.commander = False
@@ -115,7 +117,9 @@ class Unit:
         self.tags = Tags()
         self.attributes = Attributes()
         self.textures = EntityTextures()
+
         self.triggers = Triggers()
+        self.upgrades = Upgrades()
 
     def json(self):
         return {
@@ -127,23 +131,24 @@ class Unit:
         }
 
     @staticmethod
-    def load(id: str, data: dict):
+    def load(parent_id: str, data: dict):
         for key in data:
             if key not in VALID_ENTITY_KEYS:
-                raise errors.ValidationError(f"Invalid key '{key}' on entity '{id}'")
+                raise errors.ValidationError(f"Invalid key '{key}' on entity '{parent_id}'")
 
-        unit = Unit(id=id, name=data['name'])
+        unit = Unit(parent_id=parent_id, name=data['name'])
 
         unit.commander = data.get("commander", False)
 
         unit.textures.update(data.get('textures', {}))
-        _parse_health(id, unit.attributes, data.get("health", {}))
-        _parse_movement(id, unit.attributes, data.get("movement", {}))
-        _parse_combat(id, unit.attributes, data.get("combat", {}))
+        _parse_health(parent_id, unit.attributes, data.get("health", {}))
+        _parse_movement(parent_id, unit.attributes, data.get("movement", {}))
+        _parse_combat(parent_id, unit.attributes, data.get("combat", {}))
 
-        unit.tags.load(id, data.get('tags', []))
-        unit.attributes.load(id, data.get('attributes', []))
-        unit.triggers.load(id, data.get('triggers', {}))
+        unit.tags.load(parent_id, data.get('tags', []))
+        unit.attributes.load(parent_id, data.get('attributes', []))
+        unit.triggers.load(parent_id, data.get('triggers', {}))
+        unit.upgrades.load(parent_id, data.get("upgrades", []))
 
         return unit
 

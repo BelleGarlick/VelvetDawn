@@ -1,6 +1,6 @@
 from typing import Union, List
 
-import velvet_dawn.units
+import velvet_dawn
 from velvet_dawn.dao.models import TileInstance, UnitInstance
 from .selector import Selector
 from ...dao.models.world_instance import WorldInstance

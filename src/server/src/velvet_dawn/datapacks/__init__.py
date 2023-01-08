@@ -7,7 +7,7 @@ from typing import Dict, List
 from velvet_dawn import errors
 from velvet_dawn.config import Config
 from velvet_dawn.logger import logger
-from velvet_dawn.models.datapacks.unit import Entity
+from velvet_dawn.models.datapacks.units.unit import Unit
 from velvet_dawn.models.datapacks.resource import Resource, ResourceType
 from velvet_dawn.models.datapacks.tiles.tile import Tile
 
@@ -25,7 +25,7 @@ _DATAPACKS_PATH = Path(__file__).parent.parent.parent.parent.parent.parent / "da
 _abstract_definitions: Dict[str, dict] = {}
 
 tiles: Dict[str, Tile] = {}
-entities: Dict[str, Entity] = {}
+entities: Dict[str, Unit] = {}
 resources: Dict[str, Resource] = {}
 
 
@@ -103,7 +103,7 @@ def _load_entities(entities_path):
 
         logger.info(" - " + entity_id)
 
-        entity = Entity.load(id=entity_id, data=_extend(entity_data))
+        entity = Unit.load(parent_id=entity_id, data=_extend(entity_data))
         entities[entity.id] = entity
 
 

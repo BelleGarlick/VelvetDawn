@@ -1,12 +1,8 @@
 {
   "name": "Cannons",
   "extends": ["civil-war:_max-health-upgrades"],
-  "health": {
-    "max": 50
-  },
-  "movement": {
-    "range": 1
-  },
+  "health": {"max": 50},
+  "movement": {"range": 1},
   "combat": {
       "attack": 200,
       "range": 6,
@@ -18,12 +14,12 @@
   "upgrades": [
     {
       "name": "Range Increase 1",
-      "then": {"modifier": "self.movement.range", "add": 1}
+      "actions": [{"modify": "self.movement.range", "add": 1}]
     },
     {
       "name": "Range Increase 2",
-      "requires": "Range Increase 1",
-      "then": {"modifier": "self.movement.range", "add": 1}
+      "requires": ["Range Increase 1"],
+      "actions": [{"modify": "self.movement.range", "add": 1}]
     }
   ],
   "textures": {

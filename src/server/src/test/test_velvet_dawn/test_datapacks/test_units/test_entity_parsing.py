@@ -9,19 +9,19 @@ class TestUnitParsing(BaseTest):
     def test_unit_health(self):
         # Type is wrong
         with self.assertRaises(errors.ValidationError):
-            velvet_dawn.models.unit._parse_health("", Attributes(), {"max": "dsa"})
+            velvet_dawn.models.datapacks.units.unit._parse_health("", Attributes(), {"max": "dsa"})
 
         # Must be at least 0
         with self.assertRaises(errors.ValidationError):
-            velvet_dawn.models.unit._parse_health("", Attributes(), {"max": -1})
+            velvet_dawn.models.datapacks.units.unit._parse_health("", Attributes(), {"max": -1})
 
         # Wrong key
         with self.assertRaises(errors.ValidationError):
-            velvet_dawn.models.unit._parse_health("", Attributes(), {"random-key": False})
+            velvet_dawn.models.datapacks.units.unit._parse_health("", Attributes(), {"random-key": False})
 
         # Valid
         attributes = Attributes()
-        velvet_dawn.models.unit._parse_health("", attributes, {
+        velvet_dawn.models.datapacks.units.unit._parse_health("", attributes, {
             "max": 1000,
             "notes": "Example"
         })
@@ -31,20 +31,20 @@ class TestUnitParsing(BaseTest):
         # Type is wrong
         for key in ["range", "attack", "defense", "reload"]:
             with self.assertRaises(errors.ValidationError):
-                velvet_dawn.models.unit._parse_combat("", Attributes(), {key: "dsa"})
+                velvet_dawn.models.datapacks.units.unit._parse_combat("", Attributes(), {key: "dsa"})
 
         # Must be at least 0
         for key in ["range", "attack", "defense", "reload"]:
             with self.assertRaises(errors.ValidationError):
-                velvet_dawn.models.unit._parse_combat("", Attributes(), {key: -1})
+                velvet_dawn.models.datapacks.units.unit._parse_combat("", Attributes(), {key: -1})
 
         # Wrong key
         with self.assertRaises(errors.ValidationError):
-            velvet_dawn.models.unit._parse_combat("", Attributes(), {"random-key": False})
+            velvet_dawn.models.datapacks.units.unit._parse_combat("", Attributes(), {"random-key": False})
 
         # Valid
         attributes = Attributes()
-        velvet_dawn.models.unit._parse_combat("", attributes, {
+        velvet_dawn.models.datapacks.units.unit._parse_combat("", attributes, {
             "range": 5,
             "attack": 10,
             "defense": 20,
@@ -59,15 +59,15 @@ class TestUnitParsing(BaseTest):
     def test_unit_movement(self):
         # Type is wrong
         with self.assertRaises(errors.ValidationError):
-            velvet_dawn.models.unit._parse_movement("", Attributes(), {"range": "dsa"})
+            velvet_dawn.models.datapacks.units.unit._parse_movement("", Attributes(), {"range": "dsa"})
 
         # Wrong key
         with self.assertRaises(errors.ValidationError):
-            velvet_dawn.models.unit._parse_movement("", Attributes(), {"range": 2, "random-key": False})
+            velvet_dawn.models.datapacks.units.unit._parse_movement("", Attributes(), {"range": 2, "random-key": False})
 
         # Valid
         attributes = Attributes()
-        velvet_dawn.models.unit._parse_movement("", attributes, {
+        velvet_dawn.models.datapacks.units.unit._parse_movement("", attributes, {
             "range": 5,
             "notes": "Example"
         })
