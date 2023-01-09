@@ -58,9 +58,11 @@ class BaseTest(unittest.TestCase, ABC):
             velvet_dawn.players.join("player2", "")
             velvet_dawn.game.setup.update_setup("testing:commander", 1)
             velvet_dawn.game.setup.update_setup("testing:upgradable", 1)
+            velvet_dawn.game.setup.update_setup("testing:abilitied", 1)
             velvet_dawn.game.phase.start_setup_phase(config)
             velvet_dawn.game.setup.place_entity("player1", "testing:commander", 5, 0, config)
             velvet_dawn.game.setup.place_entity("player1", "testing:upgradable", 4, 0, config)
+            velvet_dawn.game.setup.place_entity("player1", "testing:abilitied", 6, 0, config)
             velvet_dawn.game.setup.place_entity("player2", "testing:commander", 5, config.map_height - 1,
                                                 config)
             velvet_dawn.game.phase.start_game_phase(config)

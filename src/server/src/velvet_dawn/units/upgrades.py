@@ -36,8 +36,8 @@ class UnitUpgradeData:
             "instance": self.instance_id,
             "upgraded": self.upgraded,
             "hidden": [x.json() for x in self.hidden],
-            "disabled": [x.json() for x in self.hidden],
-            "missingRequirements": [x.json() for x in self.hidden],
+            "disabled": [x.json() for x in self.disabled],
+            "missingRequirements": [x.json() for x in self.missing_requirements],
             "upgrades": self.upgrades,
         }
 
@@ -151,7 +151,7 @@ def get_unit_upgrade_updates(unit_instance_id: int):
 def get_player_unit_upgrades(player_name: str, full_list=False):
     """ Get a state update for a random unit / the full list of units.
     Continuously doing this overtime will result in eventual consistency
-    without hammer the server constantly checking the upgrades
+    without hammering the server constantly checking the upgrades
     """
     units = velvet_dawn.units.list(player=player_name)
 

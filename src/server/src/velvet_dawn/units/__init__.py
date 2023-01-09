@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import UnitInstance
-from . import movement, upgrades
+from . import movement, upgrades, abilities
 
 
 # TODO Test this

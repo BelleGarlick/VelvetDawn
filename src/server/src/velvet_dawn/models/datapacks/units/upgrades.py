@@ -8,7 +8,7 @@ from velvet_dawn.mechanics.actions import Action
 from velvet_dawn.mechanics.conditionals.conditional import Conditional
 
 
-VALID_KEYS = {"id", "name", "enabled", "requires", "actions", "hidden", "notes"}
+VALID_KEYS = {"id", "name", "enabled", "requires", "actions", "icon", "hidden", "notes"}
 
 
 class Upgrade:

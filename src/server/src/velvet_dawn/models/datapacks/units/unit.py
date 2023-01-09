@@ -5,12 +5,13 @@ from velvet_dawn import errors, constants
 
 
 # List of all available keys allowed on an entity
+from velvet_dawn.models.datapacks.units.abilities import Abilities
 from velvet_dawn.models.datapacks.units.upgrades import Upgrades
 
 VALID_ENTITY_KEYS = [
     "id", "name", "abstract", "extends", "upgrades", "health",
     "movement", "combat", "tags", "notes", "textures", "triggers",
-    "commander", "influence", "attributes", "actions"
+    "commander", "influence", "attributes", "actions", "abilities"
 ]
 
 VALID_HEALTH_KEYS = ["regen", "max", "notes"]
@@ -120,6 +121,7 @@ class Unit:
 
         self.triggers = Triggers()
         self.upgrades = Upgrades()
+        self.abilities = Abilities()
 
     def json(self):
         return {
@@ -149,6 +151,7 @@ class Unit:
         unit.attributes.load(parent_id, data.get('attributes', []))
         unit.triggers.load(parent_id, data.get('triggers', {}))
         unit.upgrades.load(parent_id, data.get("upgrades", []))
+        unit.abilities.load(parent_id, data.get("abilities", []))
 
         return unit
 
