@@ -21,6 +21,7 @@ export class UnitUpgrades {
                 .icon(upgrade.icon)
                 .onClick(() => {
                     Api.units.performUpgrade(instanceId, upgrade.id)
+                        .then(x => {this.available = x.upgrades})
                 })
         })
     }
