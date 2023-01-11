@@ -1,24 +1,11 @@
 {
   "name": "Pikemen",
   "extends": ["civil-war:_max-health-upgrades"],
-  "health": {
-    "max": 50
-  },
-  "movement": {
-    "range": 2
-  },
-  "combat": {
-      "attack": 25
-  },
+  "health": {"max": 50},
+  "movement": {"range": 2},
+  "combat": {"attack": 25},
   "triggers": {
-    "enter": [{ "modify": "tile.texture.color", "set": "#000000" }],
-    "leave": [{ "modify": "tile.texture.color", "set": "#00ff00" }],
-    "attack": [{
-      "modify": "unit[id=civil-war:cavalry].health",
-      "subtract": 10
-    }]
+    "notes": "[{ \"modify\": \"target[id=civil-war:cavalry].health\", \"sub\": 10 }]"
   },
-  "textures": {
-    "background": "civil-war:pikeman.png"
-  }
+  "textures": {"background": "civil-war:pikeman.png"}
 }

@@ -36,6 +36,13 @@ KeyMap = {
     "reset": ActionModifierFunction.RESET,
     "add-tag": ActionModifierFunction.ADD_TAG,
     "remove-tag": ActionModifierFunction.REMOVE_TAG,
+
+    "set-selector": ActionModifierFunction.SET,
+    "add-selector": ActionModifierFunction.SET,
+    "sub-selector": ActionModifierFunction.SET,
+    "subtract-selector": ActionModifierFunction.SET,
+    "mul-selector": ActionModifierFunction.SET,
+    "multiply-selector": ActionModifierFunction.SET,
 }
 
 
@@ -61,7 +68,7 @@ class ActionModify(Action):
         # Check the number of functions is valid
         total_function_keys = sum([1 for key in data if key in KeyMap])
         if total_function_keys != 1:
-            raise errors.ValidationError(f"Invalid modify action on {id}. Modify actions must contain one of {list(KeyMap)}.")
+            raise errors.ValidationError(f"Invalid modify action on {id}. Modify actions must contain one of {list(KeyMap)}. Problem data: {data}")
 
         # Construct the action and it's function
         action = ActionModify()
@@ -82,7 +89,7 @@ class ActionModify(Action):
         else:
             if action.selector.attribute is None:
                 raise errors.ValidationError(
-                    f"Modify actions must ensure the selectors modify an attribute not '{data['modify']}")
+                    f"Modify actions must ensure the selectors modify an attribute not '{data['modify']}'")
 
         return action
 

@@ -74,6 +74,12 @@ export abstract class ButtonBase extends Renderable {
         return this
     }
 
+    setSize(width: number, height: number) {
+        this.width = width
+        this.height = height
+        return this
+    }
+
     hovered(hovered: boolean) {
         this._hovered = hovered
         return this

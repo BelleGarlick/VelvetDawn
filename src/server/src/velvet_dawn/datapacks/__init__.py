@@ -1,3 +1,4 @@
+import copy
 import json
 import logging
 import os
@@ -194,7 +195,11 @@ def _load_items_in_dir(root_path: Path) -> Dict[Path, dict]:
 
     for file_path in sorted(_scan_dir(root_path)):
         with open(file_path) as reader:
-            data = json.load(reader)
+            try:
+                data = json.load(reader)
+            except Exception as e:
+                logger.error(e)
+                raise errors.ValidationError(f"Unable to parse file: {file_path}")
 
             if data.get("abstract", False):
                 def_id = _construct_id(root_path, file_path, data=data)
@@ -253,7 +258,7 @@ def _extend(main: dict) -> dict:
         if key not in _abstract_definitions:
             raise Exception(f"Abstract file '{key}' not found. Please mark this file with a `'abstract': true` in the file's definition.")
 
-        _merge_dicts(merged_dict, _abstract_definitions[key])
+        _merge_dicts(merged_dict, copy.deepcopy(_abstract_definitions[key]))
 
     _merge_dicts(merged_dict, main)
 

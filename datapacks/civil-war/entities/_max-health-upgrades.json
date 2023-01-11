@@ -3,38 +3,38 @@
   "upgrades": [
     {
       "id": "max-health-1",
-      "name": "Max Health 1",
+      "name": "Max Health I",
+      "description": "Increase max health.",
+      "icon": "civil-war:ui.icons.abilities.heart.png",
       "notes": "Upgrade the max health of this unit.",
+      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
       "actions": [
         {
           "modify": "self.health.max",
           "multiply": 1.1
-        }
-      ]
+        }, {"modify": "commander", "add-tag": "tag:used-upgrade"}]
     },
     {
       "id": "max-health-2",
-      "name": "Max Health 2",
+      "name": "Max Health II",
+      "description": "Increase max health.",
+      "icon": "civil-war:ui.icons.abilities.heart.png",
       "notes": "Upgrade the max health of this unit.",
       "requires": ["max-health-1"],
-      "actions": [
-        {
-          "modify": "self.health.max",
-          "multiply": 1.1
-        }
-      ]
+      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.health.max", "multiply": 1.1}, {"modify": "commander", "add-tag": "tag:used-upgrade"}]
     },
     {
       "id": "max-health-3",
-      "name": "Max Health 3",
+      "name": "Max Health III",
+      "description": "Increase max health.",
+      "icon": "civil-war:ui.icons.abilities.heart.png",
       "requires": ["max-health-2"],
+      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
       "notes": "Upgrade the max health of this unit.",
       "actions": [
-        {
-          "modify": "self.health.max",
-          "multiply": 1.1
-        }
-      ]
+        {"modify": "self.health.max", "multiply": 1.1},
+        {"modify": "commander", "add-tag": "tag:used-upgrade"}]
     }
   ]
 }

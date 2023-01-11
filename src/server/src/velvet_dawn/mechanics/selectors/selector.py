@@ -60,6 +60,8 @@ class Selector(ABC):
 
     def function_add(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
+            print(item.get_attribute(self.attribute, default=0))
+            print(value)
             item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) + value, commit=False)
         db.session.commit()
 
@@ -122,7 +124,7 @@ class Selector(ABC):
             return False
 
         for item in instances:
-            if item.get_attribute(self.attribute, default=None) > int(value):
+            if item.get_attribute(self.attribute, default=0) > int(value):
                 return False
 
         return True

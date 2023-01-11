@@ -1,55 +1,7 @@
 {
   "name": "Workers",
-  "extends": ["civil-war:_max-health-upgrades"],
-  "attributes": [
-    { "id": "wood", "name": "Wood", "default": 0, "icon": "civil-war:attributes.wood.png" },
-    { "id": "clay", "name": "Clay", "default": 0, "icon": "civil-war:attributes.clay.png" }
-  ],
+  "extends": ["civil-war:_max-health-upgrades", "civil-war:_worker-actions"],
   "health": { "max": 50 },
   "combat": { "attack": 5 },
-  "textures": { "background": "civil-war:hammer.png" },
-  "actions": [
-    {
-      "name": "Harvest Wood",
-      "turns": 3,
-      "icon": "civil-war:actions.harvest-wood.png",
-      "description": "Harvest wood by moving to forest and using this action. Takes three turns, gains two wood",
-      "condition": [{ "if": "tile", "equals": "civil-war:forest" }],
-      "then": [
-        { "target": "tile", "set": "civil-war:chopped-wood" },
-        { "target": "self.attributes.wood", "add": 2 }
-      ]
-    },
-    {
-      "name": "Harvest Wood",
-      "turns": 2,
-      "icon": "civil-war:actions.harvest-wood.png",
-      "description": "Harvest wood by moving to woods and using this action. Takes two turns, gains one wood",
-      "condition": [{ "if": "tile", "equals": "civil-war:woods" }],
-      "then": [
-        { "target": "tile", "set": "civil-war:chopped-wood" },
-        { "target": "self.attributes.wood", "add": 1 }
-      ]
-    },
-    {
-      "name": "Harvest Clay",
-      "turns": 2,
-      "icon": "civil-war:actions.harvest-clay.png",
-      "description": "Harvest wood by moving to shallow water and using this action. Takes two turns, gains one clay",
-      "condition": [{ "if": "tile", "equals": "civil-war:woods" }],
-      "then": [{ "target": "self.attributes.clay", "add": 1 }]
-    },
-    {
-      "name": "Build Fortress",
-      "turns": 4,
-      "icon": "civil-war:actions.build-fortress.png",
-      "description": "Build a fortress with improve the health, health regen and defence of a unit inside the fortress.",
-      "condition": [
-        { "if": "tile", "equals": "civil-war:grass" },
-        { "if": "self.attributes.clay", "gt": 3 },
-        { "if": "self.attributes.wood", "gt": 3 }
-      ],
-      "then": [{ "target": "tile", "set": "civil-war:fortress" }]
-    }
-  ]
+  "textures": { "background": "civil-war:hammer.png" }
 }

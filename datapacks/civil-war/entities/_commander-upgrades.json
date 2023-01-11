@@ -1,0 +1,148 @@
+{
+  "abstract": true,
+  "attributes": [
+    {"id": "com-upgrades", "name": "Commander Upgrades", "icon": "ui.attributes.com-upgrades.png", "default": 3}
+  ],
+  "upgrades": [
+    {
+      "id": "inc-unit-range",
+      "name": "Increase All Unit Movement Range I",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.movement.range", "add": 1}
+      ]
+    },
+    {
+      "requires": ["inc-unit-range"],
+      "name": "Increase All Unit Movement Range II",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.movement.range", "add": 1}
+      ]
+    },
+    {
+      "id": "inc-unit-max-health",
+      "name": "Increase All Unit Max Health I",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.health.max", "add": 20}
+      ]
+    },
+    {
+      "requires": ["inc-unit-max-health"],
+      "name": "Increase All Unit Max Health II",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.health.max", "add": 20}
+      ]
+    },
+    {
+      "id": "inc-unit-attack",
+      "name": "Increase All Unit Attack I",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.combat.attack", "add": 10}
+      ]
+    },
+    {
+      "requires": ["inc-unit-attack"],
+      "name": "Increase All Unit Attack II",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.combat.attack", "add": 10}
+      ]
+    },
+    {
+      "id": "restore-health",
+      "name": "Restore All Unit Health I",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.health", "set-selector": "friendlies.health.max"}
+      ]
+    },
+    {
+      "requires": ["restore-health"],
+      "name": "Restore All Unit Health II",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.health", "set-selector": "friendlies.health.max"}
+      ]
+    },
+    {
+      "name": "Decrease Enemy Max Health",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.health.max", "sub": 10}
+      ]
+    },
+    {
+      "name": "Decrease Enemy Movement",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.movement.range", "sub": 1}
+      ]
+    },
+    {
+      "name": "Decrease Enemy Attack",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use five upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.combat.attack", "sub": 10}
+      ]
+    }
+  ]
+}

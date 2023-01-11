@@ -1,22 +1,22 @@
-import json
 import os
 
 from flask import request
 from pathlib import Path
 
 import velvet_dawn
-from velvet_dawn import errors
 from velvet_dawn.dao import app
 from velvet_dawn.server.blueprints import (
     setup_blueprint,
     turn_blueprint,
-    datapack_blueprint
+    datapack_blueprint,
+    units_blueprint
 )
 from velvet_dawn.server.utils import api_wrapper, config
 
 app.register_blueprint(setup_blueprint, url_prefix="/setup")
 app.register_blueprint(turn_blueprint, url_prefix="/turns")
 app.register_blueprint(datapack_blueprint, url_prefix="/datapacks")
+app.register_blueprint(units_blueprint, url_prefix="/units")
 
 
 @app.after_request
@@ -58,19 +58,6 @@ def get_game_state(user):
         velvet_dawn.game.turns.check_end_turn_case(config)
 
 
-@app.route("/move/", methods=["POST"])
-@api_wrapper(return_state=True)
-def move_unit(user):
-    try:
-        entity_pk = int(request.form.get("entity"))
-        path = json.loads(request.form.get("path"))
-    except Exception:
-        raise errors.ValidationError(
-            f"Unable to parse id ('{request.form.get('id')}') and path ('{request.form.get('path')}')")
-
-    velvet_dawn.units.movement.move(user, entity_pk, path, config)
-
-
 @app.route("/join/", methods=["POST"])
 def join_game():
     username = request.form.get("username")
@@ -98,5 +85,4 @@ def load_app():
 
 if __name__ == "__main__":
     velvet_dawn.datapacks.init(config)
-
     app.run("0.0.0.0", port=config.port, debug=os.environ.get("DEV") == "true")

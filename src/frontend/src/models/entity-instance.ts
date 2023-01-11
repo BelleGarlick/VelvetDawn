@@ -9,3 +9,5 @@ export interface EntityInstance {
         y: number
     }
 }
+
+export type UnitInstance = EntityInstance;

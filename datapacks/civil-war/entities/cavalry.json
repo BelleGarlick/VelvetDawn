@@ -7,9 +7,6 @@
   "combat": {
       "attack": 25
   },
-  "tags": [
-    "tag:heavy"
-  ],
   "textures": {
     "background": "civil-war:cavalry.png"
   }

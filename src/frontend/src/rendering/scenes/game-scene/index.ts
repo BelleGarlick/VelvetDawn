@@ -30,7 +30,7 @@ export class GameScene extends Scene {
         this.renderUnits(facade)
 
         this.turnBanner.render(facade)
-        this.sidebar.selectedEntity = this.selectedEntity
+        this.sidebar.setSelectedUnit(this.selectedEntity)
         this.sidebar.render(facade)
 
         return undefined;
@@ -98,6 +98,8 @@ export class GameScene extends Scene {
                 && this.selectedEntity.player === VelvetDawn.loginDetails.username) {
             this.pathPlanning.computePaths(this.selectedEntity.getPosition(), this.selectedEntity.attributes['movement.remaining'] ?? 0)
         }
+
+        this.sidebar.onStateUpdate(state)
 
         return null
     }

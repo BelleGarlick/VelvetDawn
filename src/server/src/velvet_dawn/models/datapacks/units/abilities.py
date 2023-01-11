@@ -8,7 +8,7 @@ from velvet_dawn.mechanics.actions import Action
 from velvet_dawn.mechanics.conditionals.conditional import Conditional
 
 
-VALID_KEYS = {"name", "enabled", "actions", "hidden", "icon", "notes"}
+VALID_KEYS = {"name", "enabled", "actions", "hidden", "icon", "notes", "description"}
 
 
 class Ability:
@@ -16,6 +16,7 @@ class Ability:
         self.id: str = ""
         self.name: str = ""
         self.icon: str = ""
+        self.description: str = ""
 
         self.enabled: List[Conditional] = []
         self.hidden: List[Conditional] = []
@@ -25,7 +26,8 @@ class Ability:
         return {
             "id": self.id,
             "name": self.name,
-            "icon": self.icon
+            "icon": self.icon,
+            "description": self.description
         }
 
     @staticmethod
@@ -52,6 +54,11 @@ class Ability:
         ability.name = str(data.get("name"))
         if not isinstance(data.get("name"), str):
             raise errors.ValidationError(f"Ability name '{data.get('name')}' is invalid.")
+
+        # Parse description
+        ability.description = str(data.get("description", ""))
+        if not isinstance(ability.description, str):
+            raise errors.ValidationError(f"Ability description '{data.get('description')}' is invalid.")
 
         # Parse icons
         ability.icon = data.get("icon")

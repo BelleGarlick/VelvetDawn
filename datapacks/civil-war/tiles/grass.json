@@ -1,7 +1,8 @@
 {
   "name": "Grass",
   "neighbours": {
-    "civil-war:grass": 8,
+    "civil-war:grass": 16,
+    "civil-war:hills": 1,
     "civil-war:sand": 1,
     "civil-war:settlement": 1,
     "civil-war:woods": 1,

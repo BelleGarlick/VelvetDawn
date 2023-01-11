@@ -7,6 +7,12 @@ import {UnitEntity} from "../../../entities/unit-entity";
 import {Textures} from "../../../Textures";
 import {VelvetDawn} from "../../../../velvet-dawn/velvet-dawn";
 import {Rectangle} from "../../../entities/rectangle";
+import {ActionButton} from "./actionButton";
+import * as Api from "api"
+import {GameState} from "models/game-state";
+import {AvailableUnitUpgradesAndAbilities} from "models/entity";
+import {UnitUpgrades} from "./upgrades";
+import {UnitAbilities} from "./abilities";
 
 
 /** Game View sidebar
@@ -21,7 +27,7 @@ export class GameViewSidebar {
 
     private sidebarBackground: Rectangle = null
 
-    public selectedEntity: UnitEntity | undefined = undefined
+    private selectedEntity: UnitEntity | undefined = undefined
     private topLine = new Line()
     private attributesLine = new Line()
 
@@ -30,11 +36,16 @@ export class GameViewSidebar {
 
     nextTurnButton: NextTurnButton = null
 
+    private readonly unitUpgrades = new UnitUpgrades();
+    private readonly unitAbilities = new UnitAbilities();
+
+    private upgradesLoading = false;
+
     constructor(constants: RenderingConstants) {
         this.sidebarBackground = new Rectangle()
         this.nextTurnButton = new NextTurnButton(constants);
         this.unitTabs = new TabButtons(
-            ["Abilities", "Upgrades", "Info"],
+            ["Upgrades", "Abilities", "Info"],
             (tab) => this.tab = tab
         );
     }
@@ -58,6 +69,23 @@ export class GameViewSidebar {
                 x: facade.constants.sidebarStart + facade.constants.sidebarPadding,
                 y: remainingTop + facade.constants.sidebarPadding
             }).render(facade)
+            remainingTop += facade.constants.tabHeight + 2 * facade.constants.sidebarPadding
+
+            if (this.tab === 0)
+                this.unitUpgrades.render(facade, remainingTop)
+            if (this.tab === 1)
+                this.unitAbilities.render(facade, remainingTop)
+            if (this.tab === 2) {
+                const unitDef = VelvetDawn.datapacks.entities[this.selectedEntity.entityId]
+                facade.ctx.textBaseline = "top"
+                facade.ctx.textAlign = "center"
+                facade.ctx.fillStyle = "#ffffff"
+                facade.ctx.fillText(
+                    unitDef.description,
+                    facade.sidebarStart + facade.sidebarWidth / 2,
+                    remainingTop
+                );
+            }
         }
 
         this.nextTurnButton.draw(facade)
@@ -116,7 +144,7 @@ export class GameViewSidebar {
         const attributes = unit.attributes.filter(x => x.icon !== null)
 
         const attributeWidth = (facade.constants.sidebar - 2 * facade.constants.sidebarPadding) / attributeCols
-        const size = facade.constants.buttonHeight / 2;
+        const size = facade.constants.buttonHeight / 1.5;
 
         // Iterate through each attribute to render it within the number of defined columns
         attributes.forEach((attribute, i) => {
@@ -133,11 +161,14 @@ export class GameViewSidebar {
 
             ctx.fillStyle = "#ffffff"
             ctx.font = "35px 'Velvet Dawn'";
-            ctx.fillText(this.selectedEntity.attributes[attribute.id], x + size + facade.constants.sidebarPadding, y + size / 2)
+            ctx.fillText(this.selectedEntity.attributes[attribute.id], x + size + facade.constants.sidebarPadding, y + size / 2 + 10)
+
+            ctx.font = "25px 'Velvet Dawn'";
+            ctx.fillText(attribute.name, x + size + facade.constants.sidebarPadding, y + size / 2 - 20)
             ctx.fill()
         })
 
-        return top + (Math.ceil(attributes.length / 3) * (size + facade.constants.sidebarPadding))
+        return top + (Math.ceil(attributes.length / attributeCols) * (size + facade.constants.sidebarPadding))
     }
 
     /** Called when the user clicks within the sidebar
@@ -145,10 +176,43 @@ export class GameViewSidebar {
      * @param position Where the user clicked
      */
     clicked(position: { x: number; y: number }) {
-        [this.nextTurnButton].forEach(button => {
+        [
+            this.nextTurnButton,
+            ...Object.values(this.unitUpgrades.unitUpgradeButtons),
+            ...Object.values(this.unitAbilities.unitAbilityButtons)
+        ].forEach(button => {
             if (button.isHovered(position))
                 button.performClick()
         })
         this.unitTabs.click()
+    }
+
+    setSelectedUnit(unit: UnitEntity | undefined) {
+        if (this.selectedEntity !== unit && unit !== undefined && unit !== null) {
+            // Unit has changed
+            const unitDef = VelvetDawn.datapacks.entities[unit.entityId]
+            this.unitUpgrades.setEntity(unit.instanceId, unitDef)
+            this.unitAbilities.setEntity(unit.instanceId, unitDef)
+
+            this.upgradesLoading = true
+            Api.units.getAvailableUpgradeAndAbilities(unit.instanceId)
+                .then(data => {
+                    this.unitUpgrades.setAvailableUpgrades(data.upgrades)
+                    this.unitAbilities.setAvailableAbilities(data.abilities)
+                })
+                .catch(() => {})
+                .finally(() => {this.upgradesLoading = false})
+        }
+        this.selectedEntity = unit
+    }
+
+    onStateUpdate(x: GameState) {
+        if (this.selectedEntity)
+            Api.units.getAvailableUpgradeAndAbilities(this.selectedEntity.instanceId)
+                .then(data => {
+                    this.unitUpgrades.setAvailableUpgrades(data.upgrades)
+                    this.unitAbilities.setAvailableAbilities(data.abilities)
+                })
+                .catch(() => {})
     }
 }

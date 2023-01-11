@@ -1,21 +1,44 @@
 {
   "name": "Commander",
+  "extends": ["civil-war:_max-health-upgrades", "civil-war:_commander-upgrades"],
   "commander": true,
-  "health": {
-    "max": 200
-  },
-  "movement": {
-    "range": 3
-  },
-  "combat": {
-      "attack": 100
-  },
+  "health": {"max": 200},
+  "movement": {"range": 3},
+  "combat": {"attack": 100},
   "triggers": {
     "turn": [
-      { "modify": "tile.texture.color", "set": "#000000" },
-      { "modify": "self.health", "add": 10 }
+      {"modify": "self.health", "add": 10},
+      {"modify": "self", "remove-tag": "tag:used-upgrade"}
     ]
   },
+  "upgrades": [
+    {
+      "id": "inc-unit-range",
+      "name": "Increase All Unit Range I",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "lte": 0, "reason": "Commanders may only use three upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.movement.range", "add": 1}
+      ]
+    },
+    {
+      "requires": ["inc-unit-range"],
+      "name": "Increase All Unit Range II",
+      "enabled": [
+        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "self.com-upgrades", "lte": 0, "reason": "Commanders may only use three upgrades."}
+      ],
+      "actions": [
+        {"modify": "self.com-upgrades", "add": -1},
+        {"modify": "self", "add-tag": "tag:used-upgrade"},
+        {"modify": "friendlies.movement.range", "add": 1}
+      ]
+    }
+  ],
   "influence": [
     {
       "notes": "This would mean local enemies within range 10 have less health",

@@ -1,0 +1,20 @@
+{
+  "name": "Hills",
+  "neighbours": {
+    "civil-war:mountain": 1,
+    "civil-war:hills": 3,
+    "civil-war:sand": 1,
+    "civil-war:grass": 3
+  },
+  "movement": { "weight": 2 },
+  "textures": {
+    "color": ["#a0cf63", "#8fc746", "#8cbd4b"],
+    "image": {
+      "null": 8,
+      "civil-war:tiles.grass.grass1.png": 1,
+      "civil-war:tiles.grass.grass2.png": 1,
+      "civil-war:tiles.grass.grass3.png": 1,
+      "civil-war:tiles.grass.grass4.png": 1
+    }
+  }
+}

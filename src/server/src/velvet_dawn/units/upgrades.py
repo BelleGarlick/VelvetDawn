@@ -88,7 +88,7 @@ def upgrade_unit(player_name: str, unit_instance_id: int, upgrade_id: str):
 
     # Check is not disabled
     is_enabled, reason = upgrade.is_enabled(instance)
-    if is_enabled:
+    if not is_enabled:
         raise errors.ValidationError(f"Cannot run upgrade. {reason}")
 
     # Run the upgrade
@@ -139,7 +139,7 @@ def get_unit_upgrade_updates(unit_instance_id: int):
 
         # Check if enabled
         is_enabled, reason = upgrade.is_enabled(instance)
-        if is_enabled:
+        if not is_enabled:
             upgrades.disabled.append(NotUpgradable(upgrade_id=upgrade.id, reason=reason))
             continue
 

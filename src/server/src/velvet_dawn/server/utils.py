@@ -36,11 +36,11 @@ def api_wrapper(return_state: bool = False, host_only: bool = False):
                 return response
 
             except errors.ValidationError as e:
-                logger.error(e)
+                logger.exception(e)
                 return str(e), 400
 
             except Exception as e:
-                logger.error(e)
+                logger.exception(e)
 
         return wrapper
     return decorator

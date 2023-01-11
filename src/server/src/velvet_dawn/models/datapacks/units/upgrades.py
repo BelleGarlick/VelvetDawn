@@ -8,7 +8,7 @@ from velvet_dawn.mechanics.actions import Action
 from velvet_dawn.mechanics.conditionals.conditional import Conditional
 
 
-VALID_KEYS = {"id", "name", "enabled", "requires", "actions", "icon", "hidden", "notes"}
+VALID_KEYS = {"id", "name", "enabled", "requires", "actions", "icon", "hidden", "notes", "description"}
 
 
 class Upgrade:
@@ -16,6 +16,7 @@ class Upgrade:
         self.id: str = ""
         self.name: str = ""
         self.icon: str = ""
+        self.description: str = ""
 
         self.enabled: List[Conditional] = []
         self.hidden: List[Conditional] = []
@@ -28,7 +29,8 @@ class Upgrade:
             "id": self.id,
             "name": self.name,
             "icon": self.icon,
-            "requires": self.requires
+            "requires": self.requires,
+            "description": self.description
         }
 
     @staticmethod
@@ -58,11 +60,16 @@ class Upgrade:
         if not isinstance(data.get("name"), str):
             raise errors.ValidationError(f"Upgrade name '{data.get('name')}' is invalid.")
 
+        # Parse description
+        upgrade.description = str(data.get("description", ""))
+        if not isinstance(upgrade.description, str):
+            raise errors.ValidationError(f"Upgrade description '{data.get('description')}' is invalid.")
+
         # Parse icons
         upgrade.icon = data.get("icon")
         if upgrade.icon is None:
             logger.warning(
-                f"Upgrade '{parent_id}' has an upgrade with a missing icon.")
+                f"Upgrade '{parent_id}' has an upgrade with a missing icon ({upgrade.icon}).")
 
         elif upgrade.icon not in velvet_dawn.datapacks.resources:
             logger.warning(
@@ -129,8 +136,8 @@ class Upgrade:
         """ Check if the upgrade should be disabled and therefore not ran """
         for condition in self.enabled:
             if not condition.is_true(instance):
-                return True, condition.not_true_reason
-        return False, ""
+                return False, condition.not_true_reason
+        return True, ""
 
 
 class Upgrades:

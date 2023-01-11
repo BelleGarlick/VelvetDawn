@@ -2,9 +2,11 @@ import axios from "axios";
 
 
 export function getUrl() {
-    let port = window.location.port
-    port = '666'
-    return window.location.protocol + "//" + window.location.hostname + ":" + 666
+    // If running in dev mode
+    if (window.location.href === "http://localhost:8080/")
+        return "http://localhost:1642/"
+
+    return window.location.href
 }
 
 

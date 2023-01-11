@@ -1,0 +1,10 @@
+{
+  "name": "Mountain Peak",
+  "neighbours": {
+    "civil-war:mountain": 1
+  },
+  "movement": { "weight": 4 },
+  "textures": {
+    "color": ["#ededed"]
+  }
+}

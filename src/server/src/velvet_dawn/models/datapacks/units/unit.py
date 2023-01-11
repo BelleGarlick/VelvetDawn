@@ -11,7 +11,7 @@ from velvet_dawn.models.datapacks.units.upgrades import Upgrades
 VALID_ENTITY_KEYS = [
     "id", "name", "abstract", "extends", "upgrades", "health",
     "movement", "combat", "tags", "notes", "textures", "triggers",
-    "commander", "influence", "attributes", "actions", "abilities"
+    "commander", "influence", "attributes", "description", "abilities"
 ]
 
 VALID_HEALTH_KEYS = ["regen", "max", "notes"]
@@ -114,6 +114,7 @@ class Unit:
         self.name = name
         self.max_health = 100
         self.commander = False
+        self.description = ""
 
         self.tags = Tags()
         self.attributes = Attributes()
@@ -127,9 +128,12 @@ class Unit:
         return {
             "id": self.id,
             "name": self.name,
+            "description": self.description,
             "commander": self.commander,
             "attributes": self.attributes.json(),
-            "textures": self.textures.json()
+            "textures": self.textures.json(),
+            "upgrades": self.upgrades.json(),
+            "abilities": self.abilities.json()
         }
 
     @staticmethod
@@ -143,6 +147,7 @@ class Unit:
         unit.commander = data.get("commander", False)
 
         unit.textures.update(data.get('textures', {}))
+        unit.description = data.get("description", "No description given.")
         _parse_health(parent_id, unit.attributes, data.get("health", {}))
         _parse_movement(parent_id, unit.attributes, data.get("movement", {}))
         _parse_combat(parent_id, unit.attributes, data.get("combat", {}))

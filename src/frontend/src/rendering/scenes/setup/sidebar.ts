@@ -85,7 +85,6 @@ export class SetupSceneSidebar extends Renderable {
     }
 
     render(facade: RenderingFacade): null {
-
         facade.ctx.fillStyle = "#000000"
         facade.ctx.fillRect(facade.constants.sidebarStart, 0, facade.constants.sidebar, facade.constants.height)
 

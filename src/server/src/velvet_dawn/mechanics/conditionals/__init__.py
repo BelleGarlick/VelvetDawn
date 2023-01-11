@@ -18,4 +18,4 @@ def get_conditional(entity_id: str, data: dict):
     elif "count" in data:
         return ConditionalCounting().load(entity_id, data)
 
-    raise errors.ValidationError(f"Unknown conditional operation '{data}'. Please see datapack documentation.")
+    raise errors.ValidationError(f"Unknown conditional operation '{data}' in {entity_id}. Please see datapack documentation.")

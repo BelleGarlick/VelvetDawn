@@ -1,6 +1,10 @@
 {
   "name": "Cannons",
+  "description": "A long range weapon. This unit gains range with elevation",
   "extends": ["civil-war:_max-health-upgrades"],
+  "attributes": [
+    {"id": "blast-radius", "name": "Blast Radius", "icon": "ui.attributes.blast-radius.png", "default": 0}
+  ],
   "health": {"max": 50},
   "movement": {"range": 1},
   "combat": {
@@ -8,18 +12,42 @@
       "range": 6,
       "reload": 4
   },
-  "tags": [
-    "tag:heavy"
-  ],
   "upgrades": [
     {
-      "name": "Range Increase 1",
-      "actions": [{"modify": "self.movement.range", "add": 1}]
+      "id": "range-increase-1",
+      "name": "Range Increase I",
+      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.movement.range", "add": 1}, {"modify": "commander", "add-tag": "tag:used-upgrade"}],
+      "description": "Increase the combat range."
     },
     {
-      "name": "Range Increase 2",
-      "requires": ["Range Increase 1"],
-      "actions": [{"modify": "self.movement.range", "add": 1}]
+      "id": "range-increase-2",
+      "name": "Range Increase II",
+      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "requires": ["range-increase-1"],
+      "actions": [{"modify": "self.movement.range", "add": 1}, {"modify": "commander", "add-tag": "tag:used-upgrade"}],
+      "description": "Increase the combat range."
+    },
+    {
+      "name": "Range Increase III",
+      "requires": ["range-increase-2"],
+      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.movement.range", "add": 1}, {"modify": "commander", "add-tag": "tag:used-upgrade"}],
+      "description": "Increase the combat range."
+    },
+    {
+      "id": "blast-radius-1",
+      "name": "Blast Radius I",
+      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.blast-radius", "add": 1}, {"modify": "commander", "add-tag": "tag:used-upgrade"}],
+      "description": "Increase the blast radius."
+    },
+    {
+      "id": "blast-radius-1",
+      "name": "Blast Radius II",
+      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.blast-radius", "add": 1}, {"modify": "commander", "add-tag": "tag:used-upgrade"}],
+      "description": "Increase the blast radius."
     }
   ],
   "textures": {
