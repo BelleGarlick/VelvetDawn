@@ -21,6 +21,7 @@ export class UnitAbilities {
                 .icon(ability.icon)
                 .onClick(() => {
                     Api.units.performAbility(instanceId, ability.id)
+                        .then(x => {this.available = x.abilities})
                 })
         })
     }

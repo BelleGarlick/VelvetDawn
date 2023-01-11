@@ -1,4 +1,3 @@
-import time
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import velvet_dawn
