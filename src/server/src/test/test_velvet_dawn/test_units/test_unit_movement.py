@@ -12,8 +12,7 @@ from velvet_dawn.models import Phase
 """ Test the entities movement is validated correctly on the server """
 
 
-def setup_game() -> Tuple[Config, Tuple[int, int]]:
-    test_config = Config().load()
+def setup_game(test_config) -> Tuple[Config, Tuple[int, int]]:
     test_config.seed = 3
 
     entity_position = test_config.map_width // 2, 0
@@ -37,7 +36,7 @@ class TestUnitMovement(BaseTest):
 
     def test_move(self):
         with app.app_context():
-            test_config, entity_position = setup_game()
+            test_config, entity_position = setup_game(self.get_test_config())
 
             player1 = velvet_dawn.players.list()[0]
             entity, player2entity = velvet_dawn.units.list()
@@ -83,7 +82,7 @@ class TestUnitMovement(BaseTest):
 
     def test_validate_entity_traversing_path(self):
         with app.app_context():
-            test_config, entity_position = setup_game()
+            test_config, entity_position = setup_game(self.get_test_config())
             entity = velvet_dawn.units.list()[0]
 
             # Test invalid start tile

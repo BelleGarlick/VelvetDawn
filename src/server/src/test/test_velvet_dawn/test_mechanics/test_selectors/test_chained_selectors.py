@@ -7,7 +7,7 @@ from velvet_dawn.mechanics import selectors
 class TestChainedSelectors(BaseTest):
 
     def test_selector_parsing(self):
-        selector = selectors.get_selector("0", "world>units>commanders>closest-unit.max.health.example")
+        selector = selectors.get_selector("0", "world>units>commanders>closest.max.health.example")
 
         self.assertIsInstance(selector, selectors.SelectorWorld)
         self.assertIsInstance(selector.chained_selector, selectors.SelectorUnits)

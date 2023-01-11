@@ -38,7 +38,7 @@ class SelectorClosest(Selector):
     """ Get the closest unit to the given instance """
 
     def __init__(self):
-        Selector.__init__(self, selector_name="closest-unit")
+        Selector.__init__(self, selector_name="closest")
 
     def new(self):
         return SelectorClosest()
@@ -46,20 +46,6 @@ class SelectorClosest(Selector):
     def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]):
         units = self.filters.filter(instance, velvet_dawn.units.list())
         return get_closest(instance, units)
-
-
-class SelectorClosestTile(Selector):
-    """ Get the closest tile to the given instance """
-
-    def __init__(self):
-        Selector.__init__(self, selector_name="closest-tiles")
-
-    def new(self):
-        return SelectorClosestTile()
-
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]):
-        tiles = self.filters.filter(instance, velvet_dawn.map.list_tiles())
-        return get_closest(instance, tiles)
 
 
 class SelectorClosestEnemy(Selector):

@@ -8,7 +8,6 @@ from .selector_world import SelectorWorld
 from .selector_tiles import SelectorTile, SelectorTiles
 from .selector_closest import (
     SelectorClosest,
-    SelectorClosestTile,
     SelectorClosestEnemy,
     SelectorClosestFriendly
 )
@@ -39,7 +38,7 @@ SELECTORS = {
     selector.selector_name: selector
     for selector in [
         SelectorSelf(), SelectorWorld(), SelectorTile(), SelectorTiles(),
-        SelectorClosest(), SelectorClosestTile(), SelectorClosestEnemy(), SelectorClosestFriendly(),
+        SelectorClosest(), SelectorClosestEnemy(), SelectorClosestFriendly(),
         SelectorCommander(), SelectorCommanders(), SelectorFriendlyCommanders(), SelectorEnemyCommanders(),
         SelectorUnit(), SelectorUnits(), SelectorFriendlies(), SelectorEnemies()
     ]
