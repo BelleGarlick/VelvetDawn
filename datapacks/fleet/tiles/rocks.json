@@ -1,7 +1,10 @@
 {
   "name": "Rocks",
   "movement": {"weight": 10},
-  "textures": {"color": "#3d1f0a"},
+  "textures": {
+    "color": "#285b82",
+    "image": ["fleet:tiles.rocks.png"]
+  },
   "neighbours": {
     "fleet:island": 1,
     "fleet:rocks": 15,
