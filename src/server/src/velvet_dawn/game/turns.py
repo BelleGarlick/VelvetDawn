@@ -6,6 +6,7 @@ import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import Keys, Player, Team
+from velvet_dawn.dao.models.world_instance import WorldInstance
 from velvet_dawn.logger import logger
 from velvet_dawn.models.game_state import TurnData
 from velvet_dawn.models.phase import Phase
@@ -151,13 +152,24 @@ def begin_next_turn(config: Config):
         for unit in velvet_dawn.units.list(player=player.name):
             unit.set_attribute("movement.remaining", unit.get_attribute("movement.range", default=1), commit=False)
 
-    # Trigger all on turn begins
-    _trigger_on_turn_being_actions(new_team_turn)
+    # Fire triggers on turn begins
+    if new_team_turn == teams[0].team_id:
+        _trigger_on_round_begin_actions()
+    _trigger_on_turn_begin_actions(new_team_turn)
 
     _update_turn_start_time()
 
 
-def _trigger_on_turn_being_actions(new_team_turn: str):
+def _trigger_on_round_begin_actions():
+    """ Trigger all entity/tile round being actions """
+    for unit in velvet_dawn.units.list():
+        velvet_dawn.datapacks.entities[unit.entity_id].triggers.on_round(unit)
+    for tile in velvet_dawn.map.list_tiles():
+        velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_round(tile)
+    velvet_dawn.datapacks.world.triggers.on_round(WorldInstance())
+
+
+def _trigger_on_turn_begin_actions(new_team_turn: str):
     """ Trigger all entity/tile turn begin actions
 
     Testing for this exists in the triggers test suite
@@ -176,6 +188,7 @@ def _trigger_on_turn_being_actions(new_team_turn: str):
 
     for tile in velvet_dawn.map.list_tiles():
         velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_turn(tile)
+    velvet_dawn.datapacks.world.triggers.on_turn(WorldInstance())
 
 
 def _trigger_on_turn_end_actions(old_team_turn):
@@ -197,6 +210,7 @@ def _trigger_on_turn_end_actions(old_team_turn):
 
     for tile in velvet_dawn.map.list_tiles():
         velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_turn_end(tile)
+    velvet_dawn.datapacks.world.triggers.on_turn_end(WorldInstance())
 
 
 def _check_all_players_ready(current_phase: Phase) -> bool:

@@ -1,55 +1,14 @@
 import {VelvetDawn} from "../velvet-dawn/velvet-dawn";
 import { Perspective } from "./perspective";
 import {SetupPhase} from "./scenes/setup";
-import {RenderingConstants, Scene} from "./scenes/scene";
+import {Scene} from "./scenes/scene";
 import {GameScene} from "./scenes/game-scene";
 import {SpectatingScene} from "./scenes/spectating-scene";
 import {RenderingFacade} from "./facade";
+import {Position} from "models/position";
 
 
 const RESOLUTION = 2
-
-
-class DebugOptions {
-
-    private lastRenderTime: number = 0
-    private lastFrameEnd: number = 0
-    private rates: number[] = []
-
-    public update(frameStart: number, frameEnd: number) {
-        this.lastRenderTime = frameEnd - frameStart;
-
-        if (this.lastFrameEnd !== 0) {
-            this.rates.push(frameEnd - this.lastFrameEnd)
-        }
-        this.lastFrameEnd = frameEnd
-
-        if (this.rates.length > 100) {
-            this.rates.shift()
-        }
-    }
-
-    render(ctx: CanvasRenderingContext2D, constants: RenderingConstants) {
-        const state = VelvetDawn.getState()
-        let total = 0
-        this.rates.forEach(x => total += x);
-        total /= this.rates.length
-        const renderRate = Math.round(total * 100) / 100;
-
-        const framesPerSecond = Math.round(1000 / total * 100) / 100;
-
-        ctx.fillStyle = "#ffffff"
-        ctx.textBaseline = "bottom"
-        ctx.textAlign = "left"
-        ctx.font = "40px arial";
-        ctx.fillText(`Render Times: ${this.lastRenderTime} ${renderRate} ${framesPerSecond}`, 10, constants.height - 10)
-        ctx.fillText(`Attribute updates: ${state.attrChanges.length}`, 10, constants.height - 60)
-    }
-
-    public getLastRenderTime() {
-        return this.lastRenderTime
-    }
-}
 
 
 export class Renderer {
@@ -60,8 +19,6 @@ export class Renderer {
     private perspective = new Perspective();
 
     private scene: Scene = new SetupPhase();
-
-    private debugOptions  = new DebugOptions();
 
     public facade = new RenderingFacade()
 
@@ -86,7 +43,7 @@ export class Renderer {
 
         this.facade.ctx = ctx;
         this.facade.perspective = this.perspective
-        this.facade.timeDelta = this.debugOptions.getLastRenderTime() / 1000
+        this.facade.timeDelta = VelvetDawn.debug.getLastRenderTime() / 1000
         this.facade.recalculateConstants()
 
         ctx.fillStyle = "#66d9e8"
@@ -95,10 +52,10 @@ export class Renderer {
 
         this.scene.render(this.facade)
 
-        this.debugOptions.render(ctx, this.facade.constants)
+        VelvetDawn.debug.render(ctx, this.facade.constants)
 
         const end = new Date().getTime()
-        this.debugOptions.update(start, end);
+        VelvetDawn.debug.update(start, end);
 
         requestAnimationFrame(() => {this.render()})
     }
@@ -106,39 +63,46 @@ export class Renderer {
     public setCanvas(canvasRef: HTMLCanvasElement) {
         this.canvas = canvasRef
 
-        let mouseDown = false
         let mousePos = {x: 0, y: 0}
         this.canvas.onmousemove = (event) => {
-            const evX = event.pageX * RESOLUTION
-            const evY = event.pageY * RESOLUTION
+            if (!document.onmousemove) {
+                const evX = event.pageX * RESOLUTION
+                const evY = event.pageY * RESOLUTION
 
-            if (mouseDown) {
-                this.perspective.xOffset += mousePos.x - evX
-                this.perspective.yOffset += mousePos.y - evY
-            }
-            mousePos = {x: evX, y: evY}
-            this.facade.mousePosition = mousePos
+                mousePos = {x: evX, y: evY}
+                this.facade.mousePosition = mousePos
 
-            if (this.scene.hoveredTile) {
-                this.scene.hoveredTile.hovered = false
+                if (this.scene.hoveredTile) {
+                    this.scene.hoveredTile.hovered = false
+                }
+                this.scene.hoveredTile = this.perspective.getTileFromMouse(mousePos.x, mousePos.y)
+                this.scene.hoveredTile.hovered = true
             }
-            this.scene.hoveredTile = this.perspective.getTileFromMouse(mousePos.x, mousePos.y)
-            this.scene.hoveredTile.hovered = true
         }
 
         this.canvas.onmouseleave = () => this.facade.mousePosition = undefined
 
-        let mouseDownPos = {x: 0, y: 0}
+        let mouseDownPos: undefined | Position;
         this.canvas.onmousedown = (event) => {
-            mouseDown = true
+            mousePos = {x: event.pageX * RESOLUTION, y: event.pageY * RESOLUTION}
             mouseDownPos = {x: event.pageX * RESOLUTION, y: event.pageY * RESOLUTION}
+
+            document.onmousemove = (event) => {
+                this.perspective.xOffset -= event.x * RESOLUTION - mousePos.x
+                this.perspective.yOffset -= event.y * RESOLUTION - mousePos.y
+                mousePos = {x: event.pageX * RESOLUTION, y: event.pageY * RESOLUTION}
+            }
+
+            document.onmouseup = () => {
+                document.onmousemove = null
+            }
         }
 
         this.canvas.onmouseup = (event) => {
             const evX = event.pageX * RESOLUTION
             const evY = event.pageY * RESOLUTION
 
-            mouseDown = false
+            document.onmousemove = null
             const distance = Math.hypot(evY - mouseDownPos.y, evX - mouseDownPos.x)
             if (distance < 10) {
                 this.scene.clicked(this.facade.constants, evX, evY)

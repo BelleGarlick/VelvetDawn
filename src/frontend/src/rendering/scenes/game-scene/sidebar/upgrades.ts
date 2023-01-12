@@ -34,16 +34,22 @@ export class UnitUpgrades {
         if (this.available) {
             const renderableButtons: ActionButton[] = []
             this.available.upgrades.forEach((id) => {
-                renderableButtons.push(this.unitUpgradeButtons[id].enabled(true));
+                if (this.unitUpgradeButtons[id]) renderableButtons.push(this.unitUpgradeButtons[id].enabled(true).setReason(undefined));
+                else console.error(`Missing upgrade id: ${id}`)
             })
             this.available.disabled.forEach((id) => {
-                renderableButtons.push(this.unitUpgradeButtons[id.upgradeId].enabled(false).setReason(id.reason))
+                if (this.unitUpgradeButtons[id.upgradeId])
+                    renderableButtons.push(this.unitUpgradeButtons[id.upgradeId].enabled(false).setReason(id.reason))
+                else console.error(`Missing disabled id: ${id}`)
             })
             this.available.missingRequirements.forEach((id) => {
-                renderableButtons.push(this.unitUpgradeButtons[id.upgradeId].enabled(false).setReason(id.reason))
+                if (this.unitUpgradeButtons[id.upgradeId])
+                    renderableButtons.push(this.unitUpgradeButtons[id.upgradeId].enabled(false).setReason(id.reason))
+                else console.error(`Missing requirements id: ${id}`)
             })
             this.available.upgraded.forEach((id) => {
-                renderableButtons.push(this.unitUpgradeButtons[id].used())
+                if (this.unitUpgradeButtons[id]) renderableButtons.push(this.unitUpgradeButtons[id].used());
+                else console.error(`Missing upgrade id: ${id}`)
             })
 
             this.paginatedButtons.render(facade, renderableButtons, startY)

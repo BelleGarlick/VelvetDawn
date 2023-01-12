@@ -11,7 +11,7 @@ from velvet_dawn.logger import logger
 from velvet_dawn.models.datapacks.units.unit import Unit
 from velvet_dawn.models.datapacks.resource import Resource, ResourceType
 from velvet_dawn.models.datapacks.tiles.tile import Tile
-
+from velvet_dawn.models.datapacks.world import WorldDefinition
 
 """ datapacks module
 
@@ -25,6 +25,7 @@ _DATAPACKS_PATH = Path(__file__).parent.parent.parent.parent.parent.parent / "da
 
 _abstract_definitions: Dict[str, dict] = {}
 
+world = WorldDefinition()
 tiles: Dict[str, Tile] = {}
 entities: Dict[str, Unit] = {}
 resources: Dict[str, Resource] = {}
@@ -35,7 +36,7 @@ def init(config: Config):
     _load_datapack(_BUILT_IN_DATAPACK_PATH / "base")
 
     if "__testing__" in config.datapacks:
-        _load_datapack(_BUILT_IN_DATAPACK_PATH / "testing")
+        _load_datapack(_BUILT_IN_DATAPACK_PATH / "__testing__")
         config.datapacks.remove("__testing__")
 
     for datapack in config.datapacks:
@@ -49,37 +50,43 @@ def _load_datapack(datapack_path: Path):
     if not datapack_path.exists():
         raise errors.ValidationError(f"Datapack '{datapack}' not found.")
 
-    _load_resources(datapack_path / 'resources')
-    _load_tiles(datapack_path / 'tiles')
-    _load_entities(datapack_path / 'entities')
+    datapack_id = _load_datapack_metadata(datapack_path)
+
+    _load_resources(datapack_path / 'resources', datapack_id)
+    _load_tiles(datapack_path / 'tiles', datapack_id)
+    _load_entities(datapack_path / 'entities', datapack_id)
 
 
-def get(id: str, entities_only=False, tiles_only=False, resources_only=False):
-    if entities_only: return entities.get(id)
-    if tiles_only: return tiles.get(id)
-    if resources_only: return resources.get(id)
+def _load_datapack_metadata(datapack_path: Path):
+    path = datapack_path / 'datapack.json'
+    base_id = datapack_path.stem
+    if not path.exists():
+        return base_id
 
-    if id in entities: return entities[id]
-    if id in tiles: return tiles[id]
-    if id in resources: return resources[id]
+    with open(path) as file:
+        data = json.load(file)
+        id = data.get("id", base_id)
 
-    return None
+        WorldDefinition().load(id, data)
+
+        return id
 
 
-def _load_tiles(tiles_path):
+def _load_tiles(tiles_path, datapack_id):
     """ Load tiles
 
     This function will load tiles into the entities map
 
     Args:
         tiles_path: Path to the resource dir
+        datapack_id: The datapack id
     """
     global tiles
 
-    datapack_tiles = _load_items_in_dir(tiles_path)
+    datapack_tiles = _load_items_in_dir(tiles_path, datapack_id)
     for key in datapack_tiles:
         tile_data = datapack_tiles[key]
-        tile_id = _construct_id(tiles_path, key, data=tile_data)
+        tile_id = _construct_id(datapack_id, tiles_path, key, data=tile_data)
 
         logger.info(" - " + tile_id)
 
@@ -87,20 +94,21 @@ def _load_tiles(tiles_path):
         tiles[tile.id] = tile
 
 
-def _load_entities(entities_path):
+def _load_entities(entities_path, datapack_id):
     """ Load entities
 
     This function will load entities into the entities map
 
     Args:
         entities_path: Path to the resource dir
+        datapack_id: The datapack id
     """
     global entities
 
-    datapack_entities = _load_items_in_dir(entities_path)
+    datapack_entities = _load_items_in_dir(entities_path, datapack_id)
     for key in datapack_entities:
         entity_data = datapack_entities[key]
-        entity_id = _construct_id(entities_path, key, data=entity_data)
+        entity_id = _construct_id(datapack_id, entities_path, key, data=entity_data)
 
         logger.info(" - " + entity_id)
 
@@ -109,13 +117,14 @@ def _load_entities(entities_path):
 
 
 # TODO Test overriding
-def _load_resources(resources_path: Path):
+def _load_resources(resources_path: Path, datapack_id: str):
     """ Load resources
 
     This function will load resources into the resources map
 
     Args:
         resources_path: Path to the resource dir
+        datapack_id: The datapack prefix
     """
     global resources
 
@@ -127,7 +136,7 @@ def _load_resources(resources_path: Path):
                 overrides = json.load(reader)
             continue
 
-        resource_id = _construct_id(resources_path, resource_path, include_file_type=True)
+        resource_id = _construct_id(datapack_id, resources_path, resource_path, include_file_type=True)
         logging.info(f" - {resource_id}")
 
         file_type, resource_type = resource_path.suffix[1:], ResourceType.Audio
@@ -149,10 +158,11 @@ def _load_resources(resources_path: Path):
         )
 
 
-def _construct_id(loader_dir_path: Path, file_path: Path, include_file_type=False, data: dict = None) -> str:
+def _construct_id(datapack_id: str, loader_dir_path: Path, file_path: Path, include_file_type=False, data: dict = None) -> str:
     """ Construct the id for a file being loaded
 
     Args:
+        datapack_id: The id of the datapack being loaded
         loader_dir_path: The root path where files are loaded from within.
             This should be the path to the entities, tiles or resources
         file_path: Path to the file, used to construct id
@@ -165,18 +175,16 @@ def _construct_id(loader_dir_path: Path, file_path: Path, include_file_type=Fals
     if data and "id" in data:
         return data['id']
 
-    current_datapack_name = loader_dir_path.parent.name
-
     # Get just the tokens within the loader_dir_path.
     file_parts = list(file_path.parts)[len(list(loader_dir_path.parts)):]
 
     if not include_file_type:
         file_parts[-1] = file_path.stem
 
-    return current_datapack_name + ":" + ".".join(file_parts)
+    return datapack_id + ":" + ".".join(file_parts)
 
 
-def _load_items_in_dir(root_path: Path) -> Dict[Path, dict]:
+def _load_items_in_dir(root_path: Path, datapack_id: str) -> Dict[Path, dict]:
     """ Load items from a directory.
 
     Abstracts entities will be added to the abstract entities dict and
@@ -185,6 +193,7 @@ def _load_items_in_dir(root_path: Path) -> Dict[Path, dict]:
 
     Args:
         root_path: Directly to load
+        datapack_id: The datapack id
 
     Returns:
         Concrete entities
@@ -202,7 +211,7 @@ def _load_items_in_dir(root_path: Path) -> Dict[Path, dict]:
                 raise errors.ValidationError(f"Unable to parse file: {file_path}")
 
             if data.get("abstract", False):
-                def_id = _construct_id(root_path, file_path, data=data)
+                def_id = _construct_id(datapack_id, root_path, file_path, data=data)
                 logger.info(f" - ~{def_id}")
                 _abstract_definitions[def_id] = data
             else:

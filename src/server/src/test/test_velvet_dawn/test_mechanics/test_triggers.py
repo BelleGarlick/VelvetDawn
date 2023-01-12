@@ -1,7 +1,7 @@
 import velvet_dawn.datapacks
 from velvet_dawn.dao import app
 from test.base_test import BaseTest
-
+from velvet_dawn.dao.models.world_instance import WorldInstance
 
 """ Test all triggers are executed correctly
 
@@ -40,6 +40,7 @@ class TestTriggers(BaseTest):
         with app.app_context():
             self.setup_game()
             set_commander_trigger('turn')
+            WorldInstance().remove_tag("tag:turn-trigger-ran")
 
             unit = velvet_dawn.units.list()[0]
             self.assertNotEqual(0.1, unit.get_attribute("health"))
@@ -48,11 +49,13 @@ class TestTriggers(BaseTest):
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
             self.assertEqual(0.1, unit.get_attribute("health"))
+            self.assertTrue(WorldInstance().has_tag("tag:turn-trigger-ran"))
 
     def test_trigger_turn_end(self):
         with app.app_context():
             self.setup_game()
             set_commander_trigger('turn-end')
+            WorldInstance().remove_tag("tag:turn-end-trigger-ran")
 
             unit = velvet_dawn.units.list()[0]
             self.assertNotEqual(0.1, unit.get_attribute("health"))
@@ -61,6 +64,7 @@ class TestTriggers(BaseTest):
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
 
             self.assertEqual(0.1, unit.get_attribute("health"))
+            self.assertTrue(WorldInstance().has_tag("tag:turn-end-trigger-ran"))
 
     def test_trigger_friendly_turn(self):
         with app.app_context():
@@ -214,7 +218,7 @@ class TestTriggers(BaseTest):
             config.seed = 0
             velvet_dawn.datapacks.init(config)
 
-            set_commander_trigger('game-start')
+            set_commander_trigger('game')
 
             velvet_dawn.map.creation.new(config)
             velvet_dawn.players.join("player1", "")
@@ -226,6 +230,18 @@ class TestTriggers(BaseTest):
 
             commander = velvet_dawn.units.list()[0]
             self.assertEqual(0.1, commander.get_attribute("health"))
+            self.assertTrue(WorldInstance().has_tag("tag:game-trigger-ran"))
+
+    def test_trigger_round_begin(self):
+        with app.app_context():
+            self.setup_game()
+            WorldInstance().remove_tag("tag:round-trigger-ran")
+
+            velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
+            self.assertFalse(WorldInstance().has_tag("tag:round-trigger-ran"))
+
+            velvet_dawn.game.turns.begin_next_turn(self.get_test_config())
+            self.assertTrue(WorldInstance().has_tag("tag:round-trigger-ran"))
 
     # def test_trigger_death(self):
     #     with app.app_context():

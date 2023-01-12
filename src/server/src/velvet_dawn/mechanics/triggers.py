@@ -3,6 +3,7 @@ from typing import Dict, List, Union
 import velvet_dawn
 from velvet_dawn import errors
 from velvet_dawn.dao.models import UnitInstance, TileInstance
+from velvet_dawn.dao.models.world_instance import WorldInstance
 from velvet_dawn.mechanics.actions.action import Action
 
 
@@ -13,15 +14,9 @@ actions given to the class
 
 
 # TODO implement attack and attacked, spawn, death and kill
-TILE_TRIGGERS = [
-    "turn", "turn-end",
-    "enter", "leave",
-    "target", "targeted",
-    "game-start"
-    "death", "kill",
-    "attack", "attacked"
-]
-
+# TODO Add validation for this
+WORLD_TRIGGERS = ["game", "turn", "turn-end"]
+TILE_TRIGGERS = ["enter", "leave", "target", "targeted", "death", "kill", "attack", "attacked"] + WORLD_TRIGGERS
 UNIT_TRIGGERS = ["friendly-turn", "friendly-turn-end", "enemy-turn", "enemy-turn-end", "spawn"] + TILE_TRIGGERS
 
 
@@ -51,57 +46,60 @@ class Triggers:
                 for item in data[key]
             ]
 
-    def _run_trigger(self, trigger_name: str, instance: Union[UnitInstance, TileInstance]):
+    def _run_trigger(self, trigger_name: str, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         """ Execute each action in a given list of triggers """
         if trigger_name in self._triggers:
             for action in self._triggers[trigger_name]:
                 if action.can_run(instance):
                     action.run(instance)
 
-    def on_turn(self, instance: Union[UnitInstance, TileInstance]):
+    def on_turn(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("turn", instance)
 
-    def on_turn_end(self, instance: Union[UnitInstance, TileInstance]):
+    def on_turn_end(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("turn-end", instance)
 
-    def on_friendly_turn(self, instance: Union[UnitInstance, TileInstance]):
+    def on_friendly_turn(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("friendly-turn", instance)
 
-    def on_friendly_turn_end(self, instance: Union[UnitInstance, TileInstance]):
+    def on_friendly_turn_end(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("friendly-turn-end", instance)
 
-    def on_enemy_turn(self, instance: Union[UnitInstance, TileInstance]):
+    def on_enemy_turn(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("enemy-turn", instance)
 
-    def on_enemy_turn_end(self, instance: Union[UnitInstance, TileInstance]):
+    def on_enemy_turn_end(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("enemy-turn-end", instance)
 
-    def on_enter(self, instance: Union[UnitInstance, TileInstance]):
+    def on_enter(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("enter", instance)
 
-    def on_leave(self, instance: Union[UnitInstance, TileInstance]):
+    def on_leave(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("leave", instance)
 
-    def on_target(self, instance: Union[UnitInstance, TileInstance]):
+    def on_target(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("target", instance)
 
-    def on_targeted(self, instance: Union[UnitInstance, TileInstance]):
+    def on_targeted(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("targeted", instance)
 
-    def on_spawn(self, instance: Union[UnitInstance, TileInstance]):
+    def on_spawn(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("spawn", instance)
 
-    def on_game_start(self, instance: Union[UnitInstance, TileInstance]):
-        self._run_trigger("game-start", instance)
+    def on_game_start(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
+        self._run_trigger("game", instance)
 
-    def on_death(self, instance: Union[UnitInstance, TileInstance]):
+    def on_death(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("death", instance)
 
-    def on_kill(self, instance: Union[UnitInstance, TileInstance]):
+    def on_kill(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("kill", instance)
 
-    def on_attack(self, instance: Union[UnitInstance, TileInstance]):
+    def on_attack(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("attack", instance)
 
-    def on_attacked(self, instance: Union[UnitInstance, TileInstance]):
+    def on_attacked(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
         self._run_trigger("attacked", instance)
+
+    def on_round(self, instance: Union[UnitInstance, TileInstance, WorldInstance]):
+        self._run_trigger("round", instance)

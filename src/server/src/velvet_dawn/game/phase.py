@@ -1,7 +1,9 @@
 import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
+from velvet_dawn.dao.models.world_instance import WorldInstance
 from velvet_dawn.logger import logger
+from velvet_dawn.models.datapacks.world import WorldDefinition
 from velvet_dawn.models.phase import Phase
 from velvet_dawn.dao.models import Keys, Player
 
@@ -35,6 +37,7 @@ def start_game_phase(config: Config):
         velvet_dawn.datapacks.entities[unit.entity_id].triggers.on_game_start(unit)
     for tile in velvet_dawn.map.list_tiles():
         velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_game_start(tile)
+    velvet_dawn.datapacks.world.triggers.on_game_start(WorldInstance())
 
     velvet_dawn.game.turns.begin_next_turn(config)
 

@@ -1,11 +1,63 @@
 import * as Api from "api"
-import {GamePhase, GameState, Player, LoginDetails, createBlankState} from "models";
+import {GameState, Player, LoginDetails, createBlankState} from "models";
 import {Datapacks} from "./datapacks";
 import {SPECTATORS_TEAM} from "../constants";
 import {VelvetDawnMap} from "./map";
 import {Renderer} from "../rendering/Renderer";
+import {RenderingConstants} from "../rendering/scenes/scene";
+
+
+export class DebugOptions {
+
+    private lastRenderTime: number = 0
+    private lastFrameEnd: number = 0
+    private rates: number[] = []
+    private pingTime = 0
+
+    public update(frameStart: number, frameEnd: number) {
+        this.lastRenderTime = frameEnd - frameStart;
+
+        if (this.lastFrameEnd !== 0) {
+            this.rates.push(frameEnd - this.lastFrameEnd)
+        }
+        this.lastFrameEnd = frameEnd
+
+        if (this.rates.length > 100) {
+            this.rates.shift()
+        }
+    }
+
+    render(ctx: CanvasRenderingContext2D, constants: RenderingConstants) {
+        const state = VelvetDawn.getState()
+        let total = 0
+        this.rates.forEach(x => total += x);
+        total /= this.rates.length
+        const renderRate = Math.round(total * 100) / 100;
+
+        const framesPerSecond = Math.round(1000 / total * 100) / 100;
+
+        ctx.fillStyle = "#ffffff"
+        ctx.textBaseline = "bottom"
+        ctx.textAlign = "left"
+        ctx.font = "40px arial";
+        ctx.fillText(`Render Times: ${this.lastRenderTime} ${renderRate} ${framesPerSecond}`, 10, constants.height - 10)
+        ctx.fillText(`Attribute updates: ${state.attrChanges.length}`, 10, constants.height - 60)
+        ctx.fillText(`Ping: ${this.pingTime}`, 10, constants.height - 110)
+    }
+
+    public getLastRenderTime() {
+        return this.lastRenderTime
+    }
+
+    addPingTime(number: number) {
+        this.pingTime = number
+    }
+}
+
 
 export class VelvetDawn {
+
+    public static readonly debug = new DebugOptions();
 
     public static loginDetails: LoginDetails = {
         username: "error",
@@ -43,8 +95,13 @@ export class VelvetDawn {
         if (this.firstLoad) {
             this.firstLoad = false
             return Api.game.getState(true).then(VelvetDawn.setState)
-        } else
-            return Api.game.getState(false).then(VelvetDawn.setState)
+        } else {
+            let ping = new Date().getTime()
+            return Api.game.getState(false).then(state => {
+                VelvetDawn.debug.addPingTime(new Date().getTime() - ping)
+                VelvetDawn.setState(state)
+            })
+        }
     }
 
     static getPlayer(): Player {
