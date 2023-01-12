@@ -20,7 +20,7 @@ class TestDatapackLoading(BaseTest):
         datapack_path = Path("example") / "entity"
 
         def _id(x, ft=False, data=None):
-            return velvet_dawn.datapacks._construct_id(datapack_path, x, include_file_type=ft, data=data)
+            return velvet_dawn.datapacks._construct_id("example", datapack_path, x, include_file_type=ft, data=data)
 
         self.assertEqual("example:entity1", _id(datapack_path / "entity1.json"))
         self.assertEqual("example:entity1.json", _id(datapack_path / "entity1.json", ft=True))
@@ -47,7 +47,7 @@ class TestDatapackLoading(BaseTest):
         with open(entities_path / "example-b.json", "w+") as file:
             json.dump({"name": "example_b"}, file)
 
-        files = velvet_dawn.datapacks._load_items_in_dir(test_path / "entity")
+        files = velvet_dawn.datapacks._load_items_in_dir(test_path / "entity", "pack")
         self.assertNotIn(entities_path / "pack:example-a.json", files)
         self.assertIn(entities_path / "example-b.json", files)
         self.assertIn("pack:example-a", velvet_dawn.datapacks._abstract_definitions)
