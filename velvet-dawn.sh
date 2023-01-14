@@ -59,11 +59,12 @@ then
 
 elif [ $1 = "test-server" ]
 then
-  # Test all
+  # Test server
   python -m pytest
 
 elif [ $1 = "test-frontend" ]
 then
+  # Test frontend
   cd src/frontend
   npm run test
 

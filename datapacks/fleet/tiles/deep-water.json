@@ -1,6 +1,12 @@
 {
   "name": "Deep Water",
-  "textures": {"color": "#123057"},
+  "textures": {
+    "color": "#123057",
+    "image": {
+      "null": 3,
+      "fleet:tiles.small-waves.png": 1
+    }
+  },
   "neighbours": {
     "fleet:shallow-water": 1,
     "fleet:deep-water": 30

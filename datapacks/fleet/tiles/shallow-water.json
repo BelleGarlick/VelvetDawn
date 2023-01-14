@@ -1,6 +1,12 @@
 {
   "name": "Shallow Water",
-  "textures": {"color": "#285b82"},
+  "textures": {
+    "color": "#285b82",
+    "image": {
+      "null": 3,
+      "fleet:tiles.small-waves.png": 1
+    }
+  },
   "neighbours": {
     "fleet:island": 1,
     "fleet:rocks": 1,

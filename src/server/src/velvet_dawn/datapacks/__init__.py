@@ -144,7 +144,7 @@ def _load_resources(resources_path: Path, datapack_id: str):
             resource_type = ResourceType.Audio
         elif file_type in {"woff"}:
             resource_type = ResourceType.Font
-        elif file_type in {"jpg", "png"}:
+        elif file_type in {"jpg", "png", "svg"}:
             resource_type = ResourceType.Image
         else:
             raise Exception(f"Resource '{resource_path}' is invalid. File types may only be mp3, woff, jpg or png or 'overrides.json'")
