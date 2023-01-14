@@ -16,21 +16,21 @@ class ConditionalCounting(Conditional):
         count = len(self.selector.get_chained_selection(instance))
 
         if self.function == Comparison.EQUALS:
-            return count == int(self.function_value)
+            return count == int(self.function_value.value(instance))
 
         if self.function == Comparison.NOT_EQUALS:
-            return count != int(self.function_value)
+            return count != int(self.function_value.value(instance))
 
         if self.function == Comparison.LESS_THAN:
-            return count < int(self.function_value)
+            return count < int(self.function_value.value(instance))
 
         if self.function == Comparison.LESS_THAN_EQUAL:
-            return count <= int(self.function_value)
+            return count <= int(self.function_value.value(instance))
 
         if self.function == Comparison.GREATER_THAN:
-            return count > int(self.function_value)
+            return count > int(self.function_value.value(instance))
 
         if self.function == Comparison.GREATER_THAN_EQUAL:
-            return count >= int(self.function_value)
+            return count >= int(self.function_value.value(instance))
 
         return False

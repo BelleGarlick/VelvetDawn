@@ -12,11 +12,11 @@
   "combat": { "attack": 10 },
   "triggers": {
     "friendly-turn": [
-      {"modify": "friendlies[range=1].health", "add-selector": 10, "conditions": [{"if": "self.healing-range", "eq":  1}], "notes": "Change add-selector values to self.healing-rate"},
-      {"modify": "friendlies[range=2].health", "add-selector": 10, "conditions": [{"if": "self.healing-range", "eq":  2}]},
-      {"modify": "friendlies[range=3].health", "add-selector": 10, "conditions": [{"if": "self.healing-range", "eq":  3}]}
+      {"modify": "friendlies[range=1].health", "add-selector": "@self.healing-rate", "conditions": [{"if": "self.healing-range", "eq":  1}], "notes": "Change add-selector values to self.healing-rate"},
+      {"modify": "friendlies[range=2].health", "add-selector": "@self.healing-rate", "conditions": [{"if": "self.healing-range", "eq":  2}]},
+      {"modify": "friendlies[range=3].health", "add-selector": "@self.healing-rate", "conditions": [{"if": "self.healing-range", "eq":  3}]}
     ],
-    "notes": "Todo: add { 'particles': 'civil-war:health', 'on': 'local.health' }. Also update this when filter use $ to get a selector value"
+    "notes": "Todo: add {'particles': 'civil-war:health', 'on': 'local.health'}."
   },
   "textures": {
     "background": "civil-war:medic.png"

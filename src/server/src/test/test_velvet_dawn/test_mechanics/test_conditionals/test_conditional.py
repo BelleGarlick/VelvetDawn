@@ -55,7 +55,7 @@ class TestConditional(BaseTest):
 
         self.assertEqual(conditional.not_true_reason, "Instance is not a commander")
         self.assertEqual(conditional.function, Comparison.EQUALS)
-        self.assertEqual(conditional.function_value, "testing:commander")
+        self.assertEqual(conditional.function_value.raw, "testing:commander")
         self.assertIsInstance(conditional, ConditionalStandard)
 
         # Test count
@@ -68,7 +68,7 @@ class TestConditional(BaseTest):
 
         self.assertEqual(conditional.not_true_reason, "There must be four units")
         self.assertEqual(conditional.function, Comparison.EQUALS)
-        self.assertEqual(conditional.function_value, 4)
+        self.assertEqual(conditional.function_value.raw, 4)
         self.assertIsInstance(conditional, ConditionalCounting)
 
         # Test invalid key (not if/count)

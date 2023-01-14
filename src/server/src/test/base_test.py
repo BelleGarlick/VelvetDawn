@@ -40,7 +40,7 @@ class BaseTest(unittest.TestCase, ABC):
 
     def get_config(self):
         config = Config()
-        config.datapacks = ['__testing__', 'civil-war']
+        config.datapacks = ['__testing__']
         config.map_height = 11
         config.map_width = 7
         config.spawning.width_multiplier = 1

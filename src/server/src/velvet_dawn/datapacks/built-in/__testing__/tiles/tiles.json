@@ -1,0 +1,6 @@
+{
+  "name": "Tile",
+  "neighbours": {
+    "testing:tiles": 1
+  }
+}

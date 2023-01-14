@@ -129,6 +129,46 @@ class Selector(ABC):
 
         return True
 
+    def function_get_value(self, instance: Union[TileInstance, UnitInstance]):
+        """ This function effectively works to get the mean value of the data """
+        instances = self.get_chained_selection(instance)
+        n_instances = len(instances)
+        if n_instances == 0:
+            return 0
+
+        all_string, string_value = True, None
+        all_number, number_values = True, []
+
+        for instance in instances:
+            value = instance.get_attribute(self.attribute) if self.attribute else instance.id
+            if value is not None:
+                if isinstance(value, str):
+                    all_number = False
+
+                    if string_value is None:
+                        string_value = value
+                    elif string_value != value:
+                        return None
+
+                elif isinstance(value, int) or isinstance(value, float) or isinstance(value, bool):
+                    all_string = False
+                    number_values.append(float(value))
+                else:
+                    # Invalid type
+                    return None
+
+        if all_string and all_number:
+            # Must have no valid values, e.g. all [None, None]
+            return None
+
+        if all_string:
+            return string_value
+
+        if all_number:
+            if number_values:
+                return sum(number_values) / len(number_values)
+        return None
+
     def function_has_tag(self, instance: Union[TileInstance, UnitInstance], value: str):
         """ Check if the selection has a given tag """
         instances = self.get_chained_selection(instance)

@@ -2,8 +2,6 @@ import velvet_dawn
 from test.base_test import BaseTest
 from velvet_dawn import errors
 from velvet_dawn.dao import app
-from velvet_dawn.mechanics.conditionals import ConditionalStandard
-from velvet_dawn.mechanics.conditionals.conditional import Comparison
 
 
 class TestConditionalCount(BaseTest):
@@ -38,3 +36,19 @@ class TestConditionalCount(BaseTest):
             self.assertTrue(conditional_less_than_equals.is_true(unit))
             self.assertFalse(conditional_greater_than.is_true(unit))
             self.assertTrue(conditional_greater_than_equals.is_true(unit))
+
+    def test_conditional_if_function_value(self):
+        with app.app_context():
+            self.prepare_game()
+
+            unit = velvet_dawn.units.list()[0]
+            unit.set_attribute("units-count-true", 4)
+            unit.set_attribute("units-count-false", 5)
+
+            conditional_equals = velvet_dawn.mechanics.conditionals.get_conditional(
+                "0", {"count": "units", "equals": "@self.units-count-true"})
+            conditional_not_equals = velvet_dawn.mechanics.conditionals.get_conditional(
+                "0", {"count": "units", "equals": "@self.units-count-false"})
+
+            self.assertTrue(conditional_equals.is_true(unit))
+            self.assertFalse(conditional_not_equals.is_true(unit))

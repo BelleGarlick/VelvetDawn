@@ -75,6 +75,31 @@ class TestActionModify(BaseTest):
             self.assertEqual(100, unit.get_attribute("health"))
             self.assertEqual(9, unit.get_attribute("healthy"))
 
+    def test_modifier_function_value(self):
+        with app.app_context():
+            self.prepare_game()
+
+            unit = velvet_dawn.units.list()[0]
+            unit.set_attribute("actual", 12)
+
+            action_raw = ActionModify.from_dict("id", {"modify": "self.example", "set": "raw-value"})
+            action_random = ActionModify.from_dict("id", {"modify": "self.example", "set": "__rand__"})
+            action_selector = ActionModify.from_dict("id", {"modify": "self.example", "set": "@self.actual"})
+
+            # Tet raw
+            action_raw.run(unit)
+            self.assertEqual("raw-value", unit.get_attribute("example"))
+
+            # Test random
+            action_random.run(unit)
+            self.assertTrue(1 >= unit.get_attribute("example") >= 0)
+
+            # Test selector
+            self.assertNotEqual(12, unit.get_attribute("example"))
+            action_selector.run(unit)
+            self.assertEqual(12, unit.get_attribute("example"))
+
+
     def test_modifier_tags(self):
         with app.app_context():
             self.setup_game()

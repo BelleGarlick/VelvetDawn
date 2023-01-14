@@ -5,6 +5,8 @@ import velvet_dawn.validations
 from velvet_dawn import errors
 from velvet_dawn.dao.models import UnitInstance, TileInstance
 from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.mechanics import selectors
+from velvet_dawn.mechanics.function_value import FunctionValue
 from velvet_dawn.mechanics.selectors import Selector
 
 
@@ -43,7 +45,7 @@ class Conditional:
     def __init__(self, keyword: str, has_tag_enabled=True):
         self.selector: Optional[Selector] = None
         self.function: Optional[Comparison] = None
-        self.function_value = None
+        self.function_value = FunctionValue()
 
         self.keyword = keyword
         self.has_tag_enabled = has_tag_enabled
@@ -73,10 +75,10 @@ class Conditional:
         # Test keys
         operator_key = list(data)[0]
         self.function = OPERATORS[operator_key]
-        self.function_value = data[operator_key]
+        self.function_value.parse(id, data[operator_key])
 
         if self.function in NUMBERS_ONLY_OPERATORS:
-            velvet_dawn.validations.is_int(self.function_value, error_prefix=f"Conditional in {id} with operation '{operator_key}' comparison")
+            velvet_dawn.validations.is_int(self.function_value.raw, error_prefix=f"Conditional in {id} with operation '{operator_key}' comparison")
 
         if self.selector.attribute is not None and (self.function == Comparison.HAS_TAG or self.function == Comparison.NOT_HAS_TAG):
             raise errors.ValidationError(f"Cannot compare tags on this selector with an attribute on '{id}'.")

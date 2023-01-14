@@ -4,7 +4,9 @@ from typing import Union, Optional
 import velvet_dawn.mechanics.selectors
 from velvet_dawn import errors
 from velvet_dawn.dao.models import TileInstance, UnitInstance
+from velvet_dawn.dao.models.world_instance import WorldInstance
 from velvet_dawn.mechanics.actions.action import Action
+from velvet_dawn.mechanics.function_value import FunctionValue
 from velvet_dawn.mechanics.selectors import Selector
 
 
@@ -57,7 +59,8 @@ class ActionModify(Action):
         self.selector: Optional[Selector] = None
 
         self.function: ActionModifierFunction = ActionModifierFunction.SET
-        self.function_value = 0
+        self.function_value = FunctionValue()
+        self.is_value_selector = False
 
     @staticmethod
     def from_dict(id: str, data: dict):
@@ -79,7 +82,7 @@ class ActionModify(Action):
         for key in data:
             if key in KeyMap:
                 function_key = key
-                action.function_value = data[key]
+                action.function_value.parse(id, data[key])
                 action.function = KeyMap[key]
 
         if action.function in NON_ATTRIBUTE_MODIFIERS:
@@ -93,28 +96,28 @@ class ActionModify(Action):
 
         return action
 
-    def run(self, instance: Union[TileInstance, UnitInstance]):
+    def run(self, instance: Union[TileInstance, UnitInstance, WorldInstance]):
         """ Execute the attribute """
         if self.function == ActionModifierFunction.SET:
-            self.selector.function_set(instance, self.function_value)
+            self.selector.function_set(instance, self.function_value.value(instance))
 
         elif self.function == ActionModifierFunction.ADD:
-            self.selector.function_add(instance, self.function_value)
+            self.selector.function_add(instance, self.function_value.value(instance))
 
         elif self.function == ActionModifierFunction.MUL:
-            self.selector.function_multiply(instance, self.function_value)
+            self.selector.function_multiply(instance, self.function_value.value(instance))
 
         elif self.function == ActionModifierFunction.SUB:
-            self.selector.function_subtract(instance, self.function_value)
+            self.selector.function_subtract(instance, self.function_value.value(instance))
 
         elif self.function == ActionModifierFunction.RESET:
-            self.selector.function_reset(instance, self.function_value)
+            self.selector.function_reset(instance, self.function_value.value(instance))
 
         elif self.function == ActionModifierFunction.ADD_TAG:
-            self.selector.function_add_tag(instance, self.function_value)
+            self.selector.function_add_tag(instance, self.function_value.value(instance))
 
         elif self.function == ActionModifierFunction.REMOVE_TAG:
-            self.selector.function_remove_tag(instance, self.function_value)
+            self.selector.function_remove_tag(instance, self.function_value.value(instance))
 
         else:
             raise errors.ValidationError(f"Unknown action function type: '{self.function}'")

@@ -49,3 +49,20 @@ class TestConditionalIf(BaseTest):
             unit.add_tag("x")
 
             self.assertTrue(conditional_has_tag.is_true(unit))
+
+    def test_conditional_if_function_value(self):
+        with app.app_context():
+            self.prepare_game()
+
+            unit = velvet_dawn.units.list()[0]
+            unit.set_attribute("example1", 5)
+            unit.set_attribute("example2", 5)
+            unit.set_attribute("example3", 3)
+
+            conditional_equals = velvet_dawn.mechanics.conditionals.get_conditional(
+                "0", {"if": "self.example1", "equals": "@self.example2"})
+            conditional_not_equals = velvet_dawn.mechanics.conditionals.get_conditional(
+                "0", {"if": "self.example1", "equals": "@self.example3"})
+
+            self.assertTrue(conditional_equals.is_true(unit))
+            self.assertFalse(conditional_not_equals.is_true(unit))
