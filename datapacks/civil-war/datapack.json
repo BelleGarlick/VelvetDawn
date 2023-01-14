@@ -1,0 +1,26 @@
+{
+  "triggers": {
+    "round": [
+      {"modify": "tiles[tag=tag:resource-harvested-1].texture.color", "reset": null},
+      {"modify": "tiles[tag=tag:resource-harvested-1].texture.background", "reset": null},
+
+      {"modify": "tiles[tag=tag:resource-harvested-1]", "remove-tag": "tag:resource-harvested"},
+      {"modify": "tiles[tag=tag:resource-harvested-1]", "remove-tag": "tag:resource-harvested-1"},
+
+      {"modify": "tiles[tag=tag:resource-harvested-2]", "add-tag": "tag:resource-harvested-1"},
+      {"modify": "tiles[tag=tag:resource-harvested-2]", "remove-tag": "tag:resource-harvested-2"},
+
+      {"modify": "tiles[tag=tag:resource-harvested-3]", "add-tag": "tag:resource-harvested-2"},
+      {"modify": "tiles[tag=tag:resource-harvested-3]", "remove-tag": "tag:resource-harvested-3"},
+
+      {"modify": "tiles[tag=tag:resource-harvested-4]", "add-tag": "tag:resource-harvested-3"},
+      {"modify": "tiles[tag=tag:resource-harvested-4]", "remove-tag": "tag:resource-harvested-4"},
+
+      {"modify": "tiles[tag=tag:resource-harvested-5]", "add-tag": "tag:resource-harvested-4"},
+      {"modify": "tiles[tag=tag:resource-harvested-5]", "remove-tag": "tag:resource-harvested-5"},
+
+      {"modify": "tiles[tag=tag:resource-harvested-6]", "add-tag": "tag:resource-harvested-5"},
+      {"modify": "tiles[tag=tag:resource-harvested-6]", "remove-tag": "tag:resource-harvested-6"}
+    ]
+  }
+}

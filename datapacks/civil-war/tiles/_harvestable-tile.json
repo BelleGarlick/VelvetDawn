@@ -1,0 +1,17 @@
+{
+  "abstract": true,
+  "triggers": {
+    "round": [
+      {
+        "modify": "self.harvest-cooldown",
+        "conditions": [{"if": "self", "tagged": "tag:resource-harvested"}],
+        "sub": 1
+      },
+      {
+        "modify": "self",
+        "conditions": [{"if": "self.harvest-cooldown", "lte": 0}],
+        "remove-tag": "tag:resource-harvested"
+      }
+    ]
+  }
+}

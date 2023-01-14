@@ -1,5 +1,6 @@
 {
   "name": "Shallow Water",
+  "extends": ["civil-war:_harvestable-tile"],
   "neighbours": {
     "civil-war:sand": 1,
     "civil-war:shallow-water": 1,

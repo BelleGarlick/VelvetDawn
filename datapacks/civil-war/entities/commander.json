@@ -11,34 +11,6 @@
       {"modify": "self", "remove-tag": "tag:used-upgrade"}
     ]
   },
-  "upgrades": [
-    {
-      "id": "inc-unit-range",
-      "name": "Increase All Unit Range I",
-      "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
-        {"if": "self.com-upgrades", "lte": 0, "reason": "Commanders may only use three upgrades."}
-      ],
-      "actions": [
-        {"modify": "self.com-upgrades", "add": -1},
-        {"modify": "self", "add-tag": "tag:used-upgrade"},
-        {"modify": "friendlies.movement.range", "add": 1}
-      ]
-    },
-    {
-      "requires": ["inc-unit-range"],
-      "name": "Increase All Unit Range II",
-      "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
-        {"if": "self.com-upgrades", "lte": 0, "reason": "Commanders may only use three upgrades."}
-      ],
-      "actions": [
-        {"modify": "self.com-upgrades", "add": -1},
-        {"modify": "self", "add-tag": "tag:used-upgrade"},
-        {"modify": "friendlies.movement.range", "add": 1}
-      ]
-    }
-  ],
   "influence": [
     {
       "notes": "This would mean local enemies within range 10 have less health",
@@ -47,7 +19,5 @@
       "effects": { "sub": 10 }
     }
   ],
-  "textures": {
-    "background": "civil-war:commander.png"
-  }
+  "textures": {"background": "civil-war:commander.png"}
 }

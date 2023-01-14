@@ -79,7 +79,7 @@ def load_webpage():
 @app.route("/app.js")
 def load_app():
     path = Path(__file__).parent.parent.parent.parent.parent / "frontend" / "dist" / "app.js"
-    with open(path) as file:
+    with open(path, encoding="utf8") as file:
         return file.read()
 
 

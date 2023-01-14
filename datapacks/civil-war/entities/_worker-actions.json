@@ -1,39 +1,53 @@
 {
   "abstract": true,
   "attributes": [
-    { "id": "wood", "name": "Wood", "default": 0, "icon": "civil-war:attributes.wood.png" },
-    { "id": "clay", "name": "Clay", "default": 0, "icon": "civil-war:attributes.clay.png" }
+    { "id": "wood", "name": "Wood", "default": 0, "icon": "civil-war:ui.icons.wood.png" },
+    { "id": "clay", "name": "Clay", "default": 0, "icon": "civil-war:ui.icons.clay.png" }
   ],
   "abilities": [
     {
       "name": "Harvest Wood",
       "notes": "turns-3",
-      "icon": "civil-war:actions.harvest-wood.png",
+      "icon": "civil-war:ui.icons.wood.png",
       "description": "Harvest wood by moving to forest and using this action. Takes three turns, gains two wood",
-      "enabled": [{ "if": "tile", "equals": "civil-war:forest" }],
+      "hidden": [{ "if": "tile", "ne": "civil-war:forest", "reason": "Move to a woods or forest tile" }],
       "actions": [
-        { "modify": "tile.texture.background", "set": "civil-war:chopped-wood" },
-        { "modify": "self.attributes.wood", "add": 2 }
+        {"modify": "self.wood", "add": 2}
       ]
     },
     {
       "name": "Harvest Wood",
       "notes": "turns-2",
-      "icon": "civil-war:actions.harvest-wood.png",
+      "icon": "civil-war:ui.icons.wood.png",
       "description": "Harvest wood by moving to woods and using this action. Takes two turns, gains one wood",
-      "enabled": [{ "if": "tile", "equals": "civil-war:woods" }],
+      "enabled": [
+        {"if": "tile", "equals": "civil-war:woods", "reason": "Move to a woods or forest tile"},
+        {"if": "tile", "not-tagged": "tag:resource-harvested", "reason": "Tile has already been harvested"}
+      ],
       "actions": [
-        { "modify": "tile.texture.background", "set": "civil-war:chopped-wood" },
-        { "modify": "self.attributes.wood", "add": 1 }
+        {"modify": "self.wood", "add": 1},
+        {"modify": "tile", "add-tag": "tag:resource-harvested"},
+        {"modify": "tile.harvest-cooldown", "set": 2},
+        {"modify": "tile.texture.color", "set": "black"},
+        {"modify": "tile.texture.background", "set": null}
       ]
     },
     {
       "name": "Harvest Clay",
       "notes": "turns-2",
-      "icon": "civil-war:actions.harvest-clay.png",
-      "description": "Harvest wood by moving to shallow water and using this action. Takes two turns, gains one clay",
-      "enabled": [{ "if": "tile", "equals": "civil-war:shallow-water" }],
-      "actions": [{ "modify": "self.attributes.clay", "add": 1 }]
+      "icon": "civil-war:ui.icons.clay.png",
+      "description": "Harvest clay by moving to shallow water and using this action. Takes two turns, gains one clay",
+      "enabled": [
+        {"if": "tile", "equals": "civil-war:shallow-water", "reason": "Move to shallow water"},
+        {"if": "tile", "not-tagged": "tag:resource-harvested", "reason": "Tile has already been harvested"}
+      ],
+      "actions": [
+        {"modify": "self.clay", "add": 1},
+        {"modify": "tile", "add-tag": "tag:resource-harvested"},
+        {"modify": "tile.harvest-cooldown", "set": 2},
+        {"modify": "tile.texture.color", "set": "black"},
+        {"modify": "tile.texture.background", "set": null}
+      ]
     },
     {
       "name": "Build Fortress",
@@ -41,9 +55,9 @@
       "icon": "civil-war:actions.build-fortress.png",
       "description": "Build a fortress with improve the health, health regen and defence of a unit inside the fortress.",
       "enabled": [
-        { "if": "tile", "equals": "civil-war:grass" },
-        { "if": "self.attributes.clay", "gt": 3 },
-        { "if": "self.attributes.wood", "gt": 3 }
+        {"if": "tile", "equals": "civil-war:grass"},
+        {"if": "self.clay", "gt": 3},
+        {"if": "self.wood", "gt": 3}
       ],
       "actions": [{ "modify": "tile.background.texture", "set": "civil-war:fortress" }]
     },
@@ -54,8 +68,8 @@
       "description": "Build a fortress with improve the health, health regen and defence of a unit inside the fortress.",
       "enabled": [
         { "if": "tile", "equals": "civil-war:grass" },
-        { "if": "self.attributes.clay", "gt": 3 },
-        { "if": "self.attributes.wood", "gt": 3 }
+        { "if": "self.clay", "gt": 3 },
+        { "if": "self.wood", "gt": 3 }
       ],
       "actions": [{ "modify": "tile.background.texture", "set": "civil-war:fortress" }]
     },
@@ -66,8 +80,8 @@
       "description": "Build a fortress with improve the health, health regen and defence of a unit inside the fortress.",
       "enabled": [
         { "if": "tile", "equals": "civil-war:grass" },
-        { "if": "self.attributes.clay", "gt": 3 },
-        { "if": "self.attributes.wood", "gt": 3 }
+        { "if": "self.clay", "gt": 3 },
+        { "if": "self.wood", "gt": 3 }
       ],
       "actions": [{ "modify": "tile.background.texture", "set": "civil-war:fortress" }]
     }

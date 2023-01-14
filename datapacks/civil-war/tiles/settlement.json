@@ -8,7 +8,7 @@
     ]
   },
   "textures": {
-    "color": ["#858a8c", "#757a7c"],
+    "color": ["#2da849", "#2dab49", "#2da449"],
     "image": [
       "civil-war:tiles.settlement.settlement-church-open.png",
       "civil-war:tiles.settlement.settlement-church.png",

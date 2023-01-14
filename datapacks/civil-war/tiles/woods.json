@@ -1,5 +1,6 @@
 {
   "name": "Woods",
+  "extends": ["civil-war:_harvestable-tile"],
   "neighbours": {
     "civil-war:woods": 1,
     "civil-war:sand": 1,

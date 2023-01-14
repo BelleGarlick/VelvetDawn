@@ -35,9 +35,9 @@ class TileInstance(db.Model):
         from velvet_dawn.dao.models.attributes import AttributeParent, get_attribute
         return get_attribute(self.id, AttributeParent.Tile, key, default=default)
 
-    def reset_attribute(self, key, value_if_not_exists):
+    def reset_attribute(self, key, value_if_not_exists, commit=True):
         from velvet_dawn.dao.models.attributes import AttributeParent, reset_attribute
-        reset_attribute(self.id, AttributeParent.Tile, key, value_if_not_exists)
+        reset_attribute(self.id, AttributeParent.Tile, key, value_if_not_exists, commit=commit)
 
     def create_db_tag_obj(self, tag):
         from velvet_dawn.dao.models.tags import TagParent, create_tag_obj
