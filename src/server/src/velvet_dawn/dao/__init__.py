@@ -1,6 +1,10 @@
+from . import tags
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import velvet_dawn
+
+from . import instance
+
 
 db = SQLAlchemy()
 app = Flask(__name__)

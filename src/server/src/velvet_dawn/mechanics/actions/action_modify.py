@@ -38,13 +38,6 @@ KeyMap = {
     "reset": ActionModifierFunction.RESET,
     "add-tag": ActionModifierFunction.ADD_TAG,
     "remove-tag": ActionModifierFunction.REMOVE_TAG,
-
-    "set-selector": ActionModifierFunction.SET,
-    "add-selector": ActionModifierFunction.SET,
-    "sub-selector": ActionModifierFunction.SET,
-    "subtract-selector": ActionModifierFunction.SET,
-    "mul-selector": ActionModifierFunction.SET,
-    "multiply-selector": ActionModifierFunction.SET,
 }
 
 

@@ -75,6 +75,7 @@ class BaseTest(unittest.TestCase, ABC):
             db.session.commit()
 
     def setUp(self) -> None:
+        velvet_dawn.dao.instance.clear()
         with app.app_context():
             db.drop_all()
             db.create_all()

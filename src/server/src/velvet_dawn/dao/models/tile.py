@@ -1,5 +1,6 @@
 from sqlalchemy.orm import relationship
 
+import velvet_dawn
 from velvet_dawn.dao import db
 
 
@@ -15,7 +16,6 @@ class TileInstance(db.Model):
     y = db.Column(db.Integer)
 
     attributes = relationship("Attribute", cascade="all, delete")
-    tags = relationship("Tag", cascade="all, delete")
 
     db.UniqueConstraint(x, y)
 
@@ -39,21 +39,14 @@ class TileInstance(db.Model):
         from velvet_dawn.dao.models.attributes import AttributeParent, reset_attribute
         reset_attribute(self.id, AttributeParent.Tile, key, value_if_not_exists, commit=commit)
 
-    def create_db_tag_obj(self, tag):
-        from velvet_dawn.dao.models.tags import TagParent, create_tag_obj
-        return create_tag_obj(self.id, TagParent.Tile, tag)
+    def add_tag(self, tag: str):
+        velvet_dawn.dao.tags.add_tile_tag(self.id, tag)
 
-    def add_tag(self, tag, commit=True):
-        from velvet_dawn.dao.models.tags import TagParent, add_tag
-        add_tag(self.id, TagParent.Tile, tag, commit=commit)
-
-    def remove_tag(self, tag, commit=True):
-        from velvet_dawn.dao.models.tags import TagParent, remove_tag
-        remove_tag(self.id, TagParent.Tile, tag, commit=commit)
+    def remove_tag(self, tag: str):
+        velvet_dawn.dao.tags.remove_tile_tag(self.id, tag)
 
     def has_tag(self, tag: str):
-        from velvet_dawn.dao.models.tags import TagParent, has_tag
-        return has_tag(self.id, TagParent.Tile, tag)
+        return velvet_dawn.dao.tags.is_tile_tagged(self.id, tag)
 
     def json(self):
         return {

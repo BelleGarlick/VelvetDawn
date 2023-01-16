@@ -38,7 +38,7 @@ class TestTriggers(BaseTest):
 
     def test_trigger_turn(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
             set_commander_trigger('turn')
             WorldInstance().remove_tag("tag:turn-trigger-ran")
 
@@ -53,7 +53,7 @@ class TestTriggers(BaseTest):
 
     def test_trigger_turn_end(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
             set_commander_trigger('turn-end')
             WorldInstance().remove_tag("tag:turn-end-trigger-ran")
 
@@ -214,7 +214,7 @@ class TestTriggers(BaseTest):
 
     def test_trigger_game_begin(self):
         with app.app_context():
-            config = self.get_test_config()
+            config = self.get_config()
             config.seed = 0
             velvet_dawn.datapacks.init(config)
 
@@ -225,7 +225,7 @@ class TestTriggers(BaseTest):
             velvet_dawn.players.join("player2", "")
             velvet_dawn.game.setup.update_setup("testing:commander", 1)
             velvet_dawn.game.phase.start_setup_phase(config)
-            velvet_dawn.game.setup.place_entity("player1", "testing:commander", 15, 0, config)
+            velvet_dawn.game.setup.place_entity("player1", "testing:commander", 6, 0, config)
             velvet_dawn.game.phase.start_game_phase(config)
 
             commander = velvet_dawn.units.list()[0]
@@ -234,7 +234,7 @@ class TestTriggers(BaseTest):
 
     def test_trigger_round_begin(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
             WorldInstance().remove_tag("tag:round-trigger-ran")
 
             velvet_dawn.game.turns.begin_next_turn(self.get_test_config())

@@ -159,6 +159,8 @@ def begin_next_turn(config: Config):
 
     _update_turn_start_time()
 
+    velvet_dawn.dao.instance.save()
+
 
 def _trigger_on_round_begin_actions():
     """ Trigger all entity/tile round being actions """

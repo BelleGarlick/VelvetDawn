@@ -6,6 +6,7 @@ not tied to a player, unit ot tile.
 
 This can be accessed through the 'world' selector.
 """
+import velvet_dawn.dao.tags
 
 
 class WorldInstance:
@@ -38,21 +39,13 @@ class WorldInstance:
         reset_attribute(-1, AttributeParent.World, key, value_if_not_exists)
 
     @staticmethod
-    def create_db_tag_obj(tag):
-        from velvet_dawn.dao.models.tags import TagParent, create_tag_obj
-        return create_tag_obj(-1, TagParent.World, tag)
+    def add_tag(tag: str):
+        velvet_dawn.dao.tags.add_world_tag(tag)
 
     @staticmethod
-    def add_tag(tag, commit=True):
-        from velvet_dawn.dao.models.tags import TagParent, add_tag
-        add_tag(-1, TagParent.World, tag, commit=commit)
-
-    @staticmethod
-    def remove_tag(tag, commit=True):
-        from velvet_dawn.dao.models.tags import TagParent, remove_tag
-        remove_tag(-1, TagParent.World, tag, commit=commit)
+    def remove_tag(tag: str):
+        velvet_dawn.dao.tags.remove_world_tag(tag)
 
     @staticmethod
     def has_tag(tag: str):
-        from velvet_dawn.dao.models.tags import TagParent, has_tag
-        return has_tag(-1, TagParent.World, tag)
+        return velvet_dawn.dao.tags.is_world_tagged(tag)

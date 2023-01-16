@@ -1,3 +1,4 @@
+import math
 from typing import Optional, List
 
 import velvet_dawn
@@ -74,8 +75,35 @@ def get_tile_movement_weight(tile: TileInstance):
     return tile.get_attribute("movement.weight")
 
 
-def get_distance(to, closest):
-    # TODO Test this is correct
-    dcol = abs(to.x - closest.x)
-    drow = abs(to.y - closest.y)
-    return dcol + max(0, (drow - dcol))
+def get_distance(origin, to):
+    """ Calculate the distance between two positions. This function
+    is designed for flat-top hexagons where the second column
+    is sunk vertically. Changes to that layout will require changes
+    to this function.
+
+    This function is also implemented in the FE for
+    combat and targeting.
+
+    Args:
+        origin: Point a
+        to: Point b
+
+    Returns:
+        Int distance between
+    """
+    dcol = abs(origin.x - to.x)
+    drow = abs(origin.y - to.y)
+
+    distance = max(dcol, drow + dcol / 2)
+
+    if origin.x % 2 == 0 and dcol % 2 == 1:
+        if to.y <= origin.y:
+            return math.floor(distance)
+        return math.ceil(distance)
+
+    elif dcol % 2 == 1:
+        if to.y <= origin.y:
+            return math.ceil(distance)
+        return math.floor(distance)
+
+    return int(distance)

@@ -1,7 +1,7 @@
 from typing import Union
 
+import velvet_dawn
 from velvet_dawn import errors
-from velvet_dawn.dao import db
 from velvet_dawn.dao.models import TileInstance, UnitInstance
 
 
@@ -32,19 +32,9 @@ class Tags:
 
         return self
 
-    def get_db_objects(self, instance: Union[UnitInstance, TileInstance]):
-        """ Get the list of tag objects to save to the db, used when bulk
-        inserting tags into the db when the map is generated
-        """
-        return [
-            instance.create_db_tag_obj(tag)
-            for tag in self.tags
-        ]
-
-    def save_to_db(self, instance: Union[UnitInstance, TileInstance], commit=True):
+    def save_to_db(self, instance: Union[UnitInstance, TileInstance]):
         """ Save the tags to the db, used when an entity spawns """
         for tag in self.tags:
-            instance.add_tag(tag, commit=False)
+            instance.add_tag(tag)
 
-        if commit:
-            db.session.commit()
+        velvet_dawn.dao.instance.save()

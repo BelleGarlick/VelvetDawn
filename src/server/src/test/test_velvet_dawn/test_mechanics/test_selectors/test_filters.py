@@ -60,7 +60,7 @@ class TestFilteredSelectors(BaseTest):
 
             self.assertEqual(1, len(selector_range_0.get_selection(unit)))
             self.assertEqual(6, len(selector_range_1.get_selection(unit)))
-            self.assertEqual(15, len(selector_range_2.get_selection(unit)))
+            self.assertEqual(13, len(selector_range_2.get_selection(unit)))
 
     def test_filters_min_range(self):
         with app.app_context():

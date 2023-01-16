@@ -6,15 +6,13 @@
     {"id": "healing-rate", "name": "Healing Rate", "icon": "ui.attributes.healing-rate.png", "default": 10},
     {"id": "healing-range", "name": "Healing Range", "icon": "ui.attributes.healing-range.png", "default": 1}
   ],
-  "health": {
-    "max": 50
-  },
-  "combat": { "attack": 10 },
+  "health": {"max": 50},
+  "combat": {"attack": 10},
   "triggers": {
     "friendly-turn": [
-      {"modify": "friendlies[range=1].health", "add-selector": "@self.healing-rate", "conditions": [{"if": "self.healing-range", "eq":  1}], "notes": "Change add-selector values to self.healing-rate"},
-      {"modify": "friendlies[range=2].health", "add-selector": "@self.healing-rate", "conditions": [{"if": "self.healing-range", "eq":  2}]},
-      {"modify": "friendlies[range=3].health", "add-selector": "@self.healing-rate", "conditions": [{"if": "self.healing-range", "eq":  3}]}
+      {"modify": "friendlies[range=1].health", "add": "@self.healing-rate", "conditions": [{"if": "self.healing-range", "eq":  1}]},
+      {"modify": "friendlies[range=2].health", "add": "@self.healing-rate", "conditions": [{"if": "self.healing-range", "eq":  2}]},
+      {"modify": "friendlies[range=3].health", "add": "@self.healing-rate", "conditions": [{"if": "self.healing-range", "eq":  3}]}
     ],
     "notes": "Todo: add {'particles': 'civil-war:health', 'on': 'local.health'}."
   },

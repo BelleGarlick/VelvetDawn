@@ -27,12 +27,12 @@ class TestConditionalIf(BaseTest):
             conditional_greater_than_equals = velvet_dawn.mechanics.conditionals.get_conditional(
                 "0", {"if": "self.testing", "gte": 5})
             conditional_has_tag = velvet_dawn.mechanics.conditionals.get_conditional(
-                "0", {"if": "self", "tagged": "tag:x"})
+                "0", {"if": "self", "tagged": "x"})
 
             # cant compare tag on attribute
             with self.assertRaises(errors.ValidationError):
                 velvet_dawn.mechanics.conditionals.get_conditional(
-                    "0", {"if": "self.testing", "tagged": "tag:x"})
+                    "0", {"if": "self.testing", "tagged": "x"})
 
             self.assertFalse(conditional_equals.is_true(unit))
 

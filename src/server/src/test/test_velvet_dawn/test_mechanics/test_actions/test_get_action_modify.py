@@ -99,7 +99,6 @@ class TestActionModify(BaseTest):
             action_selector.run(unit)
             self.assertEqual(12, unit.get_attribute("example"))
 
-
     def test_modifier_tags(self):
         with app.app_context():
             self.setup_game()
@@ -109,9 +108,9 @@ class TestActionModify(BaseTest):
             action_add_tag = ActionModify.from_dict("id", {"modify": "self", "add-tag": "tagg"})
             action_remove_tag = ActionModify.from_dict("id", {"modify": "self", "remove-tag": "tagg"})
 
-            self.assertFalse(unit.has_tag("tag:tagg"))
+            self.assertFalse(unit.has_tag("tagg"))
             action_add_tag.run(unit)
-            self.assertTrue(unit.has_tag("tag:tagg"))
+            self.assertTrue(unit.has_tag("tagg"))
             action_remove_tag.run(unit)
-            self.assertFalse(unit.has_tag("tag:tagg"))
+            self.assertFalse(unit.has_tag("tagg"))
 

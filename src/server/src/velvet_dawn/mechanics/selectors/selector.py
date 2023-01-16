@@ -1,6 +1,7 @@
 from abc import ABC
 from typing import List, Union, Optional
 
+import velvet_dawn
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import UnitInstance, TileInstance
 
@@ -82,13 +83,13 @@ class Selector(ABC):
 
     def function_add_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
-            item.add_tag(value, commit=False)
-        db.session.commit()
+            item.add_tag(value)
+        velvet_dawn.dao.instance.save()
 
     def function_remove_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
-            item.remove_tag(value, commit=False)
-        db.session.commit()
+            item.remove_tag(value)
+        velvet_dawn.dao.instance.save()
 
     def function_equals(self, instance: Union[TileInstance, UnitInstance], value):
         """ Compare if the given value is equal the selectors' id / attribute value """

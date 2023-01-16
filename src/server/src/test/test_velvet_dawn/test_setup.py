@@ -9,7 +9,7 @@ from velvet_dawn.models.phase import Phase
 
 
 test_config = Config()
-test_config.datapacks = ['civil-war', 'gods']
+test_config.datapacks = ['civil-war']
 
 
 class TestSetup(BaseTest):
@@ -39,18 +39,16 @@ class TestSetup(BaseTest):
             self.assertEqual(len(setup.units), 0)
 
             # Add commanders
-            velvet_dawn.game.setup.update_setup("gods:valnorak", 10)
-            velvet_dawn.game.setup.update_setup("gods:baledung", 10)
+            velvet_dawn.game.setup.update_setup("civil-war:commander", 10)
             setup = velvet_dawn.game.setup.get_setup("player1")
-            self.assertEqual(len(setup.commanders), 2)
+            self.assertEqual(len(setup.commanders), 1)
 
             # Test setip is valid with commanders
             velvet_dawn.game.setup.update_setup("civil-war:workers", 1)
             self.assertTrue(velvet_dawn.game.setup.is_setup_valid("player1"))
 
             # Test invalid setup with no commanders but has entities
-            velvet_dawn.game.setup.update_setup("gods:valnorak", 0)
-            velvet_dawn.game.setup.update_setup("gods:baledung", 0)
+            velvet_dawn.game.setup.update_setup("civil-war:commander", 0)
             self.assertFalse(velvet_dawn.game.setup.is_setup_valid("player1"))
 
     def test_place_setup_entity(self):

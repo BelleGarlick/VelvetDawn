@@ -60,17 +60,16 @@ def new(config: Config):
     db.session.commit()
 
     # Configure all tile attributes not that the tiles have been initiated
-    tile_attributes, tile_tags = [], []
+    tile_attributes = []
     for db_tile in db.session.query(TileInstance).all():
         tile = datapacks.tiles[db_tile.tile_id]
         tile.attributes.set("texture.color", value=tile.textures.choose_color())
         tile.attributes.set("texture.background", value=tile.textures.choose_image())
 
         tile_attributes += tile.attributes.get_db_objects(db_tile)
-        tile_tags += tile.tags.get_db_objects(db_tile)
-
+        tile.tags.save_to_db(db_tile)
+        
     db.session.bulk_save_objects(tile_attributes)
-    db.session.bulk_save_objects(tile_tags)
     db.session.commit()
 
 

@@ -287,4 +287,30 @@ export class VelvetDawnMap {
                 })
         }
     }
+
+    /** Get the distance between two hex-positions
+     *
+     * @param origin Position a
+     * @param to Position b
+     * @returns The distance between the tiles
+     */
+    getDistance(origin: Position, to: Position) {
+        const dcol = Math.abs(origin.x - to.x)
+        const drow = Math.abs(origin.y - to.y)
+
+        const distance = Math.max(dcol, drow + dcol / 2)
+
+        if (origin.x % 2 === 0 && dcol % 2 === 1) {
+            if (to.y <= origin.y)
+                return Math.floor(distance)
+            return Math.ceil(distance)
+        }
+        else if (dcol % 2 === 1) {
+            if (to.y <= origin.y)
+                return Math.ceil(distance)
+            return Math.floor(distance)
+        }
+
+        return Math.round(distance)
+    }
 }

@@ -92,7 +92,7 @@
       "actions": [
         {"modify": "self.com-upgrades", "add": -1},
         {"modify": "self", "add-tag": "tag:used-upgrade"},
-        {"modify": "friendlies.health", "set-selector": "friendlies.health.max"}
+        {"modify": "friendlies.health", "set": "@friendlies.health.max"}
       ]
     },
     {
@@ -105,7 +105,7 @@
       "actions": [
         {"modify": "self.com-upgrades", "add": -1},
         {"modify": "self", "add-tag": "tag:used-upgrade"},
-        {"modify": "friendlies.health", "set-selector": "friendlies.health.max"}
+        {"modify": "friendlies.health", "set": "@friendlies.health.max"}
       ]
     },
     {
