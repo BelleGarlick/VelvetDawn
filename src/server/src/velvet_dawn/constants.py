@@ -1,9 +1,5 @@
 SPECTATORS_TEAM_ID = "team:spectators"
 
-# Keep an attribute update within the update state for 15s
-PARTIAL_GAME_STATE_TIME = 15
-
-
 UNIT_DEFAULT_HEALTH_REGEN = 0
 UNIT_DEFAULT_HEALTH_MAX = 100
 

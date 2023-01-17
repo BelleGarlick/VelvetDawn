@@ -15,29 +15,16 @@ class TileInstance(db.Model):
     x = db.Column(db.Integer)
     y = db.Column(db.Integer)
 
-    attributes = relationship("Attribute", cascade="all, delete")
-
     db.UniqueConstraint(x, y)
 
-    @property
-    def entity_id(self):
-        return self.tile_id
-
-    def create_db_attribute_obj(self, key: str, value):
-        from velvet_dawn.dao.models.attributes import AttributeParent, create_attribute_db_object
-        return create_attribute_db_object(self.id, AttributeParent.Tile, key, value)
-
-    def set_attribute(self, key, value, commit=True):
-        from velvet_dawn.dao.models.attributes import AttributeParent, set_attribute
-        return set_attribute(self.id, AttributeParent.Tile, key, value, commit=commit)
+    def set_attribute(self, key, value):
+        velvet_dawn.dao.attributes.set_tile_attribute(self.id, key, value)
 
     def get_attribute(self, key, default=None):
-        from velvet_dawn.dao.models.attributes import AttributeParent, get_attribute
-        return get_attribute(self.id, AttributeParent.Tile, key, default=default)
+        return velvet_dawn.dao.attributes.get_tile_attribute(self.id, key, default=default)
 
-    def reset_attribute(self, key, value_if_not_exists, commit=True):
-        from velvet_dawn.dao.models.attributes import AttributeParent, reset_attribute
-        reset_attribute(self.id, AttributeParent.Tile, key, value_if_not_exists, commit=commit)
+    def reset_attribute(self, key, value_if_not_exists):
+        velvet_dawn.dao.attributes.reset_tile_attribute(self.id, key, value_if_not_exists)
 
     def add_tag(self, tag: str):
         velvet_dawn.dao.tags.add_tile_tag(self.id, tag)

@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 
 import velvet_dawn
 from velvet_dawn import errors
@@ -23,13 +23,17 @@ class Filters:
         self.allowed_tags = None
         self.min_range = None
         self.max_range = None
+        self.exclude_self = False
 
-    def add_filter(self, key: str, value: str):
+    def add_filter(self, key: str, value: Optional[str] = None):
         """ Set a filter value """
         if key == "id":
             if self.allowed_ids is None:
                 self.allowed_ids = set()
             self.allowed_ids.add(value)
+
+        elif key == "exclude-self":
+            self.exclude_self = True
 
         elif key == "tag":
             if not value.startswith("tag:"):
@@ -83,6 +87,10 @@ class Filters:
             if self.min_range is not None and not isinstance(instance, WorldInstance):
                 distance = velvet_dawn.map.get_distance(instance, item)
                 valid = valid and distance >= self.min_range
+
+            if self.exclude_self:
+                if instance.id == item.id and type(instance) == type(item):
+                    valid = False
 
             if valid:
                 filtered_instances.append(item)

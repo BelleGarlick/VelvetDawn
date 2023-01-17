@@ -1,3 +1,4 @@
+import velvet_dawn
 
 
 """ This world instance exists to allow the user
@@ -6,7 +7,6 @@ not tied to a player, unit ot tile.
 
 This can be accessed through the 'world' selector.
 """
-import velvet_dawn.dao.tags
 
 
 class WorldInstance:
@@ -18,25 +18,21 @@ class WorldInstance:
             cls.instance = super(WorldInstance, cls).__new__(cls)
         return cls.instance
 
-    @staticmethod
-    def create_db_attribute_obj(key: str, value):
-        from velvet_dawn.dao.models.attributes import AttributeParent, create_attribute_db_object
-        return create_attribute_db_object(-1, AttributeParent.World, key, value)  # No id given since world is singleton
+    @property
+    def id(self):
+        return "world"
 
     @staticmethod
-    def set_attribute(key, value, commit=True):
-        from velvet_dawn.dao.models.attributes import AttributeParent, set_attribute
-        return set_attribute(-1, AttributeParent.World, key, value, commit=commit)
+    def set_attribute(key, value):
+        velvet_dawn.dao.attributes.set_world_attribute(key, value)
 
     @staticmethod
     def get_attribute(key, default=None):
-        from velvet_dawn.dao.models.attributes import AttributeParent, get_attribute
-        return get_attribute(-1, AttributeParent.World, key, default=default)
+        return velvet_dawn.dao.attributes.get_world_attribute(key, default=default)
 
     @staticmethod
     def reset_attribute(key, value_if_not_exists):
-        from velvet_dawn.dao.models.attributes import AttributeParent, reset_attribute
-        reset_attribute(-1, AttributeParent.World, key, value_if_not_exists)
+        velvet_dawn.dao.attributes.reset_world_attribute(key, value_if_not_exists)
 
     @staticmethod
     def add_tag(tag: str):

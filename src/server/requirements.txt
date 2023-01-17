@@ -1,3 +1,4 @@
 Flask
 pathlib
 flask_sqlalchemy
+pyredis

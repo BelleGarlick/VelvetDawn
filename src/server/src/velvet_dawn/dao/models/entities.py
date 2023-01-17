@@ -19,31 +19,14 @@ class UnitInstance(db.Model):
     x = db.Column(db.Integer, nullable=False)
     y = db.Column(db.Integer, nullable=False)
 
-    attributes = relationship("Attribute", cascade="all, delete")
-
-    @property
-    def pos_x(self):
-        return self.x
-
-    @property
-    def pos_y(self):
-        return self.y
-
-    def create_db_attribute_obj(self, key: str, value):
-        from velvet_dawn.dao.models.attributes import AttributeParent, create_attribute_db_object
-        return create_attribute_db_object(self.id, AttributeParent.Unit, key, value)
-
-    def set_attribute(self, key, value, commit=True):
-        from velvet_dawn.dao.models.attributes import AttributeParent, set_attribute
-        return set_attribute(self.id, AttributeParent.Unit, key, value, commit=commit)
+    def set_attribute(self, key, value):
+        velvet_dawn.dao.attributes.set_unit_attribute(self.id, key, value)
 
     def get_attribute(self, key, default=None):
-        from velvet_dawn.dao.models.attributes import AttributeParent, get_attribute
-        return get_attribute(self.id, AttributeParent.Unit, key, default=default)
+        return velvet_dawn.dao.attributes.get_unit_attribute(self.id, key, default=default)
 
-    def reset_attribute(self, key, value_if_not_exists, commit=True):
-        from velvet_dawn.dao.models.attributes import AttributeParent, reset_attribute
-        reset_attribute(self.id, AttributeParent.Unit, key, value_if_not_exists, commit=commit)
+    def reset_attribute(self, key, value_if_not_exists):
+        velvet_dawn.dao.attributes.reset_unit_attribute(self.id, key, value_if_not_exists)
 
     def add_tag(self, tag: str):
         velvet_dawn.dao.tags.add_unit_tag(self.id, tag)

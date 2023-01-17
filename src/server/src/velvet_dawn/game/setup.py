@@ -104,7 +104,7 @@ def place_entity(player: str, entity_id: str, x: int, y: int, config: Config):
         raise errors.ValidationError("This point is not within your spawn territory")
 
     if not velvet_dawn.map.is_traversable(x=x, y=y):
-        raise errors.ValidationError("Cannot place two entities in the same tile.")
+        raise errors.ValidationError("Unit cannot be placed here.")
 
     # Check that the entity is valid within the setup definition
     if entity_id in setup.commanders:

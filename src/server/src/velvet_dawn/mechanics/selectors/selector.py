@@ -1,8 +1,6 @@
 from abc import ABC
 from typing import List, Union, Optional
 
-import velvet_dawn
-from velvet_dawn.dao import db
 from velvet_dawn.dao.models import UnitInstance, TileInstance
 
 from velvet_dawn.dao.models.world_instance import WorldInstance
@@ -31,8 +29,11 @@ class Selector(ABC):
 
         if filters:
             for filter in filters:
-                key, value = filter.split("=")
-                new_copy.filters.add_filter(key, value)
+                if "=" in filter:
+                    key, value = filter.split("=")
+                    new_copy.filters.add_filter(key, value)
+                else:
+                    new_copy.filters.add_filter(filter)
 
         return new_copy
 
@@ -56,40 +57,33 @@ class Selector(ABC):
 
     def function_set(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
-            item.set_attribute(self.attribute, value, commit=False)
-        db.session.commit()
+            item.set_attribute(self.attribute, value)
 
     def function_add(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
             print(item.get_attribute(self.attribute, default=0))
             print(value)
-            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) + value, commit=False)
-        db.session.commit()
+            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) + value)
 
     def function_subtract(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
-            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) - value, commit=False)
-        db.session.commit()
+            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) - value)
 
     def function_reset(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
-            item.reset_attribute(self.attribute, value, commit=False)
-        db.session.commit()
+            item.reset_attribute(self.attribute, value)
 
     def function_multiply(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
-            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) * value, commit=False)
-        db.session.commit()
+            item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) * value)
 
     def function_add_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
             item.add_tag(value)
-        velvet_dawn.dao.instance.save()
 
     def function_remove_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
             item.remove_tag(value)
-        velvet_dawn.dao.instance.save()
 
     def function_equals(self, instance: Union[TileInstance, UnitInstance], value):
         """ Compare if the given value is equal the selectors' id / attribute value """

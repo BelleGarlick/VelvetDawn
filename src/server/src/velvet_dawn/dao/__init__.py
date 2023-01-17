@@ -1,4 +1,4 @@
-from . import tags
+from . import tags, attributes
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import velvet_dawn

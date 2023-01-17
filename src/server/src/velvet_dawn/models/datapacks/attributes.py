@@ -121,21 +121,7 @@ class Attributes:
 
         self.attributes[id] = attr
 
-    def get_db_objects(self, instance: Union[UnitInstance, TileInstance]):
-        """ Extract the new db objects, this function exists to allow
-        for bulk attribute insertion when generating the map.
-        """
-        return [
-            instance.create_db_attribute_obj(attribute.id, attribute.default)
-            for attribute in self.attributes.values()
-        ]
-
-    def save_to_db(self, instance: Union[UnitInstance, TileInstance], commit=True):
+    def save_to_db(self, instance: Union[UnitInstance, TileInstance]):
         """ Store the attributes in the db """
         for attribute in self.attributes.values():
-            instance.set_attribute(attribute.id, attribute.default, commit=False)
-
-        if commit:
-            db.session.commit()
-
-
+            instance.set_attribute(attribute.id, attribute.default)

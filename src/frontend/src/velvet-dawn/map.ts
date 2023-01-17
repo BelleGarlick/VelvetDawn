@@ -313,4 +313,22 @@ export class VelvetDawnMap {
 
         return Math.round(distance)
     }
+
+    /** List all units in range
+     *
+     * @param position Position units must be in range of
+     * @param range Max distance between the unit and given position
+     * @returns Units in range
+     */
+    getUnitsInRange(position: Position, range: number) {
+        const inRangeUnits: UnitEntity[] = []
+
+        Object.values(this.units).forEach(unit => {
+            if (this.getDistance(position, unit.getPosition()) <= range) {
+                inRangeUnits.push(unit)
+            }
+        });
+
+        return inRangeUnits;
+    }
 }

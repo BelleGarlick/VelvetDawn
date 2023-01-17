@@ -150,7 +150,7 @@ def begin_next_turn(config: Config):
     players = velvet_dawn.players.list(team=new_team_turn)
     for player in players:
         for unit in velvet_dawn.units.list(player=player.name):
-            unit.set_attribute("movement.remaining", unit.get_attribute("movement.range", default=1), commit=False)
+            unit.set_attribute("movement.remaining", unit.get_attribute("movement.range", default=1))
 
     # Fire triggers on turn begins
     if new_team_turn == teams[0].team_id:

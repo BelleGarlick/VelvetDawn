@@ -22,6 +22,8 @@ def clear():
         redis_connection.flushall()
     _data = {}
 
+    save()
+
 
 def set_redis():
     # TODO
@@ -101,3 +103,31 @@ def sismember(name, value):
         return value in _data[name]
 
     return False
+
+
+"""
+Hash Operations
+"""
+
+
+def hset(name, key=None, value=None):
+    if redis_connection:
+        redis_connection.hset(name, key=key, value=value)
+    else:
+        if name not in _data:
+            _data[name] = {}
+        _data[name][key] = value
+
+
+def hget(name, key, default=None):
+    if redis_connection:
+        return redis_connection.hget(name, key) or default
+    else:
+        return _data.get(name, {}).get(key, default)
+
+
+def hexists(name, key):
+    if redis_connection:
+        return redis_connection.hexists(name, key)
+    else:
+        return key in _data.get(name, {})

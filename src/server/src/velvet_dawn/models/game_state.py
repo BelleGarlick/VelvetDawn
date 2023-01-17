@@ -2,7 +2,6 @@ import dataclasses
 from typing import List
 
 from velvet_dawn.dao.models import Player, Team, SpawnArea, UnitInstance
-from velvet_dawn.dao.models.attributes import Attribute
 from velvet_dawn.models.game_setup import GameSetup
 
 
@@ -33,7 +32,7 @@ class GameState:
     spawn_area: List[SpawnArea]
     entities: List[UnitInstance]
     turn: TurnData
-    attr_changes: List[Attribute]
+    attr_changes: List[dict]
 
     def json(self):
         return {
@@ -44,5 +43,5 @@ class GameState:
             "entities": {entity.id: entity.json() for entity in self.entities},
             "setup": self.setup.json(),
             "spawnArea": [tile.json() for tile in self.spawn_area],
-            "attrChanges": [x.json() for x in self.attr_changes],
+            "attrChanges": self.attr_changes
         }
