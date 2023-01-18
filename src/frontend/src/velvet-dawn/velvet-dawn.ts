@@ -123,6 +123,7 @@ export class VelvetDawn {
 
     static listCurrentTurnPlayers() {
         const state = VelvetDawn.getState()
+
         if (state.phase === 'setup') {
             return Object.keys(state.players).map(x => {
                 const player = state.players[x]
@@ -130,6 +131,7 @@ export class VelvetDawn {
                  ? player
                  : null
             }).filter(x => x != null)
+
         } else {
             const turn = state.turn.team
 

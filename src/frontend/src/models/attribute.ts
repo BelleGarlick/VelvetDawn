@@ -1,8 +1,8 @@
 
 
 export interface Attribute {
-    instanceId: string,
-    parent: string,
-    key: string,
+    id: string,
+    type: string,
+    attribute: string,
     value: any
 }

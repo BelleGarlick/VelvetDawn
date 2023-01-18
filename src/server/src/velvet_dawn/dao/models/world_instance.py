@@ -24,24 +24,24 @@ class WorldInstance:
 
     @staticmethod
     def set_attribute(key, value):
-        velvet_dawn.dao.attributes.set_world_attribute(key, value)
+        velvet_dawn.db.attributes.set_world_attribute(key, value)
 
     @staticmethod
     def get_attribute(key, default=None):
-        return velvet_dawn.dao.attributes.get_world_attribute(key, default=default)
+        return velvet_dawn.db.attributes.get_world_attribute(key, default=default)
 
     @staticmethod
     def reset_attribute(key, value_if_not_exists):
-        velvet_dawn.dao.attributes.reset_world_attribute(key, value_if_not_exists)
+        velvet_dawn.db.attributes.reset_world_attribute(key, value_if_not_exists)
 
     @staticmethod
     def add_tag(tag: str):
-        velvet_dawn.dao.tags.add_world_tag(tag)
+        velvet_dawn.db.tags.add_world_tag(tag)
 
     @staticmethod
     def remove_tag(tag: str):
-        velvet_dawn.dao.tags.remove_world_tag(tag)
+        velvet_dawn.db.tags.remove_world_tag(tag)
 
     @staticmethod
     def has_tag(tag: str):
-        return velvet_dawn.dao.tags.is_world_tagged(tag)
+        return velvet_dawn.db.tags.is_world_tagged(tag)

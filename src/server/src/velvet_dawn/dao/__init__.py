@@ -1,10 +1,6 @@
-from . import tags, attributes
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import velvet_dawn
-
-from . import instance
-
 
 db = SQLAlchemy()
 app = Flask(__name__)
@@ -16,6 +12,7 @@ from velvet_dawn.dao import models
 
 with app.app_context():
     db.create_all()
+
 
 def get_value(key: models.Keys, _type=None, default=None):
     value = db.session.query(models.KeyValues).get(key)

@@ -5,6 +5,8 @@ import {LobbyUsers} from "./LobbyUsers";
 import {LobbyUnits} from "./LobbyUnits";
 import {GameSetup, ViewState} from "models";
 import {Renderer} from "../../rendering/Renderer";
+import { Button } from "ui/Button";
+import { Text } from "ui/Text";
 
 
 let time: any = -1
@@ -36,26 +38,31 @@ export function Lobby({ setView }: { setView: (x: ViewState) => void }) {
     }, []);
 
     return <>
-        <span>Welcome {VelvetDawn.loginDetails.username}</span>
         <div style={{
             display: 'flex',
             flexDirection: 'row'
         }}>
-            <button onClick={() => setTab(0)}>Players</button>
-            <button onClick={() => setTab(1)}>Units</button>
+            <Button onClick={() => setTab(0)}>Players</Button>
+            <Button onClick={() => setTab(1)}>Units</Button>
         </div>
         {tab === 0 && <LobbyUsers state={state} />}
         {tab === 1 && <LobbyUnits setup={gameSetup} setSetup={setGameSetup} />}
 
-        {userIsAdmin && (<>
-            <button onClick={() => {
-                Api.setup.startSetup().then(x => {
-                    VelvetDawn.setState(x)
-                })
-            }}>Start</button>
-            <button onClick={() => {
-                setView(ViewState.DatapackEditor)
-            }}>Datapack Editor</button>
-        </>)}
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+        }}>
+            {userIsAdmin && (<>
+                <Button onClick={() => {
+                    Api.setup.startSetup().then(x => {
+                        VelvetDawn.setState(x)
+                    })
+                }}>Start</Button>
+                <Button onClick={() => {
+                    setView(ViewState.DatapackEditor)
+                }}>Datapack Editor</Button>
+            </>)}
+        </div>
     </>
 }

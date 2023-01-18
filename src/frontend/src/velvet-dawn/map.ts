@@ -243,12 +243,12 @@ export class VelvetDawnMap {
         })
 
         state.attrChanges.forEach((attrUpdate) => {
-            if (attrUpdate.parent === "tile")
-                this.tilesById[attrUpdate.instanceId].attributes[attrUpdate.key] = attrUpdate.value
-            else if (attrUpdate.parent === "unit")
-                this.units[attrUpdate.instanceId].attributes[attrUpdate.key] = attrUpdate.value
+            if (attrUpdate.type === "tile")
+                this.tilesById[attrUpdate.id].attributes[attrUpdate.attribute] = attrUpdate.value
+            else if (attrUpdate.type === "unit")
+                this.units[attrUpdate.id].attributes[attrUpdate.attribute] = attrUpdate.value
             else
-                console.error("Unknown attribute upgrade " + attrUpdate.parent)
+                console.error("Unknown attribute upgrade " + attrUpdate.type)
         });
     }
 

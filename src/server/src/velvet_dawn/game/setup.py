@@ -3,10 +3,13 @@ from typing import List
 import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import UnitInstance, EntitySetup
+from velvet_dawn.dao.models import UnitInstance
 from velvet_dawn import datapacks, errors
 from velvet_dawn.models.game_setup import GameSetup
 from velvet_dawn.models.phase import Phase
+
+
+# TODO Add testing to
 
 
 """ velvet_dawn.game.setup
@@ -21,20 +24,18 @@ their initial setup entities when in the setup phase.
 
 
 def get_setup(player: str):
-    # TODO Test this
     """ Get the game setup definition """
-    entity_setup: List[EntitySetup] = db.session.query(EntitySetup).all()
-    entity_setup = sorted(entity_setup, key=lambda x: x.entity_id)
+    entity_setup_map = velvet_dawn.db.setup_untits.get()
 
     commander_entities = {
-        entity.entity_id
-        for entity in entity_setup
-        if datapacks.entities[entity.entity_id].commander
+        entity_id
+        for entity_id in entity_setup_map
+        if datapacks.entities[entity_id].commander and entity_setup_map[entity_id] > 0
     }
 
     units = {
-        entity.entity_id: entity.amount for entity in entity_setup
-        if not datapacks.entities[entity.entity_id].commander
+        entity_id: entity_setup_map[entity_id] for entity_id in entity_setup_map
+        if not datapacks.entities[entity_id].commander and entity_setup_map[entity_id] > 0
     }
 
     # calculate remaining players
@@ -70,20 +71,7 @@ def update_setup(entity_id: str, count: int):
     if entity_id not in datapacks.entities:
         raise errors.ValidationError(f"Unknown entity id: '{entity_id}'")
 
-    # If exists, update else create
-    item = db.session.query(EntitySetup).where(EntitySetup.entity_id == entity_id).one_or_none()
-    if item:
-        query = db.session.query(EntitySetup).where(EntitySetup.entity_id == entity_id)
-        if count > 0:
-            query.update({EntitySetup.amount: count})
-        else:
-            for item in query.all():
-                db.session.delete(item)
-
-    elif count > 0:
-        db.session.add(EntitySetup(entity_id=entity_id, amount=count))
-
-    db.session.commit()
+    velvet_dawn.db.setup_untits.set_count(entity_id, count)
 
 
 def is_setup_valid(player):

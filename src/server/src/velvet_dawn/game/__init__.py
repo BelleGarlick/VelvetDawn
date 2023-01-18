@@ -1,7 +1,4 @@
-import time
-
 import velvet_dawn.teams
-from velvet_dawn import constants
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import UnitInstance
@@ -29,6 +26,11 @@ def get_state(config: Config, user: str, full_state: bool = False):
 
     entities = db.session.query(UnitInstance).all()
 
+    if full_state:
+        attribute_updates = velvet_dawn.db.attributes.get_full_attribute_list()
+    else:
+        attribute_updates = velvet_dawn.db.attributes.get_attribute_updates()
+
     return GameState(
         phase=current_phase,
         turn=turns.current_turn_data(config, current_phase),
@@ -37,5 +39,5 @@ def get_state(config: Config, user: str, full_state: bool = False):
         setup=velvet_dawn.game.setup.get_setup(user),
         spawn_area=spawn_area,
         entities=entities,
-        attr_changes=velvet_dawn.dao.attributes.get_attribute_updates(),
+        attr_changes=attribute_updates,
     )

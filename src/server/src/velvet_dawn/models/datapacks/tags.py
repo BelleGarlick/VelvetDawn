@@ -37,4 +37,4 @@ class Tags:
         for tag in self.tags:
             instance.add_tag(tag)
 
-        velvet_dawn.dao.instance.save()
+        velvet_dawn.db.instance.save()

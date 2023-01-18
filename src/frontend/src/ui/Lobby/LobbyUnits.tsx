@@ -2,73 +2,77 @@ import * as React from "react";
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import * as Api from "api"
 import {GameSetup} from "models";
+import { Button } from "ui/Button";
+import { Text } from "ui/Text";
+
+
+const ButtonPadding = '5px 10px'
 
 
 function AdminView({ setup, setSetup }: { setup: GameSetup, setSetup: (x: GameSetup) => void }) {
     return <>
-        <span>Commanders</span>
-        {Object.keys(VelvetDawn.datapacks.entities)
-            .filter(x => VelvetDawn.datapacks.entities[x].commander)
-            .map(entity => {
-            return <div style={{ display: 'flex', justifyContent: 'space-between' }} key={entity}>
-                <div>{VelvetDawn.datapacks.entities[entity].name}</div>
-                <div style={{display: 'flex', flexDirection: 'row'}}>
-                    {!setup.commanders.includes(entity) && <button onClick={() => {
-                        Api.setup.updateGameSetup(entity, 1).then(setSetup)
-                    }}>Add</button>}
-                    {setup.commanders.includes(entity) && <button onClick={() => {
-                        Api.setup.updateGameSetup(entity, 0).then(setSetup)
-                    }}>Remove</button>}
+        <Text style={{ fontSize: '20px' }}>Commanders</Text>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {Object.keys(VelvetDawn.datapacks.entities)
+                .filter(x => VelvetDawn.datapacks.entities[x].commander)
+                .map(entity => {
+                return <div style={{ display: 'flex', justifyContent: 'space-between' }} key={entity}>
+                    <Text style={{ paddingLeft: '12px' }}>{VelvetDawn.datapacks.entities[entity].name}</Text>
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                        {!setup.commanders.includes(entity) && <Button style={{padding: ButtonPadding}} onClick={() => {
+                            Api.setup.updateGameSetup(entity, 1).then(setSetup)
+                        }}>Add</Button>}
+                        {setup.commanders.includes(entity) && <Button style={{padding: ButtonPadding}} onClick={() => {
+                            Api.setup.updateGameSetup(entity, 0).then(setSetup)
+                        }}>Remove</Button>}
+                    </div>
                 </div>
-            </div>
-        })}
+            })}
+        </div>
 
-        <span>Units</span>
-        {Object.keys(VelvetDawn.datapacks.entities)
-            .filter(x => !VelvetDawn.datapacks.entities[x].commander)
-            .map(entity => {
-            return <div style={{
-                display: 'flex',
-                justifyContent: 'space-between'
-            }} key={entity}>
-                <div>{VelvetDawn.datapacks.entities[entity].name}</div>
-                <div style={{display: 'flex', flexDirection: 'row'}}>
-                    <button onClick={() => {
-                        console.log(setup.units[entity])
-                        Api.setup.updateGameSetup(entity, (setup.units[entity] ?? 0) - 1).then(setSetup)
-                    }}>-</button>
-                    <div>{setup.units[entity]}</div>
-                    <button onClick={() => {
-                        Api.setup.updateGameSetup(entity, (setup.units[entity] ?? 0) + 1).then(setSetup)
-                    }}>+</button>
+        <Text style={{ fontSize: '20px' }}>Units</Text>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {Object.keys(VelvetDawn.datapacks.entities)
+                .filter(x => !VelvetDawn.datapacks.entities[x].commander)
+                .map(entity => {
+                return <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                }} key={entity}>
+                    <Text style={{ paddingLeft: '12px' }}>{VelvetDawn.datapacks.entities[entity].name}</Text>
+                    <div style={{display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center'}}>
+                        <Button style={{padding: ButtonPadding}} onClick={() => {
+                            Api.setup.updateGameSetup(entity, (setup.units[entity] ?? 0) - 1).then(setSetup)
+                        }}>-</Button>
+                        <Text>{setup.units[entity] ?? 0}</Text>
+                        <Button style={{padding: ButtonPadding}} onClick={() => {
+                            Api.setup.updateGameSetup(entity, (setup.units[entity] ?? 0) + 1).then(setSetup)
+                        }}>+</Button>
+                    </div>
                 </div>
-            </div>
-        })}
+            })}
+        </div>
     </>
 }
 
 
 function NonAdminView({ setup }: { setup: GameSetup }) {
     return <>
-        <span>Commanders</span>
-        <div>
+        <Text style={{ fontSize: '20px' }}>Commanders</Text>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {setup.commanders.map((commander) => {
                 return <div style={{ display: 'flex', justifyContent: 'space-between' }} key={commander}>
-                    <div>{VelvetDawn.datapacks.entities[commander].name}</div>
-                    <div><button>i</button></div>
+                    <Text style={{ paddingLeft: '12px' }}>{VelvetDawn.datapacks.entities[commander].name}</Text>
                 </div>
             })}
         </div>
 
-        <span>Units</span>
-        <div>
+        <Text style={{ fontSize: '20px' }}>Units</Text>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {Object.keys(setup.units).map((unit) => {
                 return <div style={{ display: 'flex', justifyContent: 'space-between' }} key={unit}>
-                    <p>{VelvetDawn.datapacks.entities[unit].name}</p>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <div>{setup.units[unit]}</div>
-                        <div><button>i</button></div>
-                    </div>
+                    <Text style={{ paddingLeft: '12px' }}>{VelvetDawn.datapacks.entities[unit].name}</Text>
+                    <Text>{setup.units[unit]}</Text>
                 </div>
             })}
         </div>

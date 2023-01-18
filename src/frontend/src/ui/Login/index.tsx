@@ -1,8 +1,9 @@
 import * as React from "react";
 import * as Api from 'api'
 import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
-import {ViewState, LoginDetails} from "models";
 import {Text} from "../Text"
+import {Button} from "../Button"
+import {ViewState, LoginDetails} from "models";
 
 export function Login({ loginDetails, setLoginDetails, setView }: { loginDetails: LoginDetails, setLoginDetails: (x: LoginDetails) => void, setView: (x: ViewState) => void }) {
     const join = () => {
@@ -19,39 +20,48 @@ export function Login({ loginDetails, setLoginDetails, setView }: { loginDetails
             })
     }
 
-    join()
+    // join()
 
     return <>
-        <Text>Welcome to Velvet Dawn</Text>
+        <Text style={{
+            color: 'white',
+            marginLeft: '20px',
+            fontSize: '18px'
+        }}>Username</Text>
         <input
             type={'text'}
             value={loginDetails.username}
             onInput={(event) => {
-                // @ts-ignore
-                const v = event.target.value
-
                 setLoginDetails({
                     ...loginDetails,
-                    username: v
+                    // @ts-ignore
+                    username: event.target.value
                 })
             } }
         />
+        <Text style={{
+            color: 'white',
+            marginLeft: '20px',
+            fontSize: '18px'
+        }}>Unique Key</Text>
         <input
             type={'password'}
             value={loginDetails.password}
             onInput={(event) => {
-                // @ts-ignore
-                const v = event.target.value
-
                 setLoginDetails({
                     ...loginDetails,
-                    password: v
+                    // @ts-ignore
+                    password: event.target.value
                 })
             }}
         />
+        <Text style={{ color: 'white', fontSize: '12px' }}>This will act like a password to prevent other's spoofing you. Do not use an actual password.</Text>
 
-        <button onClick={() => {
-            join()
-        }}>Join</button>
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+        }}>
+            <Button onClick={join}>Join</Button>
+        </div>
     </>
 }

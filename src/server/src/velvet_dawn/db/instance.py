@@ -131,3 +131,9 @@ def hexists(name, key):
         return redis_connection.hexists(name, key)
     else:
         return key in _data.get(name, {})
+
+
+def hgetall(name):
+    if redis_connection:
+        return redis_connection.hgetall(name)
+    return _data.get(name, {})

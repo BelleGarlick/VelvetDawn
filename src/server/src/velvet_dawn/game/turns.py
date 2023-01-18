@@ -159,7 +159,7 @@ def begin_next_turn(config: Config):
 
     _update_turn_start_time()
 
-    velvet_dawn.dao.instance.save()
+    velvet_dawn.db.instance.save()
 
 
 def _trigger_on_round_begin_actions():

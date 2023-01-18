@@ -1,5 +1,3 @@
-from sqlalchemy.orm import relationship
-
 import velvet_dawn
 from velvet_dawn.dao import db
 
@@ -18,22 +16,22 @@ class TileInstance(db.Model):
     db.UniqueConstraint(x, y)
 
     def set_attribute(self, key, value):
-        velvet_dawn.dao.attributes.set_tile_attribute(self.id, key, value)
+        velvet_dawn.db.attributes.set_tile_attribute(self.id, key, value)
 
     def get_attribute(self, key, default=None):
-        return velvet_dawn.dao.attributes.get_tile_attribute(self.id, key, default=default)
+        return velvet_dawn.db.attributes.get_tile_attribute(self.id, key, default=default)
 
     def reset_attribute(self, key, value_if_not_exists):
-        velvet_dawn.dao.attributes.reset_tile_attribute(self.id, key, value_if_not_exists)
+        velvet_dawn.db.attributes.reset_tile_attribute(self.id, key, value_if_not_exists)
 
     def add_tag(self, tag: str):
-        velvet_dawn.dao.tags.add_tile_tag(self.id, tag)
+        velvet_dawn.db.tags.add_tile_tag(self.id, tag)
 
     def remove_tag(self, tag: str):
-        velvet_dawn.dao.tags.remove_tile_tag(self.id, tag)
+        velvet_dawn.db.tags.remove_tile_tag(self.id, tag)
 
     def has_tag(self, tag: str):
-        return velvet_dawn.dao.tags.is_tile_tagged(self.id, tag)
+        return velvet_dawn.db.tags.is_tile_tagged(self.id, tag)
 
     def json(self):
         return {

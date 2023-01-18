@@ -43,7 +43,7 @@ class TestSetup(BaseTest):
             setup = velvet_dawn.game.setup.get_setup("player1")
             self.assertEqual(len(setup.commanders), 1)
 
-            # Test setip is valid with commanders
+            # Test setup is valid with commanders
             velvet_dawn.game.setup.update_setup("civil-war:workers", 1)
             self.assertTrue(velvet_dawn.game.setup.is_setup_valid("player1"))
 

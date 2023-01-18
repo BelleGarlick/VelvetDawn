@@ -1,9 +1,9 @@
 import axios from "axios";
+import { inDevMove } from "../constants";
 
 
 export function getUrl() {
-    // If running in dev mode
-    if (window.location.href === "http://localhost:8080/")
+    if (inDevMove())
         return "http://localhost:1642/"
 
     return window.location.href

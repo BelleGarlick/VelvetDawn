@@ -5,7 +5,7 @@ from velvet_dawn.dao import app, db
 if __name__ == "__main__":
     with app.app_context():
         # TODO Delete delete new data store
-        velvet_dawn.dao.instance.clear()
+        velvet_dawn.db.setup_untits.db.clear()  # TODO Move this into db module
         db.init_app(app)
         db.drop_all()
         print("Game state cleaned")

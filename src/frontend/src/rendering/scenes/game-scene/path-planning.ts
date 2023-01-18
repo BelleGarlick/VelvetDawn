@@ -28,7 +28,6 @@ export class PathPlanning {
         this.velvetDawnMap = map ?? VelvetDawn.map
     }
 
-
     /** Compute the paths the given position may take within a
      * given range.
      *

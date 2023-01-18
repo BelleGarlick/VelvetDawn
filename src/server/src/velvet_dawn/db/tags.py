@@ -1,4 +1,4 @@
-import velvet_dawn.dao.instance as dao
+import velvet_dawn.db.instance as db
 
 
 """ Tags interface with the dao
@@ -30,93 +30,93 @@ WORLD_TAGS = "TAGS#world"
 def add_unit_tag(unit_id: str, tag: str):
     """ Add tag to unit in both places """
     # Add tag to set of tags in the unit
-    dao.sadd(UNIT_TAGS.format(unit_id), [tag])
+    db.sadd(UNIT_TAGS.format(unit_id), [tag])
 
     # Add unit to the set of units grouped by the tag
-    dao.sadd(UNITS_BY_TAG_PREFIX.format(tag), [unit_id])
+    db.sadd(UNITS_BY_TAG_PREFIX.format(tag), [unit_id])
 
 
 def add_tile_tag(tile_id, tag):
     """ Add tag to tile in both places """
     # Add tag to set of tags in the tile
-    dao.sadd(TILES_TAGS.format(tile_id), [tag])
+    db.sadd(TILES_TAGS.format(tile_id), [tag])
 
     # Add unit to the set of tiles grouped by the tag
-    dao.sadd(TILES_BY_TAG_PREFIX.format(tag), [tile_id])
+    db.sadd(TILES_BY_TAG_PREFIX.format(tag), [tile_id])
 
 
 def add_world_tag(tag):
     """ Add tag to world """
     # Add tag to set of tags in the world
-    dao.sadd(WORLD_TAGS, [tag])
+    db.sadd(WORLD_TAGS, [tag])
 
 
 def remove_unit_tag(unit_id: str, tag: str):
     """ Remove unit from tags in both places """
     # Add tag to set of tags in the unit
-    dao.srem(UNIT_TAGS.format(unit_id), [tag])
+    db.srem(UNIT_TAGS.format(unit_id), [tag])
 
     # Add unit to the set of units grouped by the tag
-    dao.srem(UNITS_BY_TAG_PREFIX.format(tag), [unit_id])
+    db.srem(UNITS_BY_TAG_PREFIX.format(tag), [unit_id])
 
 
 def remove_tile_tag(tile_id, tag):
     """ Remove tiles from tags in both places """
     # Add tag to set of tags in the tile
-    dao.srem(TILES_TAGS.format(tile_id), [tag])
+    db.srem(TILES_TAGS.format(tile_id), [tag])
 
     # Add unit to the set of tiles grouped by the tag
-    dao.srem(TILES_BY_TAG_PREFIX.format(tag), [tile_id])
+    db.srem(TILES_BY_TAG_PREFIX.format(tag), [tile_id])
 
 
 def remove_world_tag(tag):
     """ Remove world tags """
     # Add tag to set of tags in the world
-    dao.srem(WORLD_TAGS, [tag])
+    db.srem(WORLD_TAGS, [tag])
 
 
 def get_units_with_tag(tag):
     """ Get all units with a tag """
-    return dao.smembers(UNITS_BY_TAG_PREFIX.format(tag))
+    return db.smembers(UNITS_BY_TAG_PREFIX.format(tag))
 
 
 def get_tiles_with_tag(tag):
     """ Get all tiles with a tag """
-    return dao.smembers(TILES_BY_TAG_PREFIX.format(tag))
+    return db.smembers(TILES_BY_TAG_PREFIX.format(tag))
 
 
 def get_unit_tags(unit_id):
     """ Get all tags on a unit """
-    return dao.smembers(UNIT_TAGS.format(unit_id))
+    return db.smembers(UNIT_TAGS.format(unit_id))
 
 
 def get_tile_tags(tile_id):
     """ Get all tags on a tile """
-    return dao.smembers(TILES_TAGS.format(tile_id))
+    return db.smembers(TILES_TAGS.format(tile_id))
 
 
 def get_world_tags():
     """ Get all tags on the world instance """
-    return dao.smembers(WORLD_TAGS)
+    return db.smembers(WORLD_TAGS)
 
 
 def is_unit_tagged(unit_id, tag):
     """ Check if the unit has a given tag """
-    return dao.sismember(UNIT_TAGS.format(unit_id), tag)
+    return db.sismember(UNIT_TAGS.format(unit_id), tag)
 
 
 def is_tile_tagged(tile_id, tag):
     """ Check if the tile has a given tag """
-    return dao.sismember(TILES_TAGS.format(tile_id), tag)
+    return db.sismember(TILES_TAGS.format(tile_id), tag)
 
 
 def is_world_tagged(tag):
     """ Check if the world has a given tag """
-    return dao.sismember(WORLD_TAGS, tag)
+    return db.sismember(WORLD_TAGS, tag)
 
 
 # TODO Use when a unit is killed
 def remove_unit(unit_id):
     for tag in list(get_unit_tags(unit_id)):
         remove_unit_tag(unit_id, tag)
-    dao.rem(UNIT_TAGS.format(unit_id))
+    db.rem(UNIT_TAGS.format(unit_id))
