@@ -1,9 +1,9 @@
 from abc import ABC
 from typing import List, Union, Optional
 
-from velvet_dawn.dao.models import UnitInstance, TileInstance
+from velvet_dawn.dao.models import TileInstance
 
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.db.instances import UnitInstance, WorldInstance
 from velvet_dawn.mechanics.selectors.filters import Filters
 
 

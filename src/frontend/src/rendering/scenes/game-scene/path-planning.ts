@@ -3,6 +3,7 @@ import {Position} from "models";
 import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
 import {Perspective} from "../../perspective";
 import {RenderingConstants} from "../scene";
+import {RenderingFacade} from "../../facade";
 
 
 /** Path planning module for the game scene
@@ -117,7 +118,7 @@ export class PathPlanning {
      * @param entityId The entity id to update
      * @param position The position to move the entity too.
      */
-    moveUnit(entityId: number, position: Position) {
+    moveUnit(entityId: string, position: Position) {
         const path = this.getPathToPoint(position)
         if (path) {
             this.velvetDawnMap.move(entityId, path)
@@ -134,7 +135,7 @@ export class PathPlanning {
      * @param hoveredTilePosition The position of the hovered
      *      tile to render the path too.
      */
-    render(ctx: CanvasRenderingContext2D, perspective: Perspective, constants: RenderingConstants, hoveredTilePosition: Position) {
+    render({ ctx, perspective, constants }: RenderingFacade, hoveredTilePosition: Position) {
         if (this.cachedPathAreaPositions) {
             this.cachedPathAreaPositions.forEach(position => {
                 const {

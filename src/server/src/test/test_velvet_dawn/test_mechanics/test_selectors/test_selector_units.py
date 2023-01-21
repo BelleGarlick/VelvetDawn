@@ -1,7 +1,7 @@
 import velvet_dawn.map.creation
 from velvet_dawn.dao import app
 from test.base_test import BaseTest
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.db.instances import WorldInstance
 from velvet_dawn.mechanics import selectors
 from velvet_dawn.mechanics.selectors import SelectorUnit, SelectorUnits, SelectorFriendlies, SelectorEnemies
 
@@ -26,9 +26,9 @@ class TestUnitSelectors(BaseTest):
 
     def test_selectors_from_unit(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(15, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
 
             selector = selectors.get_selector(unit.id, "unit")
             units_selector = selectors.get_selector(unit.id, "units")
@@ -40,15 +40,15 @@ class TestUnitSelectors(BaseTest):
             friendlies = friendlies_selector.get_selection(unit)
             enemies = selector_enemies.get_selection(unit)
             self.assertEqual(unit.id, single_unit[0].id)
-            self.assertEqual(3, len(all_units))
-            self.assertEqual(2, len(friendlies))
+            self.assertEqual(4, len(all_units))
+            self.assertEqual(3, len(friendlies))
             self.assertEqual(1, len(enemies))
 
     def test_selectors_from_tile_and_world(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
 
-            tile = velvet_dawn.map.get_tile(15, 0)
+            tile = velvet_dawn.map.get_tile(5, 0)
 
             # Get selectors
             selector = selectors.get_selector(tile.tile_id, "unit")
@@ -62,8 +62,8 @@ class TestUnitSelectors(BaseTest):
             friendlies = friendlies_selector.get_selection(tile)
             enemies = selector_enemies.get_selection(tile)
             self.assertEqual(1, len(single_unit))
-            self.assertEqual(3, len(all_units))
-            self.assertEqual(2, len(friendlies))
+            self.assertEqual(4, len(all_units))
+            self.assertEqual(3, len(friendlies))
             self.assertEqual(1, len(enemies))
 
             # From world perspective
@@ -72,8 +72,8 @@ class TestUnitSelectors(BaseTest):
             friendlies = friendlies_selector.get_selection(WorldInstance())
             enemies = selector_enemies.get_selection(WorldInstance())
             self.assertEqual(0, len(single_unit))
-            self.assertEqual(3, len(all_units))
-            self.assertEqual(2, len(friendlies))
+            self.assertEqual(4, len(all_units))
+            self.assertEqual(3, len(friendlies))
             self.assertEqual(1, len(enemies))
 
             # Switch turns
@@ -83,10 +83,10 @@ class TestUnitSelectors(BaseTest):
             friendlies = friendlies_selector.get_selection(tile)
             enemies = selector_enemies.get_selection(tile)
             self.assertEqual(1, len(friendlies))
-            self.assertEqual(2, len(enemies))
+            self.assertEqual(3, len(enemies))
 
             # From world perspective
             friendlies = friendlies_selector.get_selection(WorldInstance())
             enemies = selector_enemies.get_selection(WorldInstance())
             self.assertEqual(1, len(friendlies))
-            self.assertEqual(2, len(enemies))
+            self.assertEqual(3, len(enemies))

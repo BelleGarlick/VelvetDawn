@@ -1,9 +1,8 @@
 from typing import Union, List
 
 from velvet_dawn.dao.models import TileInstance
-from velvet_dawn.dao.models import UnitInstance
 from .selector import Selector
-from ...dao.models.world_instance import WorldInstance
+from ...db.instances import UnitInstance, WorldInstance
 
 """ Selector 'self' modifies what ever is calling it
 

@@ -2,15 +2,15 @@ import time
 
 import velvet_dawn
 from test.base_test import BaseTest
-from velvet_dawn.dao import app
 
 
-class TestDaoAttributes(BaseTest):
+class TestDbAttributes(BaseTest):
 
     def test_attribute_operations(self):
         """ Test getting, setting, setting again, resetting operations """
         # Units
-        self.assertEqual(10, velvet_dawn.db.attributes.get_unit_attribute("1", "example.health", 10))
+        self.assertEqual(10, velvet_dawn.db.attributes.get_unit_attribute("1", "example.health", 10))  # get default
+
         velvet_dawn.db.attributes.set_unit_attribute("1", "example.health", 100)
         self.assertEqual(100, velvet_dawn.db.attributes.get_unit_attribute("1", "example.health"))
         velvet_dawn.db.attributes.set_unit_attribute("1", "example.health", 120)
@@ -56,3 +56,10 @@ class TestDaoAttributes(BaseTest):
         updates = velvet_dawn.db.attributes.get_attribute_updates()
         self.assertEqual(2, len(updates))
         self.assertTrue(updates[0]['value'] < updates[1]['value'])  # 13 < 15, 15 was added last so should be newest
+
+    def test_removing_units(self):
+        velvet_dawn.db.attributes.set_unit_attribute("1", "example.health", 100)
+        self.assertEqual(100, velvet_dawn.db.attributes.get_unit_attribute("1", "example.health"))
+
+        velvet_dawn.db.attributes.remove_unit("1")
+        self.assertIsNone(velvet_dawn.db.attributes.get_unit_attribute("1", "example.health"))

@@ -22,9 +22,9 @@ class TestGetAction(BaseTest):
 
     def test_action_can_run(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(15, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
             action = velvet_dawn.mechanics.actions.get_action("0", {
                 "modify": "self.health",
                 "set": 100,

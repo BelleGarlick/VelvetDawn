@@ -23,7 +23,7 @@ export class TileEntity extends Entity {
 
     public attributes: { [key: string]: any } = {}
 
-    constructor(instanceId: number, tileId: string, position: Position) {
+    constructor(instanceId: string, tileId: string, position: Position) {
         super(instanceId, tileId)
 
         this.position = position

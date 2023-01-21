@@ -1,7 +1,7 @@
 from typing import Union
 
-from velvet_dawn.dao.models import TileInstance, UnitInstance
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.dao.models import TileInstance
+from velvet_dawn.db.instances import UnitInstance, WorldInstance
 from velvet_dawn.mechanics.conditionals.conditional import Comparison, Conditional
 
 

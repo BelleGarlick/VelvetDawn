@@ -62,8 +62,9 @@ const setupMap = async (setupEntity: boolean): Promise<VelvetDawnMap> => {
     if (setupEntity)
         map.updateState({
             ...VelvetDawn.getState(),
-            entities: {
-                0: {...blankEntity, id: 0, position: {x: 0, y: 0}}
+            unitChanges: {
+                updates: [{...blankEntity, instanceId: "0", unit: "a", position: {x: 0, y: 0}}],
+                removed: []
             },
             attrChanges: [
                 {id: "1", type: 'tile', attribute: "movement.weight", value: 3},
@@ -125,19 +126,23 @@ describe("Test update from state", () => {
 
         map.updateState({
             ...VelvetDawn.getState(),
-            entities: {
-                0: {...blankEntity, id: 0, position: {x: 1, y: 0}}
-            }
+            unitChanges: {
+                updates: [{...blankEntity, instanceId: "0", unit: "a", position: {x: 1, y: 0}}],
+                removed: []
+            },
         })
         expect(map.allUnits().length).toBe(1)
         expect(unit.getPosition().x).toBe(1)
 
         map.updateState({
             ...VelvetDawn.getState(),
-            entities: {
-                0: {...blankEntity, id: 0, position: {x: 1, y: 0}},
-                1: {...blankEntity, id: 1, position: {x: 0, y: 0}}
-            }
+            unitChanges: {
+                updates: [
+                    {...blankEntity, instanceId: "0", unit: "a", position: {x: 1, y: 0}},
+                    {...blankEntity, instanceId: "1", unit: "a", position: {x: 0, y: 0}}
+                ],
+                removed: []
+            },
         })
 
         expect(map.allUnits().length).toBe(2)
@@ -146,9 +151,12 @@ describe("Test update from state", () => {
 
         map.updateState({
             ...VelvetDawn.getState(),
-            entities: {
-                1: {...blankEntity, id: 1, position: {x: 0, y: 0}}
-            }
+            unitChanges: {
+                updates: [
+                    {...blankEntity, instanceId: "1", unit: "a", position: {x: 0, y: 0}}
+                ],
+                removed: []
+            },
         })
 
         expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe(1)
@@ -166,7 +174,7 @@ describe("Test move entity", () => {
         expect(unit.instanceId).toBe(0)
         expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe(0)
 
-        map.move(0, [{x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2}])
+        map.move("0", [{x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2}])
         expect(map.getUnitAtPosition({x: 2, y: 2}).instanceId).toBe(0)
         expect(unit.getPosition()).toStrictEqual({x: 2, y: 2})
     })
@@ -207,10 +215,13 @@ describe("Test entities in movement range", () => {
         // Spawn entities surrounding the current so there are no paths
         map.updateState({
             ...VelvetDawn.getState(),
-            entities: {
-                0: {...blankEntity, id: 0, position: {x: 0, y: 0}},
-                1: {...blankEntity, id: 1, position: {x: 1, y: 0}},
-                2: {...blankEntity, id: 2, position: {x: 0, y: 1}}
+            unitChanges: {
+                updates: [
+                    {...blankEntity, instanceId: "0", unit: "a", position: {x: 0, y: 0}},
+                    {...blankEntity, instanceId: "1", unit: "a", position: {x: 1, y: 0}},
+                    {...blankEntity, instanceId: "2", unit: "a", position: {x: 0, y: 1}},
+                ],
+                removed: []
             }
         })
 

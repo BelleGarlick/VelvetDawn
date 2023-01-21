@@ -5,6 +5,7 @@ import {PathPlanning} from "./path-planning";
 import {UnitEntity} from "../../entities/unit-entity";
 import {GameViewSidebar} from "./sidebar";
 import {RenderingFacade} from "../../facade";
+import {Combat} from "./combat";
 
 
 export class GameScene extends Scene {
@@ -13,6 +14,7 @@ export class GameScene extends Scene {
 
     private selectedEntity: UnitEntity;
     private pathPlanning = new PathPlanning();
+    private combat = new Combat();
 
     /** Setup view components */
     onStart(facade: RenderingFacade): null {
@@ -26,7 +28,8 @@ export class GameScene extends Scene {
 
     render(facade: RenderingFacade): undefined {
         this.renderTiles(facade)
-        this.pathPlanning.render(facade.ctx, facade.perspective, facade.constants, this.hoveredTile?.position)
+        this.pathPlanning.render(facade, this.hoveredTile?.position)
+        this.combat.render(facade)
         this.renderUnits(facade)
 
         this.turnBanner.render(facade)
@@ -50,9 +53,14 @@ export class GameScene extends Scene {
                 // This is for own clause, will need another clause for non-player owned entities
                 this.selectedEntity = mapEntity;
                 this.pathPlanning.computePaths(this.clickedTile.position, mapEntity.attributes['movement.remaining'] ?? 0)
+
+                const combatRange = this.selectedEntity.attributes['combat.range'] ?? 1
+                this.combat.getTargetablePositions(this.selectedEntity.getPosition(), combatRange)
             }
             else if (mapEntity) {
                 this.selectedEntity = mapEntity;
+                this.combat.clear()
+                this.pathPlanning.clear()
             }
             else if (this.selectedEntity
                 && VelvetDawn.isPlayersTurn()
@@ -64,6 +72,7 @@ export class GameScene extends Scene {
             else {
                 this.selectedEntity = null
                 this.pathPlanning.clear()
+                this.combat.clear()
             }
 
         } else {
@@ -83,6 +92,7 @@ export class GameScene extends Scene {
         if (event.key === "Escape") {
             this.selectedEntity = undefined
             this.pathPlanning.clear()
+            this.combat.clear()
             this.clickedTile = undefined
             event.preventDefault()
         }
@@ -93,10 +103,14 @@ export class GameScene extends Scene {
     onStateUpdate(state: GameState): null {
         // Recompute paths incase anything has changed in the state update
         this.pathPlanning.clear()
+        this.combat.clear()
         if (this.selectedEntity
                 && VelvetDawn.isPlayersTurn()
                 && this.selectedEntity.player === VelvetDawn.loginDetails.username) {
             this.pathPlanning.computePaths(this.selectedEntity.getPosition(), this.selectedEntity.attributes['movement.remaining'] ?? 0)
+
+            const combatRange = this.selectedEntity.attributes['combat.range'] ?? 1
+            this.combat.getTargetablePositions(this.selectedEntity.getPosition(), combatRange)
         }
 
         this.sidebar.onStateUpdate(state)

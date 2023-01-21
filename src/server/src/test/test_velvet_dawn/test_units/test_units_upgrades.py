@@ -14,12 +14,12 @@ class TestUnitUpgrades(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            upgradable_unit = velvet_dawn.units.get_unit_at_position(4, 0)
+            upgradable_unit = velvet_dawn.db.units.get_units_at_positions(4, 0)[0]
             upgrades = velvet_dawn.datapacks.entities[upgradable_unit.entity_id].upgrades.upgrades
 
             # Unit not found raised
             with self.assertRaises(errors.ValidationError):
-                velvet_dawn.units.upgrades.upgrade_unit(upgradable_unit.player, -1, upgrades[0].id)
+                velvet_dawn.units.upgrades.upgrade_unit(upgradable_unit.player, "-1", upgrades[0].id)
 
             # Invalid upgrade
             with self.assertRaises(errors.ValidationError):
@@ -58,7 +58,7 @@ class TestUnitUpgrades(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            upgradable_unit = velvet_dawn.units.get_unit_at_position(4, 0)
+            upgradable_unit = velvet_dawn.db.units.get_units_at_positions(4, 0)[0]
 
             upgrades = velvet_dawn.units.upgrades.get_unit_upgrade_updates(upgradable_unit.id)
             self.assertEqual(0, len(upgrades.upgraded))

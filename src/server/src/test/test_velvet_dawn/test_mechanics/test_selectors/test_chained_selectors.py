@@ -18,11 +18,11 @@ class TestChainedSelectors(BaseTest):
 
     def test_chained_selectors(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
 
             selector = selectors.get_selector("0", "world>units>commander>tile.max.health.example")
 
-            tiles = selector.get_chained_selection(velvet_dawn.units.get_unit_at_position(15, 0))
+            tiles = selector.get_chained_selection(velvet_dawn.db.units.get_units_at_positions(5, 0)[0])
 
             # 3 units with two commanders each on 1 tile results in 2 tiles
             self.assertEqual(2, len(tiles))

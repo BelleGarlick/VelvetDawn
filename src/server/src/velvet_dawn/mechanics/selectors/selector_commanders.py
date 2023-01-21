@@ -1,9 +1,9 @@
 from typing import Union, List
 
 import velvet_dawn
-from velvet_dawn.dao.models import UnitInstance, TileInstance
+from velvet_dawn.dao.models import TileInstance
 from .selector import Selector
-from ...dao.models.world_instance import WorldInstance
+from ...db.instances import UnitInstance, WorldInstance
 
 """ Selector 'commander' references to the commander of the given unit
 

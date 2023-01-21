@@ -6,7 +6,7 @@ import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import Keys, Player, Team
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.db.instances import WorldInstance
 from velvet_dawn.logger import logger
 from velvet_dawn.models.game_state import TurnData
 from velvet_dawn.models.phase import Phase

@@ -1,5 +1,6 @@
 import {Position} from "models";
 import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
+import {RenderingFacade} from "../../facade";
 
 /** Combats class for getting the list of positions
  * the selected unit can attack and calling the api
@@ -27,7 +28,7 @@ export class Combat {
             VelvetDawn.map
                 .getUnitsInRange(position, range)
                 .forEach(unit => {
-                    if (unit.player !== VelvetDawn.getPlayer().team) {
+                    if (unit.player !== VelvetDawn.getPlayer().name) {
                         this.targetablePosition.add(unit.getPosition());
                     }
                 })
@@ -41,5 +42,31 @@ export class Combat {
         this.currentPosition = undefined
         this.currentRange = -1
         this.targetablePosition.clear()
+    }
+
+    render(facade: RenderingFacade) {
+        const { ctx, constants } = facade;
+        this.targetablePosition.forEach(position => {
+            const {
+                visible, clipPoints
+            } = facade.perspective.getTileRenderingConstants(position, facade.constants);
+
+            if (!visible)
+                return
+
+            ctx.beginPath()
+            ctx.strokeStyle = "#dd0000"
+            ctx.fillStyle = "#dd0000"
+            ctx.lineWidth = 3 * constants.resolution
+            ctx.moveTo(clipPoints[clipPoints.length - 1].x, clipPoints[clipPoints.length - 1].y)
+            clipPoints.forEach(pos => ctx.lineTo(pos.x, pos.y))
+            ctx.stroke()
+
+            ctx.globalAlpha = 0.15
+            ctx.fill()
+            ctx.globalAlpha = 1
+
+            ctx.closePath()
+        })
     }
 }

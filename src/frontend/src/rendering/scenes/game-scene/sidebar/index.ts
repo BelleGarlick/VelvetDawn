@@ -7,10 +7,8 @@ import {UnitEntity} from "../../../entities/unit-entity";
 import {Textures} from "../../../Textures";
 import {VelvetDawn} from "../../../../velvet-dawn/velvet-dawn";
 import {Rectangle} from "../../../entities/rectangle";
-import {ActionButton} from "./actionButton";
 import * as Api from "api"
 import {GameState} from "models/game-state";
-import {AvailableUnitUpgradesAndAbilities} from "models/entity";
 import {UnitUpgrades} from "./upgrades";
 import {UnitAbilities} from "./abilities";
 

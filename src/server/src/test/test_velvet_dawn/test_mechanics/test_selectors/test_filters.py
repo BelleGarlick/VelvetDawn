@@ -1,7 +1,7 @@
 import velvet_dawn
 from test.base_test import BaseTest
 from velvet_dawn.dao import app
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.db.instances import WorldInstance
 from velvet_dawn.mechanics import selectors
 
 
@@ -52,7 +52,7 @@ class TestFilteredSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(5, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
 
             selector_range_0 = selectors.get_selector(unit.entity_id, "tiles[range=0]")
             selector_range_1 = selectors.get_selector(unit.entity_id, "tiles[range=1]")
@@ -66,7 +66,7 @@ class TestFilteredSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(5, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
 
             selector_range_0 = selectors.get_selector(unit.entity_id, "tiles[min-range=0]")
             selector_range_1 = selectors.get_selector(unit.entity_id, "tiles[min-range=1]")
@@ -80,7 +80,7 @@ class TestFilteredSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(5, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
 
             selector_self = selectors.get_selector(unit.entity_id, "self[exclude-self]")
             selector_units = selectors.get_selector(unit.entity_id, "units[exclude-self]")

@@ -1,5 +1,4 @@
 import dataclasses
-from typing import Optional, List
 
 
 @dataclasses.dataclass

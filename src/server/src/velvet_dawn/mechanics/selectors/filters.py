@@ -3,9 +3,8 @@ from typing import List, Union, Optional
 import velvet_dawn
 from velvet_dawn import errors
 
-from velvet_dawn.dao.models import TileInstance, UnitInstance
-from velvet_dawn.dao.models.world_instance import WorldInstance
-
+from velvet_dawn.dao.models import TileInstance
+from velvet_dawn.db.instances import UnitInstance, WorldInstance
 
 """ Filtering module
 

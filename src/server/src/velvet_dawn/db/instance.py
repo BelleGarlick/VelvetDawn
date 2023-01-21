@@ -59,6 +59,7 @@ def rem(key: str):
     elif key in _data:
         del _data[key]
 
+
 """
 Set Operations
 """
@@ -137,3 +138,21 @@ def hgetall(name):
     if redis_connection:
         return redis_connection.hgetall(name)
     return _data.get(name, {})
+
+
+def hdel(name, key):
+    if redis_connection:
+        return redis_connection.hdel(name, key)
+    else:
+        if name in _data:
+            if key in _data[name]:
+                del _data[name][key]
+            if not _data[name]:
+                del _data[name]
+
+
+def hvals(name):
+    if redis_connection:
+        return redis_connection.hvals(name)
+    else:
+        return _data.get(name, {}).values()

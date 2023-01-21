@@ -17,9 +17,9 @@ class TestSelectorsClosest(BaseTest):
 
     def test_selector_unit(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(15, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
 
             selector_closest_unit = selectors.get_selector("0", "closest")
             selector_closest_enemy = selectors.get_selector("0", "closest-enemy")

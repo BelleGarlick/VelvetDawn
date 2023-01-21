@@ -115,8 +115,8 @@ def is_world_tagged(tag):
     return db.sismember(WORLD_TAGS, tag)
 
 
-# TODO Use when a unit is killed
 def remove_unit(unit_id):
+    """ Remove all tags from unit and units from tag """
     for tag in list(get_unit_tags(unit_id)):
         remove_unit_tag(unit_id, tag)
     db.rem(UNIT_TAGS.format(unit_id))

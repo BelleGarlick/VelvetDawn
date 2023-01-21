@@ -3,9 +3,8 @@ from typing import Optional, Union
 
 import velvet_dawn.validations
 from velvet_dawn import errors
-from velvet_dawn.dao.models import UnitInstance, TileInstance
-from velvet_dawn.dao.models.world_instance import WorldInstance
-from velvet_dawn.mechanics import selectors
+from velvet_dawn.dao.models import TileInstance
+from velvet_dawn.db.instances import UnitInstance, WorldInstance
 from velvet_dawn.mechanics.function_value import FunctionValue
 from velvet_dawn.mechanics.selectors import Selector
 

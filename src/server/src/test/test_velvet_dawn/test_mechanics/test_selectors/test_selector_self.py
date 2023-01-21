@@ -1,7 +1,7 @@
 import velvet_dawn.map.creation
 from velvet_dawn.dao import app
 from test.base_test import BaseTest
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.db.instances import WorldInstance
 from velvet_dawn.mechanics import selectors
 
 
@@ -9,10 +9,10 @@ class TestSelfSelectors(BaseTest):
 
     def test_selector_self(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(15, 0)
-            tile = velvet_dawn.map.get_tile(15, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            tile = velvet_dawn.map.get_tile(5, 0)
 
             selector = selectors.get_selector(unit.entity_id, "self")
 

@@ -2,7 +2,9 @@ from typing import Union
 
 import velvet_dawn
 from velvet_dawn import errors
-from velvet_dawn.dao.models import TileInstance, UnitInstance
+from velvet_dawn.dao.models import TileInstance
+from velvet_dawn.db.instances import UnitInstance
+import velvet_dawn.db.instance as instance
 
 
 class Tags:

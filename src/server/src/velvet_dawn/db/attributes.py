@@ -141,6 +141,12 @@ def get_world_attribute(attribute, default=None):
     return db.hget(WORLD_ATTRIBUTES, attribute, default=default)
 
 
+def remove_unit(unit_id):
+    """ Remove all attributes from units """
+    db.rem(UNIT_ATTRIBUTES.format(unit_id))
+    db.rem(UNIT_ATTRIBUTES_DEFAULTS.format(unit_id))
+
+
 def get_full_attribute_list():
     """ Get all attributes """
     attributes = []

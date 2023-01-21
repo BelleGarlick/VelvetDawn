@@ -1,13 +1,11 @@
 
 
-export interface EntityInstance {
-    id: number,
+export interface UnitUpdate {
+    instanceId: string,
     player: string,
-    entity: string,
+    unit: string,
     position: {
         x: number,
         y: number
     }
 }
-
-export type UnitInstance = EntityInstance;

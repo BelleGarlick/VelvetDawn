@@ -2,7 +2,7 @@ import velvet_dawn
 from test.base_test import BaseTest
 
 
-class TestDaoTags(BaseTest):
+class TestDbTags(BaseTest):
 
     def test_crud_operations(self):
         """ Test all crud operations for tags """

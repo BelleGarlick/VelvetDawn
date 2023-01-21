@@ -3,7 +3,7 @@ import {AvailableUnitUpgradesAndAbilities, GameState, Position} from "models";
 import {VelvetDawn} from "velvet-dawn/velvet-dawn";
 
 
-export function move(entityPk: number, path: Position[]): Promise<GameState> {
+export function move(entityPk: string, path: Position[]): Promise<GameState> {
     return post("/units/move/", {
         username: VelvetDawn.loginDetails.username,
         password: VelvetDawn.loginDetails.password,
@@ -12,12 +12,12 @@ export function move(entityPk: number, path: Position[]): Promise<GameState> {
     })
 }
 
-export function getAvailableUpgradeAndAbilities(entityPk: number): Promise<AvailableUnitUpgradesAndAbilities> {
+export function getAvailableUpgradeAndAbilities(entityPk: string): Promise<AvailableUnitUpgradesAndAbilities> {
     return get(`/units/available-upgrades-and-abilities/?username=${VelvetDawn.loginDetails.username}&password=${VelvetDawn.loginDetails.password}&id=${entityPk}`)
 }
 
 
-export function performUpgrade(entityPk: number, upgradeId: string): Promise<AvailableUnitUpgradesAndAbilities> {
+export function performUpgrade(entityPk: string, upgradeId: string): Promise<AvailableUnitUpgradesAndAbilities> {
     return post("/units/upgrade/", {
         username: VelvetDawn.loginDetails.username,
         password: VelvetDawn.loginDetails.password,
@@ -27,7 +27,7 @@ export function performUpgrade(entityPk: number, upgradeId: string): Promise<Ava
 }
 
 
-export function performAbility(entityPk: number, abilityId: string): Promise<AvailableUnitUpgradesAndAbilities> {
+export function performAbility(entityPk: string, abilityId: string): Promise<AvailableUnitUpgradesAndAbilities> {
     return post("/units/ability/", {
         username: VelvetDawn.loginDetails.username,
         password: VelvetDawn.loginDetails.password,

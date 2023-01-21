@@ -15,7 +15,7 @@ export class UnitEntity extends Entity {
 
     public attributes: { [key: string]: any } = {}
 
-    constructor(id: number, entityId: string, player: string) {
+    constructor(id: string, entityId: string, player: string) {
         super(id, entityId)
 
         this.player = player

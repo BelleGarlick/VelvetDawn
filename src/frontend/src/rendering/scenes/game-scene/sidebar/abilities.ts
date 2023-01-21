@@ -10,7 +10,7 @@ export class UnitAbilities {
     public unitAbilityButtons: { [abilityId: string]: ActionButton } = {}
     private paginatedButtons = new PaginatedButtons();
 
-    setEntity(instanceId: number, uniDefinition: UnitDefinition) {
+    setEntity(instanceId: string, uniDefinition: UnitDefinition) {
         this.paginatedButtons.resetTabPage()
         this.unitAbilityButtons = {};
         this.available = undefined

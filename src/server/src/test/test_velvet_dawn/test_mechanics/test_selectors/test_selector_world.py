@@ -1,5 +1,5 @@
 from test.base_test import BaseTest
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.db.instances import WorldInstance
 from velvet_dawn.mechanics import selectors
 
 

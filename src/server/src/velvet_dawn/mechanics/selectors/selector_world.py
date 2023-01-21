@@ -1,10 +1,8 @@
 from typing import Union, List
 
 from velvet_dawn.dao.models import TileInstance
-from velvet_dawn.dao.models import UnitInstance
 from .selector import Selector
-from ...dao.models.world_instance import WorldInstance
-
+from ...db.instances import UnitInstance, WorldInstance
 
 """ Selector 'world' allows the user to access the world object 
 in order to set/get attributes

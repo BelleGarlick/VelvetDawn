@@ -36,7 +36,7 @@ class UnitAbilityData:
         }
 
 
-def run_unit_ability(player_name: str, unit_instance_id: int, ability_id: str):
+def run_unit_ability(player_name: str, unit_instance_id: str, ability_id: str):
     """ Verify ability a unit with the specified ability id
 
     Args:
@@ -44,7 +44,7 @@ def run_unit_ability(player_name: str, unit_instance_id: int, ability_id: str):
         unit_instance_id: The unit instance
         ability_id: The ability id
     """
-    instance = velvet_dawn.units.get_unit_by_id(unit_instance_id)
+    instance = velvet_dawn.db.units.get_unit_by_instance_id(unit_instance_id)
     if not instance:
         raise errors.ValidationError("Unit not found.")
 
@@ -70,12 +70,12 @@ def run_unit_ability(player_name: str, unit_instance_id: int, ability_id: str):
     ability.run(instance)
 
 
-def get_unit_ability_updates(unit_instance_id: int):
+def get_unit_ability_updates(unit_instance_id: str):
     """ Get the breakdown of abilities that are hidden / disabled
      or already used """
     abilities = UnitAbilityData()
 
-    instance = velvet_dawn.units.get_unit_by_id(unit_instance_id)
+    instance = velvet_dawn.db.units.get_unit_by_instance_id(unit_instance_id)
     if not instance:
         return abilities
 

@@ -1,5 +1,5 @@
 import { Team } from "./team";
-import {Player, EntityInstance} from "models/index";
+import {Player, UnitUpdate} from "models/index";
 import {Attribute} from "models/attribute";
 
 export enum GamePhase {
@@ -29,7 +29,10 @@ export interface GameState {
     teams: Team[],
     players: { [key: string]: Player },
     setup: GameSetup,
-    entities: { [key: string]: EntityInstance },
+    unitChanges: {
+        updates: UnitUpdate[],
+        removed: UnitUpdate[],
+    },
     spawnArea: {
         x: number,
         y: number
@@ -55,7 +58,10 @@ export const createBlankState = (): GameState => {
             placedCommander: false,
             remainingUnits: {}
         },
-        entities: {},
+        unitChanges: {
+            updates: [],
+            removed: [],
+        },
         spawnArea: [],
         attrChanges: []
     }

@@ -1,7 +1,7 @@
 import velvet_dawn.datapacks
 from velvet_dawn.dao import app
 from test.base_test import BaseTest
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.db.instances import WorldInstance
 
 """ Test all triggers are executed correctly
 
@@ -160,25 +160,25 @@ class TestTriggers(BaseTest):
 
     def test_trigger_enter(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
             set_commander_tile_trigger('enter')
 
             commander = velvet_dawn.units.list()[0]
             player = velvet_dawn.players.get_player(commander.player)
 
-            velvet_dawn.units.movement.move(
+            instance = velvet_dawn.units.movement.move(
                 player, commander.id, [
                     {"x": commander.x, "y": commander.y},
-                    {"x": commander.x + 1, "y": commander.y}
+                    {"x": commander.x, "y": commander.y + 1}
                 ], self.get_test_config()
             )
 
-            new_tile = velvet_dawn.map.get_tile(commander.x, commander.y)
+            new_tile = velvet_dawn.map.get_tile(instance.x, instance.y)
             self.assertEqual(0.1, new_tile.get_attribute("test"))
 
     def test_trigger_leave(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
             set_commander_tile_trigger('leave')
 
             commander = velvet_dawn.units.list()[0]
@@ -187,11 +187,11 @@ class TestTriggers(BaseTest):
             velvet_dawn.units.movement.move(
                 player, commander.id, [
                     {"x": commander.x, "y": commander.y},
-                    {"x": commander.x + 1, "y": commander.y}
+                    {"x": commander.x, "y": commander.y + 1}
                 ], self.get_test_config()
             )
 
-            new_tile = velvet_dawn.map.get_tile(commander.x - 1, commander.y)
+            new_tile = velvet_dawn.map.get_tile(commander.x, commander.y)
             self.assertEqual(0.1, new_tile.get_attribute("test"))
 
     def test_trigger_spawn(self):

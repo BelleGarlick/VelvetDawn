@@ -4,7 +4,7 @@ from typing import Optional, List
 import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import KeyValues, Keys, TileInstance, UnitInstance
+from velvet_dawn.dao.models import KeyValues, Keys, TileInstance
 
 from velvet_dawn.map.creation import new
 from velvet_dawn.map.spawn import allocate_spawn_points, get_allocated_spawn_area, is_point_spawnable
@@ -49,8 +49,7 @@ def is_traversable(x: int, y: int) -> bool:
         If the tile is traversable
     """
     # First check if there is already an entity at that position
-    entity_at_position = db.session.query(UnitInstance).where(UnitInstance.x == x, UnitInstance.y == y).one_or_none()
-    if entity_at_position:
+    if velvet_dawn.db.units.get_units_at_positions(x, y):
         return False
 
     db_tile = get_tile(x, y)

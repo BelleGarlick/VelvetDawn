@@ -47,7 +47,7 @@ class TestActionModify(BaseTest):
 
     def test_modifier_working(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
 
             unit = velvet_dawn.units.list()[0]
 
@@ -101,7 +101,7 @@ class TestActionModify(BaseTest):
 
     def test_modifier_tags(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
 
             unit = velvet_dawn.units.list()[0]
 

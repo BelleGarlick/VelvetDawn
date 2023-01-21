@@ -25,7 +25,7 @@ def move_unit(user):
 @units_blueprint.route("/available-upgrades-and-abilities/")
 @api_wrapper()
 def get_unit_upgrade_and_abilities(user):
-    instance_id = int(request.args.get("id"))
+    instance_id = request.args.get("id")
 
     return {
         "abilities": velvet_dawn.units.abilities.get_unit_ability_updates(instance_id).json(),
@@ -36,7 +36,7 @@ def get_unit_upgrade_and_abilities(user):
 @units_blueprint.route("/upgrade/", methods=["POST"])
 @api_wrapper()
 def perform_unit_upgrade(user):
-    instance_id = int(request.form.get("id"))
+    instance_id = request.form.get("id")
     upgrade_id = request.form.get("upgrade")
     velvet_dawn.units.upgrades.upgrade_unit(user.name, instance_id, upgrade_id)
 
@@ -49,7 +49,7 @@ def perform_unit_upgrade(user):
 @units_blueprint.route("/ability/", methods=["POST"])
 @api_wrapper(return_state=True)
 def perform_unit_ability(user):
-    instance_id = int(request.form.get("id"))
+    instance_id = request.form.get("id")
     ability_id = request.form.get("ability")
     velvet_dawn.units.abilities.run_unit_ability(user.name, instance_id, ability_id)
 

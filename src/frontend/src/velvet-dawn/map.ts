@@ -183,7 +183,7 @@ export class VelvetDawnMap {
      * @param entityId The id of the entity to update
      * @param path The path the entity traverses.
      */
-    move(entityId: number, path: Position[]) {
+    move(entityId: string, path: Position[]) {
         if (path.length < 1)
             return
 
@@ -211,35 +211,29 @@ export class VelvetDawnMap {
      * @param state The latest state of the game given by the server.
      */
     updateState(state: GameState) {
-        // A buffer to store all entities (new and existing)
-        const newMapEntities: { [key: string]: UnitEntity } = {}
+        // Update / create updates entities
+        state.unitChanges.updates.forEach(entity => {
+            let currentInstance = this.units[entity.instanceId];
 
-        // Loop through all server entities checking if it's new or just
-        //  needs to be updated
-        Object.keys(state.entities).forEach(entityId => {
-            const serverEntity = state.entities[entityId]
-
-            // Create or get entity by id
-            let unitEntity = this.units.hasOwnProperty(entityId)
-                ? this.units[entityId]
-                : new UnitEntity(serverEntity.id, serverEntity.entity, serverEntity.player);
+            // Remove current instant from current position
+            if (currentInstance) {
+                const key = VelvetDawnMap.hashCoordinate(currentInstance.getPosition())
+                delete this.unitInstanceMap[key]
+            }
+            else {
+                currentInstance = new UnitEntity(entity.instanceId, entity.unit, entity.player);
+            }
+            currentInstance.setPosition(entity.position)
 
             // Update the entity and entity map position
-            this.units[entityId] = unitEntity
-            newMapEntities[VelvetDawnMap.hashCoordinate(serverEntity.position)] = unitEntity
-            unitEntity.setPosition(serverEntity.position)
+            this.units[entity.instanceId] = currentInstance
+            this.unitInstanceMap[VelvetDawnMap.hashCoordinate(entity.position)] = currentInstance;
         });
 
-        // Replace the instance map with the new one
-        this.unitInstanceMap = newMapEntities;
-
         // Clear up old units if they've been removed
-        Object.keys(this.units).forEach(entityId => {
-            if (!state.entities.hasOwnProperty(entityId)) {
-                const unit = this.units[entityId]
-                delete this.units[entityId]
-                delete this.unitInstanceMap[VelvetDawnMap.hashCoordinate(unit.getPosition())]
-            }
+        state.unitChanges.removed.forEach(removed => {
+            delete this.units[removed.instanceId]
+            delete this.unitInstanceMap[VelvetDawnMap.hashCoordinate(removed.position)]
         })
 
         state.attrChanges.forEach((attrUpdate) => {

@@ -8,22 +8,22 @@ class TestConditionalCount(BaseTest):
 
     def test_conditional_count(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(15, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
 
             conditional_equals = velvet_dawn.mechanics.conditionals.get_conditional(
-                "0", {"count": "units", "equals": 3})
+                "0", {"count": "units", "equals": 4})
             conditional_not_equals = velvet_dawn.mechanics.conditionals.get_conditional(
-                "0", {"count": "units", "ne": 3})
+                "0", {"count": "units", "ne": 4})
             conditional_less_than = velvet_dawn.mechanics.conditionals.get_conditional(
-                "0", {"count": "units", "lt": 3})
+                "0", {"count": "units", "lt": 4})
             conditional_less_than_equals = velvet_dawn.mechanics.conditionals.get_conditional(
-                "0", {"count": "units", "lte": 3})
+                "0", {"count": "units", "lte": 4})
             conditional_greater_than = velvet_dawn.mechanics.conditionals.get_conditional(
-                "0", {"count": "units", "gt": 3})
+                "0", {"count": "units", "gt": 4})
             conditional_greater_than_equals = velvet_dawn.mechanics.conditionals.get_conditional(
-                "0", {"count": "units", "gte": 3})
+                "0", {"count": "units", "gte": 4})
 
             # cant compare tag on attribute
             with self.assertRaises(errors.ValidationError):

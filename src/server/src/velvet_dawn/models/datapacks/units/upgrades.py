@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import velvet_dawn.mechanics.conditionals
 from velvet_dawn import errors
-from velvet_dawn.dao.models import UnitInstance
+from velvet_dawn.db.instances import UnitInstance
 from velvet_dawn.logger import logger
 from velvet_dawn.mechanics.actions import Action
 from velvet_dawn.mechanics.conditionals.conditional import Conditional

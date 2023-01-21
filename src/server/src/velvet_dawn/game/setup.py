@@ -2,14 +2,10 @@ from typing import List
 
 import velvet_dawn
 from velvet_dawn.config import Config
-from velvet_dawn.dao import db
-from velvet_dawn.dao.models import UnitInstance
 from velvet_dawn import datapacks, errors
+from velvet_dawn.db.instances import UnitInstance
 from velvet_dawn.models.game_setup import GameSetup
 from velvet_dawn.models.phase import Phase
-
-
-# TODO Add testing to
 
 
 """ velvet_dawn.game.setup
@@ -40,7 +36,7 @@ def get_setup(player: str):
 
     # calculate remaining players
     placed_commander, remaining_units = False, {x: units[x] for x in units}
-    player_entities = db.session.query(UnitInstance).where(UnitInstance.player == player).all()
+    player_entities = velvet_dawn.db.units.get_all_player_units(player)
     for entity in player_entities:
         if entity.entity_id in commander_entities:
             placed_commander = True
@@ -109,20 +105,12 @@ def place_entity(player: str, entity_id: str, x: int, y: int, config: Config):
 
     # Finally, add the entity to the db
     entity_definition = datapacks.entities[entity_id]
-    entity = UnitInstance(
-        x=x,
-        y=y,
-        player=player,
-        entity_id=entity_id,
-        commander=entity_definition.commander
+    return velvet_dawn.db.units.spawn(
+        entity_definition,
+        player,
+        x,
+        y
     )
-    db.session.add(entity)
-    db.session.commit()
-    entity_definition.attributes.save_to_db(entity)
-    entity_definition.tags.save_to_db(entity)
-
-    # Trigger on spawn
-    entity_definition.triggers.on_spawn(entity)
 
 
 def remove_entity(player_id: str, x: int, y: int):
@@ -139,24 +127,21 @@ def remove_entity(player_id: str, x: int, y: int):
     if velvet_dawn.game.phase.get_phase() != Phase.Setup:
         raise errors.ValidationError("Game setup may only be changed during game setup")
 
-    entities = db.session.query(UnitInstance).where(
-        UnitInstance.player == player_id,
-        UnitInstance.x == x,
-        UnitInstance.y == y
-    ).all()
-
-    if not entities:
+    units = [
+        x for x in velvet_dawn.db.units.get_units_at_positions(x, y)
+        if x.player == player_id
+    ]
+    if not units:
         raise errors.ValidationError("No entity for you to remove here.")
 
-    for entity in entities:
-        db.session.delete(entity)
-    db.session.commit()
+    for unit in units:
+        velvet_dawn.db.units.remove(unit)
 
 
 def validate_player_setups():
     """ This function checks all players have placed their commands """
     for player in velvet_dawn.players.list(exclude_spectators=True):
-        player_entities: List[UnitInstance] = db.session.query(UnitInstance).where(UnitInstance.player == player.name).all()
+        player_entities: List[UnitInstance] = velvet_dawn.db.units.get_all_player_units(player.name)
 
         player_has_commander = False
         for item in player_entities:

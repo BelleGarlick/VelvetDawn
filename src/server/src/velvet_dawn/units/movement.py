@@ -5,9 +5,10 @@ from velvet_dawn import errors
 import velvet_dawn.map.neighbours
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
+from velvet_dawn.db.instances import UnitInstance
 from velvet_dawn.models.phase import Phase
 from velvet_dawn.models.coordinate import Coordinate
-from velvet_dawn.dao.models import Player, UnitInstance, TileInstance
+from velvet_dawn.dao.models import Player, TileInstance
 
 
 def get_remaining_moves(unit: UnitInstance):
@@ -31,7 +32,7 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
     if velvet_dawn.game.turns.get_active_turn(Phase.GAME) != player.team:
         raise errors.InvalidTurnError()
 
-    entity = velvet_dawn.units.get_unit_by_id(entity_pk)
+    entity = velvet_dawn.db.units.get_unit_by_instance_id(entity_pk)
     if entity is None:
         raise errors.ItemNotFoundError(entity_pk)
 
@@ -46,17 +47,16 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
 
     # Update the entity to the new position based on the path and the remaining moves
     entity.set_attribute("movement.remaining", remaining_moves)
-    db.session.query(UnitInstance).where(UnitInstance.id == entity.id).update({
-        UnitInstance.x: path[-1]['x'],
-        UnitInstance.y: path[-1]['y']
-    })
+    instance = velvet_dawn.db.units.move(entity, path[-1]['x'], path[-1]['y'])
     db.session.commit()
 
     # Run enter movement triggers
     trigger_on_enter_actions(
-        velvet_dawn.units.get_unit_at_position(path[-1]['x'], path[-1]['y']),
-        velvet_dawn.map.get_tile(path[-1]['x'], path[-1]['y'])
+        instance,
+        velvet_dawn.map.get_tile(instance.tile_x, instance.tile_y)
     )
+
+    return instance
 
 
 def _validate_entity_traversing_path(entity: UnitInstance, path: List[Dict[str, int]], config: Config) -> int:

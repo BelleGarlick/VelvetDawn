@@ -1,32 +1,20 @@
-from typing import List, Optional
-
-from velvet_dawn.dao import db
-from velvet_dawn.dao.models import UnitInstance
+from typing import List
+import velvet_dawn
 from . import movement, upgrades, abilities
 
-
-# TODO Test this
-
-
-def get_unit(unit_id: str):
-    return db.session.query(UnitInstance).where(UnitInstance.entity_id == unit_id).one_or_none()
-
-
-def get_unit_by_id(unit_id: int) -> Optional[UnitInstance]:
-    return db.session.query(UnitInstance).where(UnitInstance.id == unit_id).one_or_none()
-
-
-def get_unit_at_position(x: int, y: int) -> Optional[UnitInstance]:
-    return db.session.query(UnitInstance).where(UnitInstance.x == x, UnitInstance.y == y).one_or_none()
+from ..db.instances import UnitInstance
 
 
 def list(player: str = None, commander_only=False) -> List[UnitInstance]:
-    query = db.session.query(UnitInstance)
-
     if player:
-        query = query.where(UnitInstance.player == player)
+        units = velvet_dawn.db.units.get_all_player_units(player)
+    else:
+        units = velvet_dawn.db.units.get_all_units()
 
     if commander_only:
-        query = query.where(UnitInstance.commander == True)
+        return [
+            unit for unit in units
+            if velvet_dawn.datapacks.entities[unit.entity_id].commander
+        ]
 
-    return query.all()
+    return units

@@ -13,7 +13,7 @@ class TestUnitAbilities(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(6, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(6, 0)[0]
             abilities = velvet_dawn.datapacks.entities[unit.entity_id].abilities.abilities
 
             # Unit not found raised
@@ -49,7 +49,7 @@ class TestUnitAbilities(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(6, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(6, 0)[0]
             abilities_list = velvet_dawn.datapacks.entities[unit.entity_id].abilities.abilities
 
             abilities = velvet_dawn.units.abilities.get_unit_ability_updates(unit.id)

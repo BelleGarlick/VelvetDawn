@@ -2,8 +2,8 @@ from typing import Dict, List, Union
 
 import velvet_dawn
 from velvet_dawn import errors
-from velvet_dawn.dao.models import UnitInstance, TileInstance
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.dao.models import TileInstance
+from velvet_dawn.db.instances import UnitInstance, WorldInstance
 from velvet_dawn.mechanics.actions.action import Action
 
 

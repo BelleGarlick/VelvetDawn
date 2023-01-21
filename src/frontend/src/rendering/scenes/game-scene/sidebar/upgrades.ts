@@ -10,7 +10,7 @@ export class UnitUpgrades {
     public unitUpgradeButtons: { [upgradeId: string]: ActionButton } = {}
     private paginatedButtons = new PaginatedButtons();
 
-    setEntity(instanceId: number, uniDefinition: UnitDefinition) {
+    setEntity(instanceId: string, uniDefinition: UnitDefinition) {
         this.paginatedButtons.resetTabPage()
         this.unitUpgradeButtons = {};
         this.available = undefined

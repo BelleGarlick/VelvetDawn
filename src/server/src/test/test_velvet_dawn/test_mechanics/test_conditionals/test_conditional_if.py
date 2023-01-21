@@ -2,17 +2,15 @@ import velvet_dawn
 from test.base_test import BaseTest
 from velvet_dawn import errors
 from velvet_dawn.dao import app
-from velvet_dawn.mechanics.conditionals import ConditionalStandard
-from velvet_dawn.mechanics.conditionals.conditional import Comparison
 
 
 class TestConditionalIf(BaseTest):
 
     def test_conditional_if(self):
         with app.app_context():
-            self.setup_game()
+            self.prepare_game()
 
-            unit = velvet_dawn.units.get_unit_at_position(15, 0)
+            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
 
             conditional_equals = velvet_dawn.mechanics.conditionals.get_conditional(
                 "0", {"if": "self.testing", "equals": 5})

@@ -1,9 +1,8 @@
 from abc import ABC
 from typing import Union, List
 
-from velvet_dawn import errors
-from velvet_dawn.dao.models import UnitInstance, TileInstance
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.dao.models import TileInstance
+from velvet_dawn.db.instances import UnitInstance, WorldInstance
 from velvet_dawn.mechanics.conditionals.conditional import Conditional
 
 """ Abstract base action class

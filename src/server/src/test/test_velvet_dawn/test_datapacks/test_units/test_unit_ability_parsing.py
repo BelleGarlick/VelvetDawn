@@ -1,7 +1,6 @@
 import velvet_dawn.datapacks
 from test.base_test import BaseTest
 from velvet_dawn import errors
-from velvet_dawn.models import Attributes
 import velvet_dawn
 
 

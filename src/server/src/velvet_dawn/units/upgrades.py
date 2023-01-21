@@ -42,7 +42,7 @@ class UnitUpgradeData:
         }
 
 
-def upgrade_unit(player_name: str, unit_instance_id: int, upgrade_id: str):
+def upgrade_unit(player_name: str, unit_instance_id: str, upgrade_id: str):
     """ Verify upgrade a unit with the specified upgrade id
 
     Args:
@@ -50,7 +50,7 @@ def upgrade_unit(player_name: str, unit_instance_id: int, upgrade_id: str):
         unit_instance_id: The unit instance
         upgrade_id: The upgrade id
     """
-    instance = velvet_dawn.units.get_unit_by_id(unit_instance_id)
+    instance = velvet_dawn.db.units.get_unit_by_instance_id(unit_instance_id)
     if not instance:
         raise errors.ValidationError("Unit not found.")
 
@@ -97,12 +97,12 @@ def upgrade_unit(player_name: str, unit_instance_id: int, upgrade_id: str):
     upgrade.run(instance)
 
 
-def get_unit_upgrade_updates(unit_instance_id: int):
+def get_unit_upgrade_updates(unit_instance_id: str):
     """ Get the breakdown of upgrades that are hidden / disabled
      or already used """
     upgrades = UnitUpgradeData()
 
-    instance = velvet_dawn.units.get_unit_by_id(unit_instance_id)
+    instance = velvet_dawn.db.units.get_unit_by_instance_id(unit_instance_id)
     if not instance:
         return upgrades
 

@@ -4,11 +4,11 @@ from typing import List, Optional, Union
 import velvet_dawn
 from velvet_dawn import errors, constants
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import Player, UnitInstance, TileInstance
+from velvet_dawn.dao.models import Player, TileInstance
 
 
 # noinspection PyShadowingBuiltins
-from velvet_dawn.dao.models.world_instance import WorldInstance
+from velvet_dawn.db.instances import UnitInstance, WorldInstance
 
 
 def list(team: str = None, exclude_spectators: bool = False) -> List[Player]:

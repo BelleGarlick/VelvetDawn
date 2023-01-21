@@ -74,7 +74,7 @@ class TestUnitMovement(BaseTest):
                 {'x': first_pos['x'], 'y': first_pos['y']},
                 {'x': first_pos['x'], 'y': first_pos['y'] + 1},
             ], test_config)
-            unit = velvet_dawn.units.get_unit_by_id(entity.id)
+            unit = velvet_dawn.db.units.get_unit_by_instance_id(entity.id)
             self.assertEqual(2, unit.get_attribute("movement.remaining"))
 
             self.assertEqual(unit.x, first_pos['x'])
