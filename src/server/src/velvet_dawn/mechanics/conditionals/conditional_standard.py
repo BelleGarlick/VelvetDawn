@@ -1,7 +1,4 @@
-from typing import Union
-
-from velvet_dawn.dao.models import TileInstance
-from velvet_dawn.db.instances import UnitInstance, WorldInstance
+from velvet_dawn.db.instances import Instance
 from velvet_dawn.mechanics.conditionals.conditional import Conditional, Comparison
 
 
@@ -11,7 +8,7 @@ class ConditionalStandard(Conditional):
     def __init__(self):
         super().__init__(keyword="if")
 
-    def is_true(self, instance: Union[UnitInstance, TileInstance, WorldInstance]) -> bool:
+    def is_true(self, instance: Instance) -> bool:
         """ Compare the values in the selector """
         if self.function == Comparison.EQUALS:
             return self.selector.function_equals(instance, self.function_value.value(instance))

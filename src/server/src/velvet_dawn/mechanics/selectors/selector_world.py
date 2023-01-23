@@ -1,8 +1,7 @@
-from typing import Union, List
+from typing import List
 
-from velvet_dawn.dao.models import TileInstance
 from .selector import Selector
-from ...db.instances import UnitInstance, WorldInstance
+from ...db.instances import Instance, WorldInstance
 
 """ Selector 'world' allows the user to access the world object 
 in order to set/get attributes
@@ -20,6 +19,6 @@ class SelectorWorld(Selector):
     def new(self):
         return SelectorWorld()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[WorldInstance]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         # World is singleton so this will return the same instance
         return self.filters.filter(instance, [WorldInstance()])

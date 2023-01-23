@@ -3,6 +3,24 @@ from abc import ABC
 
 class Instance(ABC):
 
+    @property
+    def id(self):
+        raise NotImplementedError
+
+    @property
+    def entity_id(self):
+        raise NotImplementedError
+
+    @property
+    def player(self):
+        return None
+
+    def __hash__(self):
+        raise NotImplementedError
+
+    def __eq__(self, other):
+        return hash(self) == hash(other)
+
     def set_attribute(self, key, value):
         raise NotImplementedError
 

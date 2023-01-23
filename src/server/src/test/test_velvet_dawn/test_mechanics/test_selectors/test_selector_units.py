@@ -48,7 +48,7 @@ class TestUnitSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            tile = velvet_dawn.map.get_tile(5, 0)
+            tile = velvet_dawn.db.tiles.get_tile(5, 0)
 
             # Get selectors
             selector = selectors.get_selector(tile.tile_id, "unit")

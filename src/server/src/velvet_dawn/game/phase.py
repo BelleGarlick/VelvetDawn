@@ -34,7 +34,7 @@ def start_game_phase(config: Config):
     # Trigger game start
     for unit in velvet_dawn.units.list():
         velvet_dawn.datapacks.entities[unit.entity_id].triggers.on_game_start(unit)
-    for tile in velvet_dawn.map.list_tiles():
+    for tile in velvet_dawn.db.tiles.all():
         velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_game_start(tile)
     velvet_dawn.datapacks.world.triggers.on_game_start(WorldInstance())
 

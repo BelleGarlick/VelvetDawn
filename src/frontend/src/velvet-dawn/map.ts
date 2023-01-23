@@ -51,11 +51,13 @@ export class VelvetDawnMap {
             }
 
             this.tiles = mapDef.tiles.map((tile) => {
-                let tileEntity = new TileEntity(tile.id, tile.tileId, tile.position)
-                this.tilesById[tile.id] = tileEntity
+                let tileEntity = new TileEntity(tile.instanceId, tile.tile, tile.position)
+                this.tilesById[tile.instanceId] = tileEntity
                 this.map[tile.position.x][tile.position.y] = tileEntity;
                 return tileEntity
             })
+
+            console.log(this.tiles)
         })
     }
 
@@ -237,9 +239,9 @@ export class VelvetDawnMap {
         })
 
         state.attrChanges.forEach((attrUpdate) => {
-            if (attrUpdate.type === "tile")
+            if (attrUpdate.type === "tile") {
                 this.tilesById[attrUpdate.id].attributes[attrUpdate.attribute] = attrUpdate.value
-            else if (attrUpdate.type === "unit")
+            } else if (attrUpdate.type === "unit")
                 this.units[attrUpdate.id].attributes[attrUpdate.attribute] = attrUpdate.value
             else
                 console.error("Unknown attribute upgrade " + attrUpdate.type)

@@ -1,10 +1,10 @@
 import math
-from typing import Optional, List
 
 import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import KeyValues, Keys, TileInstance
+from velvet_dawn.dao.models import KeyValues, Keys
+from velvet_dawn.db.instances import TileInstance
 
 from velvet_dawn.map.creation import new
 from velvet_dawn.map.spawn import allocate_spawn_points, get_allocated_spawn_area, is_point_spawnable
@@ -27,9 +27,7 @@ def get(config: Config):
     return {
         "width": config.map_width,
         "height": config.map_height,
-        "tiles": [
-            x.json() for x in db.session.query(TileInstance).all()
-        ]
+        "tiles": [x.json() for x in velvet_dawn.db.tiles.all()]
     }
 
 
@@ -52,21 +50,11 @@ def is_traversable(x: int, y: int) -> bool:
     if velvet_dawn.db.units.get_units_at_positions(x, y):
         return False
 
-    db_tile = get_tile(x, y)
+    db_tile = velvet_dawn.db.tiles.get_tile(x, y)
     if not db_tile:
         return False
 
     return db_tile.get_attribute("movement.traversable", default=True)
-
-
-def list_tiles() -> List[TileInstance]:
-    return db.session.query(TileInstance).all()
-
-
-def get_tile(x, y) -> Optional[TileInstance]:
-    return db.session.query(TileInstance)\
-        .where(TileInstance.x == x, TileInstance.y == y)\
-        .one_or_none()
 
 
 def get_tile_movement_weight(tile: TileInstance):

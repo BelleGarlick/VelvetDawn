@@ -44,7 +44,7 @@ export class Combat {
         this.targetablePosition.clear()
     }
 
-    render(facade: RenderingFacade) {
+    render(facade: RenderingFacade, hoveredTilePosition: Position) {
         const { ctx, constants } = facade;
         this.targetablePosition.forEach(position => {
             const {
@@ -62,11 +62,31 @@ export class Combat {
             clipPoints.forEach(pos => ctx.lineTo(pos.x, pos.y))
             ctx.stroke()
 
-            ctx.globalAlpha = 0.15
+            ctx.globalAlpha = (hoveredTilePosition?.x === position.x && hoveredTilePosition?.y === position.y)
+                ? 0.3
+                : 0.15;
             ctx.fill()
             ctx.globalAlpha = 1
 
             ctx.closePath()
         })
+    }
+
+    isPointInRange(position: Position) {
+        let found = false;
+
+        this.targetablePosition.forEach(pos => {
+            if (pos.x === position.x && pos.y === position.y)
+                found = true
+        })
+
+        return found
+    }
+
+    attack(instanceId: string, position: Position) {
+        console.log("Attack this")
+        console.log(instanceId)
+        console.log(position)
+        // TODO Attack target
     }
 }

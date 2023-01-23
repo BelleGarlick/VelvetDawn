@@ -3,8 +3,7 @@ from typing import Union, Optional
 
 import velvet_dawn.mechanics.selectors
 from velvet_dawn import errors
-from velvet_dawn.dao.models import TileInstance
-from velvet_dawn.db.instances import UnitInstance, WorldInstance
+from velvet_dawn.db.instances import Instance
 from velvet_dawn.mechanics.actions.action import Action
 from velvet_dawn.mechanics.function_value import FunctionValue
 from velvet_dawn.mechanics.selectors import Selector
@@ -89,7 +88,7 @@ class ActionModify(Action):
 
         return action
 
-    def run(self, instance: Union[TileInstance, UnitInstance, WorldInstance]):
+    def run(self, instance: Instance):
         """ Execute the attribute """
         if self.function == ActionModifierFunction.SET:
             self.selector.function_set(instance, self.function_value.value(instance))

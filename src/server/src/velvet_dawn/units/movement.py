@@ -5,10 +5,10 @@ from velvet_dawn import errors
 import velvet_dawn.map.neighbours
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
-from velvet_dawn.db.instances import UnitInstance
+from velvet_dawn.db.instances import UnitInstance, TileInstance
 from velvet_dawn.models.phase import Phase
 from velvet_dawn.models.coordinate import Coordinate
-from velvet_dawn.dao.models import Player, TileInstance
+from velvet_dawn.dao.models import Player
 
 
 def get_remaining_moves(unit: UnitInstance):
@@ -17,13 +17,13 @@ def get_remaining_moves(unit: UnitInstance):
     return unit.get_attribute("movement.remaining", default=0)
 
 
-def move(player: Player, entity_pk: int, path: List[dict], config: Config):
+def move(player: Player, entity_pk: str, path: List[dict], config: Config):
     """ Move an entity through a path
 
     Args:
         player: The player moving the entity
         entity_pk: The db instance id of the entity
-        path: List of {x, y} positions the entity moves, starting with it's current pos
+        path: List of {x, y} positions the entity moves, starting with its current pos
         config: The came config
     """
     if velvet_dawn.game.phase.get_phase() != Phase.GAME:
@@ -43,7 +43,7 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
     remaining_moves = _validate_entity_traversing_path(entity, path, config)
 
     # Run leave movement triggers
-    trigger_on_leave_actions(entity, velvet_dawn.map.get_tile(entity.x, entity.y))
+    trigger_on_leave_actions(entity, velvet_dawn.db.tiles.get_tile(entity.x, entity.y))
 
     # Update the entity to the new position based on the path and the remaining moves
     entity.set_attribute("movement.remaining", remaining_moves)
@@ -53,7 +53,7 @@ def move(player: Player, entity_pk: int, path: List[dict], config: Config):
     # Run enter movement triggers
     trigger_on_enter_actions(
         instance,
-        velvet_dawn.map.get_tile(instance.tile_x, instance.tile_y)
+        velvet_dawn.db.tiles.get_tile(instance.tile_x, instance.tile_y)
     )
 
     return instance
@@ -74,7 +74,7 @@ def _validate_entity_traversing_path(entity: UnitInstance, path: List[Dict[str, 
     Raises:
         Exception if the path is invalid
     """
-    tiles = [velvet_dawn.map.get_tile(point['x'], point['y']) for point in path]
+    tiles = [velvet_dawn.db.tiles.get_tile(point['x'], point['y']) for point in path]
     remaining_moves = get_remaining_moves(entity)
 
     if tiles[0].x != entity.x or tiles[0].y != entity.y:
@@ -85,8 +85,10 @@ def _validate_entity_traversing_path(entity: UnitInstance, path: List[Dict[str, 
             raise errors.EntityMovementErrorInvalidItem()
 
         # Check if the previous tile is a neighbour
-        if i > 0 and tiles[i - 1] not in velvet_dawn.map.neighbours.get_neighbours(Coordinate(tile.x, tile.y), config):
-            raise errors.EntityMovementErrorNotNeighbours(i + 1)
+        if i > 0:
+            prev_tile = tiles[i - 1]
+            if Coordinate(prev_tile.x, prev_tile.y) not in velvet_dawn.map.neighbours.get_neighbours(Coordinate(tile.x, tile.y), config):
+                raise errors.EntityMovementErrorNotNeighbours(i + 1)
 
         # If the player already exists in this tile then we don't need to
         # check if it's valid or decrement the remaining moves

@@ -1,6 +1,6 @@
 from typing import Dict
 
-import velvet_dawn.db.instance as db
+import velvet_dawn.db.gateway as db
 
 
 """ This file writes the number of allowed units in the 

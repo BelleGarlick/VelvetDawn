@@ -1,8 +1,7 @@
-from typing import Union, List
+from typing import List
 
-from velvet_dawn.dao.models import TileInstance
 from .selector import Selector
-from ...db.instances import UnitInstance, WorldInstance
+from ...db.instances import Instance
 
 """ Selector 'self' modifies what ever is calling it
 
@@ -29,5 +28,5 @@ class SelectorSelf(Selector):
     def new(self):
         return SelectorSelf()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[Union[UnitInstance, TileInstance, WorldInstance]]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         return self.filters.filter(instance, [instance])

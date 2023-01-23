@@ -64,7 +64,7 @@ class BaseTest(unittest.TestCase, ABC):
             velvet_dawn.db.units.move(instance, 5, 2)
 
     def setUp(self) -> None:
-        velvet_dawn.db.instance.clear()
+        velvet_dawn.db.gateway.clear()
         with app.app_context():
             db.drop_all()
             db.create_all()

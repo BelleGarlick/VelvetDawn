@@ -5,7 +5,6 @@ from test.base_test import BaseTest
 from velvet_dawn import errors
 from velvet_dawn.config import Config
 from velvet_dawn.dao import app, db
-from velvet_dawn.dao.models import TileInstance
 from velvet_dawn.models import Phase
 
 
@@ -59,7 +58,7 @@ class TestUnitMovement(BaseTest):
             velvet_dawn.game.turns.begin_next_turn(test_config)
 
             with self.assertRaises(errors.ItemNotFoundError):
-                velvet_dawn.units.movement.move(player1, -1, [
+                velvet_dawn.units.movement.move(player1, "-1", [
                     {'x': first_pos['x'], 'y': test_config.map_height - 1},
                     {'x': first_pos['x'], 'y': test_config.map_height - 2},
                 ], test_config)
@@ -99,11 +98,8 @@ class TestUnitMovement(BaseTest):
                 velvet_dawn.units.movement._validate_entity_traversing_path(entity, [first_pos, {'x': 0, 'y': 0}], test_config)
 
             # Test unknown tile error
-            tile = velvet_dawn.map.get_tile(first_pos['x'] - 1, first_pos['y'])
-            db.session.query(TileInstance)\
-                .where(TileInstance.x == tile.x, TileInstance.y == tile.y)\
-                .update({TileInstance.tile_id: "unknown_tile"})
-            db.session.commit()
+            tile = velvet_dawn.db.tiles.get_tile(first_pos['x'] - 1, first_pos['y'])
+            velvet_dawn.db.tiles.set_tile(tile.x, tile.y, "unknown_tile")
             with self.assertRaises(errors.UnknownTile):
                 velvet_dawn.units.movement._validate_entity_traversing_path(entity, [
                     first_pos,
@@ -111,7 +107,7 @@ class TestUnitMovement(BaseTest):
                 ], test_config)
 
             # Test tile not traversable
-            tile = velvet_dawn.map.get_tile(first_pos['x'] + 1, first_pos['y'])
+            tile = velvet_dawn.db.tiles.get_tile(first_pos['x'] + 1, first_pos['y'])
             tile.set_attribute("movement.traversable", False)
             self.assertFalse(tile.get_attribute("movement.traversable"))
             with self.assertRaises(errors.EntityMovementErrorTileNotTraversable):

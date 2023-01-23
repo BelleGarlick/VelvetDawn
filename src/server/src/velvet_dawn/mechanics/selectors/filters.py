@@ -1,10 +1,9 @@
-from typing import List, Union, Optional
+from typing import List, Optional
 
 import velvet_dawn
 from velvet_dawn import errors
 
-from velvet_dawn.dao.models import TileInstance
-from velvet_dawn.db.instances import UnitInstance, WorldInstance
+from velvet_dawn.db.instances import Instance, WorldInstance
 
 """ Filtering module
 
@@ -55,9 +54,9 @@ class Filters:
 
     def filter(
             self,
-            instance: Union[TileInstance, UnitInstance, WorldInstance],
-            items: List[Union[TileInstance, UnitInstance, WorldInstance]]
-    ) -> List[Union[TileInstance, UnitInstance, WorldInstance]]:
+            instance: Instance,
+            items: List[Instance]
+    ) -> List[Instance]:
         """ Filter the list of given instances from the perspective of the
         given filter.
 

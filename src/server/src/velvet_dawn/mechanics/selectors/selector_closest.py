@@ -1,9 +1,8 @@
 from typing import Union, List
 
 import velvet_dawn
-from velvet_dawn.dao.models import TileInstance
 from .selector import Selector
-from ...db.instances import UnitInstance, WorldInstance
+from ...db.instances import UnitInstance, WorldInstance, TileInstance, Instance
 
 """ Selector 'unit' references the unit in the current tile
 
@@ -12,7 +11,7 @@ Some examples:
 """
 
 
-def get_closest(to: Union[TileInstance, UnitInstance], items: List[Union[TileInstance, UnitInstance]]):
+def get_closest(to: Instance, items: List[Instance]):
     closest, best_distance = None, 0
 
     if isinstance(to, TileInstance) or isinstance(to, UnitInstance):
@@ -56,7 +55,7 @@ class SelectorClosestEnemy(Selector):
     def new(self):
         return SelectorClosestEnemy()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[UnitInstance]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         units = velvet_dawn.units.list()
         _, enemy_players = velvet_dawn.players.split_players_by_instance(instance)
         enemy_units = list(filter(lambda x: x.player in enemy_players, units))
@@ -74,7 +73,7 @@ class SelectorClosestFriendly(Selector):
     def new(self):
         return SelectorClosestFriendly()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance]) -> List[Union[UnitInstance, TileInstance]]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         units = velvet_dawn.units.list()
         friendly_players, _ = velvet_dawn.players.split_players_by_instance(instance)
         friendly_units = list(filter(lambda x: x.player in friendly_players, units))

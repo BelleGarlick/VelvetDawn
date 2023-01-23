@@ -29,7 +29,7 @@ export class GameScene extends Scene {
     render(facade: RenderingFacade): undefined {
         this.renderTiles(facade)
         this.pathPlanning.render(facade, this.hoveredTile?.position)
-        this.combat.render(facade)
+        this.combat.render(facade, this.hoveredTile?.position)
         this.renderUnits(facade)
 
         this.turnBanner.render(facade)
@@ -56,6 +56,12 @@ export class GameScene extends Scene {
 
                 const combatRange = this.selectedEntity.attributes['combat.range'] ?? 1
                 this.combat.getTargetablePositions(this.selectedEntity.getPosition(), combatRange)
+            }
+            else if (this.selectedEntity
+                && VelvetDawn.isPlayersTurn()
+                && this.selectedEntity.player === VelvetDawn.loginDetails.username
+                && this.combat.isPointInRange(this.clickedTile.position)) {
+                this.combat.attack(this.selectedEntity.instanceId, this.clickedTile.position)
             }
             else if (mapEntity) {
                 this.selectedEntity = mapEntity;

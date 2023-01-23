@@ -1,9 +1,8 @@
-from typing import Union, List
+from typing import List
 
 import velvet_dawn
-from velvet_dawn.dao.models import TileInstance
 from .selector import Selector
-from ...db.instances import UnitInstance, WorldInstance
+from ...db.instances import UnitInstance, TileInstance, Instance
 
 """ Units selectors, allow the user to get the units in the game """
 
@@ -17,7 +16,7 @@ class SelectorUnit(Selector):
     def new(self):
         return SelectorUnit()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]):
+    def get_selection(self, instance: Instance):
         """ Get the unit in the same position as the given instance """
         if isinstance(instance, UnitInstance):
             return self.filters.filter(instance, [instance])
@@ -39,10 +38,7 @@ class SelectorUnits(Selector):
     def new(self):
         return SelectorUnits()
 
-    def get_selection(
-            self,
-            instance: Union[TileInstance, UnitInstance, WorldInstance]
-    ) -> List[UnitInstance]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         """ Return all units """
         return self.filters.filter(instance, velvet_dawn.units.list())
 
@@ -57,10 +53,7 @@ class SelectorEnemies(Selector):
     def new(self):
         return SelectorEnemies()
 
-    def get_selection(
-            self,
-            instance: Union[TileInstance, UnitInstance, WorldInstance]
-    ) -> List[UnitInstance]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         """ Get the list of selectors who are not on the same team / who's turn it isn't """
         units = velvet_dawn.units.list()
 
@@ -80,10 +73,7 @@ class SelectorFriendlies(Selector):
     def new(self):
         return SelectorFriendlies()
 
-    def get_selection(
-            self,
-            instance: Union[TileInstance, UnitInstance, WorldInstance]
-    ) -> List[UnitInstance]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         """ Get the list of selectors who are on the same team / who's turn it is """
         units = velvet_dawn.units.list()
 

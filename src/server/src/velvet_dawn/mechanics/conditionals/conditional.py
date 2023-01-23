@@ -3,8 +3,7 @@ from typing import Optional, Union
 
 import velvet_dawn.validations
 from velvet_dawn import errors
-from velvet_dawn.dao.models import TileInstance
-from velvet_dawn.db.instances import UnitInstance, WorldInstance
+from velvet_dawn.db.instances import Instance
 from velvet_dawn.mechanics.function_value import FunctionValue
 from velvet_dawn.mechanics.selectors import Selector
 
@@ -86,6 +85,6 @@ class Conditional:
 
         return self
 
-    def is_true(self, instance: Union[UnitInstance, TileInstance, WorldInstance]) -> bool:
+    def is_true(self, instance: Instance) -> bool:
         """ Call the conditional function """
         raise NotImplementedError()

@@ -139,6 +139,8 @@ def begin_next_turn(config: Config):
     if current_turn: _trigger_on_turn_end_actions(current_turn)
     else: current_turn = teams[-1].team_id
 
+    velvet_dawn.db.gateway.save()
+
     new_team_turn = None
     for i, team in enumerate(teams):
         if team.team_id == current_turn:
@@ -159,14 +161,12 @@ def begin_next_turn(config: Config):
 
     _update_turn_start_time()
 
-    velvet_dawn.db.instance.save()
-
 
 def _trigger_on_round_begin_actions():
     """ Trigger all entity/tile round being actions """
     for unit in velvet_dawn.units.list():
         velvet_dawn.datapacks.entities[unit.entity_id].triggers.on_round(unit)
-    for tile in velvet_dawn.map.list_tiles():
+    for tile in velvet_dawn.db.tiles.all():
         velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_round(tile)
     velvet_dawn.datapacks.world.triggers.on_round(WorldInstance())
 
@@ -188,7 +188,7 @@ def _trigger_on_turn_begin_actions(new_team_turn: str):
         if unit.player in friendly_players: entity_definition.triggers.on_friendly_turn(unit)
         if unit.player in enemy_players: entity_definition.triggers.on_enemy_turn(unit)
 
-    for tile in velvet_dawn.map.list_tiles():
+    for tile in velvet_dawn.db.tiles.all():
         velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_turn(tile)
     velvet_dawn.datapacks.world.triggers.on_turn(WorldInstance())
 
@@ -210,7 +210,7 @@ def _trigger_on_turn_end_actions(old_team_turn):
         if unit.player in friendly_players: entity_definition.triggers.on_friendly_turn_end(unit)
         if unit.player in enemy_players: entity_definition.triggers.on_enemy_turn_end(unit)
 
-    for tile in velvet_dawn.map.list_tiles():
+    for tile in velvet_dawn.db.tiles.all():
         velvet_dawn.datapacks.tiles[tile.tile_id].triggers.on_turn_end(tile)
     velvet_dawn.datapacks.world.triggers.on_turn_end(WorldInstance())
 

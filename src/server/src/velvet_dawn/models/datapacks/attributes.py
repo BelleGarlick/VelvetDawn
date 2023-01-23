@@ -4,7 +4,7 @@ from typing import Dict, Optional, Union
 import velvet_dawn
 from velvet_dawn import errors
 from velvet_dawn.db.instances import UnitInstance
-from velvet_dawn.dao.models import TileInstance
+from velvet_dawn.db.instances.tile_instance import TileInstance
 from velvet_dawn.logger import logger
 
 

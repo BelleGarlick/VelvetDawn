@@ -12,7 +12,7 @@ class TestTileSelectors(BaseTest):
             self.prepare_game()
 
             unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
-            tile = velvet_dawn.map.get_tile(5, 0)
+            tile = velvet_dawn.db.tiles.get_tile(5, 0)
 
             selector = selectors.get_selector(unit.entity_id, "tile")
             selector_tiles = selectors.get_selector(unit.entity_id, "tiles")

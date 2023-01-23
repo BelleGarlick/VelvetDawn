@@ -1,4 +1,4 @@
-import velvet_dawn.db.instance as db
+import velvet_dawn.db.gateway as db
 
 
 """ Tags interface with the dao

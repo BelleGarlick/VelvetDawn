@@ -1,8 +1,7 @@
 from abc import ABC
 from typing import Union, List
 
-from velvet_dawn.dao.models import TileInstance
-from velvet_dawn.db.instances import UnitInstance, WorldInstance
+from velvet_dawn.db.instances import Instance
 from velvet_dawn.mechanics.conditionals.conditional import Conditional
 
 """ Abstract base action class
@@ -21,11 +20,11 @@ class Action(ABC):
         """ Parse the dict defined in the data-packs """
         pass
 
-    def run(self, instance: Union[TileInstance, UnitInstance, WorldInstance]):
+    def run(self, instance: Instance):
         """ Execute the action """
         raise NotImplementedError
 
-    def can_run(self, instance: Union[TileInstance, UnitInstance, WorldInstance]):
+    def can_run(self, instance: Instance):
         """ Test if the action can run """
         for condition in self.conditions:
             if not condition.is_true(instance):

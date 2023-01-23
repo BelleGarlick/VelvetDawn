@@ -1,8 +1,6 @@
 import {PathPlanningNode, VelvetDawnMap} from "../../../velvet-dawn/map";
 import {Position} from "models";
 import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
-import {Perspective} from "../../perspective";
-import {RenderingConstants} from "../scene";
 import {RenderingFacade} from "../../facade";
 
 

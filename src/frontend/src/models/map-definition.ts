@@ -1,8 +1,8 @@
 
 export interface TileInstance {
-    id: string
+    instanceId: string
 
-    tileId: string
+    tile: string
 
     position: {
         x: number

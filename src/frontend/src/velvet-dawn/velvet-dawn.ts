@@ -42,7 +42,8 @@ export class DebugOptions {
         ctx.font = "40px arial";
         ctx.fillText(`Render Times: ${this.lastRenderTime} ${renderRate} ${framesPerSecond}`, 10, constants.height - 10)
         ctx.fillText(`Attribute updates: ${state.attrChanges.length}`, 10, constants.height - 60)
-        ctx.fillText(`Ping: ${this.pingTime}`, 10, constants.height - 110)
+        ctx.fillText(`Entity updates: ${state.unitChanges.updates.length + state.unitChanges.removed.length}`, 10, constants.height - 110)
+        ctx.fillText(`Ping: ${this.pingTime}`, 10, constants.height - 160)
     }
 
     public getLastRenderTime() {
@@ -86,22 +87,18 @@ export class VelvetDawn {
 
         return Promise.all([
             VelvetDawn.datapacks.init(),
-            VelvetDawn.map.init(),
-            VelvetDawn.refreshGameState()
-        ])
+            VelvetDawn.map.init()
+        ]).then(() => {
+            Api.game.getState(true).then(VelvetDawn.setState)
+        })
     }
 
     static refreshGameState() {
-        if (this.firstLoad) {
-            this.firstLoad = false
-            return Api.game.getState(true).then(VelvetDawn.setState)
-        } else {
-            let ping = new Date().getTime()
-            return Api.game.getState(false).then(state => {
-                VelvetDawn.debug.addPingTime(new Date().getTime() - ping)
-                VelvetDawn.setState(state)
-            })
-        }
+        let ping = new Date().getTime()
+        return Api.game.getState(false).then(state => {
+            VelvetDawn.debug.addPingTime(new Date().getTime() - ping)
+            VelvetDawn.setState(state)
+        })
     }
 
     static getPlayer(): Player {

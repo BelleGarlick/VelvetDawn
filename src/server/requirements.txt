@@ -1,4 +1,4 @@
 Flask
 pathlib
 flask_sqlalchemy
-redis-py
+py-redis

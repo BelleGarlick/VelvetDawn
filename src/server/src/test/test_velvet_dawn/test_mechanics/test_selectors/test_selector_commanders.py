@@ -43,7 +43,7 @@ class TestLocalSelectors(BaseTest):
             self.prepare_game()
 
             player_a_commander = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
-            tile = velvet_dawn.map.get_tile(5, 0)
+            tile = velvet_dawn.db.tiles.get_tile(5, 0)
 
             selector = selectors.get_selector("0", "commander")
             selector_commanders = selectors.get_selector("0", "commanders")

@@ -1,9 +1,7 @@
 from abc import ABC
 from typing import List, Union, Optional
 
-from velvet_dawn.dao.models import TileInstance
-
-from velvet_dawn.db.instances import UnitInstance, WorldInstance
+from velvet_dawn.db.instances import Instance
 from velvet_dawn.mechanics.selectors.filters import Filters
 
 
@@ -37,17 +35,14 @@ class Selector(ABC):
 
         return new_copy
 
-    def get_selection(
-            self,
-            instance: Union[TileInstance, UnitInstance, WorldInstance]
-    ) -> List[Union[UnitInstance, TileInstance, WorldInstance]]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         raise NotImplementedError()
 
-    def get_chained_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[Union[UnitInstance, TileInstance, WorldInstance]]:
-        direct_selection = self.get_selection(instance)
+    def get_chained_selection(self, instance: Instance) -> List[Instance]:
+        direct_selection = set(self.get_selection(instance))
 
         if not self.chained_selector:
-            return direct_selection
+            return list(direct_selection)
 
         chained_selection = set()
         for item in direct_selection:
@@ -55,37 +50,35 @@ class Selector(ABC):
 
         return list(chained_selection)
 
-    def function_set(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+    def function_set(self, instance: Instance, value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
             item.set_attribute(self.attribute, value)
 
-    def function_add(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+    def function_add(self, instance: Instance, value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
-            print(item.get_attribute(self.attribute, default=0))
-            print(value)
             item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) + value)
 
-    def function_subtract(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+    def function_subtract(self, instance: Instance, value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
             item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) - value)
 
-    def function_reset(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+    def function_reset(self, instance: Instance, value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
             item.reset_attribute(self.attribute, value)
 
-    def function_multiply(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+    def function_multiply(self, instance: Instance, value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
             item.set_attribute(self.attribute, item.get_attribute(self.attribute, default=0) * value)
 
-    def function_add_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+    def function_add_tag(self, instance: Instance, value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
             item.add_tag(value)
 
-    def function_remove_tag(self, instance: Union[TileInstance, UnitInstance], value: Union[str, int, float]):
+    def function_remove_tag(self, instance: Instance, value: Union[str, int, float]):
         for item in self.get_chained_selection(instance):
             item.remove_tag(value)
 
-    def function_equals(self, instance: Union[TileInstance, UnitInstance], value):
+    def function_equals(self, instance: Instance, value):
         """ Compare if the given value is equal the selectors' id / attribute value """
         instances = self.get_chained_selection(instance)
         if not instances:
@@ -100,7 +93,7 @@ class Selector(ABC):
 
         return True
 
-    def function_less_than(self, instance: Union[TileInstance, UnitInstance], value):
+    def function_less_than(self, instance: Instance, value):
         """ Compare if the entities attribute is less than a given value """
         instances = self.get_chained_selection(instance)
         if not instances or not self.attribute:
@@ -112,7 +105,7 @@ class Selector(ABC):
 
         return True
 
-    def function_less_than_equals(self, instance: Union[TileInstance, UnitInstance], value):
+    def function_less_than_equals(self, instance: Instance, value):
         """ Compare if the entities attribute is less/equal than a given value """
         instances = self.get_chained_selection(instance)
         if not instances or not self.attribute:
@@ -124,7 +117,7 @@ class Selector(ABC):
 
         return True
 
-    def function_get_value(self, instance: Union[TileInstance, UnitInstance]):
+    def function_get_value(self, instance: Instance):
         """ This function effectively works to get the mean value of the data """
         instances = self.get_chained_selection(instance)
         n_instances = len(instances)
@@ -164,7 +157,7 @@ class Selector(ABC):
                 return sum(number_values) / len(number_values)
         return None
 
-    def function_has_tag(self, instance: Union[TileInstance, UnitInstance], value: str):
+    def function_has_tag(self, instance: Instance, value: str):
         """ Check if the selection has a given tag """
         instances = self.get_chained_selection(instance)
         if not instances:

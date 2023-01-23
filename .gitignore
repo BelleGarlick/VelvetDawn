@@ -11,3 +11,4 @@ Scripts/*
 pyvenv.cfg
 include/*
 var/*
+data.json

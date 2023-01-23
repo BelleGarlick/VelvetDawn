@@ -1,10 +1,8 @@
 from typing import Union
 
-import velvet_dawn
 from velvet_dawn import errors
-from velvet_dawn.dao.models import TileInstance
 from velvet_dawn.db.instances import UnitInstance
-import velvet_dawn.db.instance as instance
+from velvet_dawn.db.instances.tile_instance import TileInstance
 
 
 class Tags:
@@ -38,5 +36,3 @@ class Tags:
         """ Save the tags to the db, used when an entity spawns """
         for tag in self.tags:
             instance.add_tag(tag)
-
-        velvet_dawn.db.instance.save()

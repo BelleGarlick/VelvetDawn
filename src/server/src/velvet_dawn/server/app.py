@@ -13,6 +13,7 @@ from velvet_dawn.server.blueprints import (
 )
 from velvet_dawn.server.utils import api_wrapper, config
 
+
 app.register_blueprint(setup_blueprint, url_prefix="/setup")
 app.register_blueprint(turn_blueprint, url_prefix="/turns")
 app.register_blueprint(datapack_blueprint, url_prefix="/datapacks")
@@ -85,4 +86,5 @@ def load_app():
 
 if __name__ == "__main__":
     velvet_dawn.datapacks.init(config)
+    velvet_dawn.db.gateway.load()
     app.run("0.0.0.0", port=config.port, debug=os.environ.get("DEV") == "true")

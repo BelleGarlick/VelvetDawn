@@ -1,9 +1,8 @@
-from typing import Union, List
+from typing import List
 
 import velvet_dawn
-from velvet_dawn.dao.models import TileInstance
 from .selector import Selector
-from ...db.instances import UnitInstance, WorldInstance
+from ...db.instances import UnitInstance, Instance
 
 """ Selector 'commander' references to the commander of the given unit
 
@@ -21,7 +20,7 @@ class SelectorCommander(Selector):
     def new(self):
         return SelectorCommander()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]):
+    def get_selection(self, instance: Instance):
         if isinstance(instance, UnitInstance):
             commanders = velvet_dawn.units.list(commander_only=True)
             commanders = list(filter(lambda x: x.player == instance.player, commanders))
@@ -38,7 +37,7 @@ class SelectorCommanders(Selector):
     def new(self):
         return SelectorCommanders()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]):
+    def get_selection(self, instance: Instance):
         return self.filters.filter(instance, velvet_dawn.units.list(commander_only=True))
 
 
@@ -51,7 +50,7 @@ class SelectorFriendlyCommanders(Selector):
     def new(self):
         return SelectorFriendlyCommanders()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[UnitInstance]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         units = velvet_dawn.units.list(commander_only=True)
         friendly_players, _ = velvet_dawn.players.split_players_by_instance(instance)
         friendly_units = list(filter(lambda x: x.player in friendly_players, units))
@@ -68,7 +67,7 @@ class SelectorEnemyCommanders(Selector):
     def new(self):
         return SelectorEnemyCommanders()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[UnitInstance]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         units = velvet_dawn.units.list(commander_only=True)
         _, enemy_players = velvet_dawn.players.split_players_by_instance(instance)
         enemy_units = list(filter(lambda x: x.player in enemy_players, units))

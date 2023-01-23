@@ -1,7 +1,7 @@
 import json
 import time
 
-import velvet_dawn.db.instance as db
+import velvet_dawn.db.gateway as db
 import velvet_dawn
 
 """ Attributes interface with the dao
@@ -171,7 +171,7 @@ def get_full_attribute_list():
                 "value": unit_attributes[key]
             })
 
-    tiles = velvet_dawn.map.list_tiles()
+    tiles = velvet_dawn.db.tiles.all()
     for tile in tiles:
         tiles_attributes = db.hgetall(TILES_ATTRIBUTES.format(tile.id))
         for key in tiles_attributes:

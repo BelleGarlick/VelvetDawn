@@ -1,9 +1,8 @@
 from typing import Union, List
 
 import velvet_dawn
-from velvet_dawn.dao.models import TileInstance
 from .selector import Selector
-from ...db.instances import UnitInstance, WorldInstance
+from ...db.instances import Instance, TileInstance, UnitInstance, WorldInstance
 
 """ Selector 'tile' references the tile the current unit is in
 
@@ -21,12 +20,12 @@ class SelectorTile(Selector):
     def new(self):
         return SelectorTile()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[TileInstance]:
+    def get_selection(self, instance: Instance) -> List[Instance]:
         if isinstance(instance, TileInstance):
             return self.filters.filter(instance, [instance])
 
         if isinstance(instance, UnitInstance):
-            tile = velvet_dawn.map.get_tile(x=instance.x, y=instance.y)
+            tile = velvet_dawn.db.tiles.get_tile(x=instance.x, y=instance.y)
             if tile:
                 return self.filters.filter(instance, [tile])
 
@@ -42,5 +41,5 @@ class SelectorTiles(Selector):
     def new(self):
         return SelectorTiles()
 
-    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[TileInstance]:
-        return self.filters.filter(instance, velvet_dawn.map.list_tiles())
+    def get_selection(self, instance: Union[TileInstance, UnitInstance, WorldInstance]) -> List[Instance]:
+        return self.filters.filter(instance, velvet_dawn.db.tiles.all())

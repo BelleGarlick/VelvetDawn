@@ -15,15 +15,15 @@ jest.mock('api', () => {
                         width: 3,
                         height: 3,
                         tiles: [
-                            {id: 0, tileId: "test:grass", position: {x: 0, y: 0}, color: '#000000'},
-                            {id: 1, tileId: "test:void", position: {x: 0, y: 1}, color: '#000000'},
-                            {id: 2, tileId: "test:grass", position: {x: 0, y: 2}, color: '#000000'},
-                            {id: 3, tileId: "test:void", position: {x: 1, y: 0}, color: '#000000'},
-                            {id: 4, tileId: "test:wall", position: {x: 1, y: 1}, color: '#000000'},
-                            {id: 5, tileId: "test:grass", position: {x: 1, y: 2}, color: '#000000'},
-                            {id: 6, tileId: "test:grass", position: {x: 2, y: 0}, color: '#000000'},
-                            {id: 7, tileId: "test:grass", position: {x: 2, y: 1}, color: '#000000'},
-                            {id: 8, tileId: "test:grass", position: {x: 2, y: 2}, color: '#000000'},
+                            {instanceId: '0:0', tile: "test:grass", position: {x: 0, y: 0}, color: '#000000'},
+                            {instanceId: '0:1', tile: "test:void", position: {x: 0, y: 1}, color: '#000000'},
+                            {instanceId: '0:2', tile: "test:grass", position: {x: 0, y: 2}, color: '#000000'},
+                            {instanceId: '1:0', tile: "test:void", position: {x: 1, y: 0}, color: '#000000'},
+                            {instanceId: '1:1', tile: "test:wall", position: {x: 1, y: 1}, color: '#000000'},
+                            {instanceId: '1:2', tile: "test:grass", position: {x: 1, y: 2}, color: '#000000'},
+                            {instanceId: '2:0', tile: "test:grass", position: {x: 2, y: 0}, color: '#000000'},
+                            {instanceId: '2:1', tile: "test:grass", position: {x: 2, y: 1}, color: '#000000'},
+                            {instanceId: '2:2', tile: "test:grass", position: {x: 2, y: 2}, color: '#000000'},
                         ]
                     })
                 });
@@ -67,9 +67,9 @@ const setupMap = async (setupEntity: boolean): Promise<VelvetDawnMap> => {
                 removed: []
             },
             attrChanges: [
-                {id: "1", type: 'tile', attribute: "movement.weight", value: 3},
-                {id: "3", type: 'tile', attribute: "movement.weight", value: 3},
-                {id: "4", type: 'tile', attribute: "movement.traversable", value: false}
+                {id: "0:1", type: 'tile', attribute: "movement.weight", value: 3},
+                {id: "1:0", type: 'tile', attribute: "movement.weight", value: 3},
+                {id: "1:1", type: 'tile', attribute: "movement.traversable", value: false}
             ]
         })
 
@@ -84,7 +84,7 @@ describe("Test init", () => {
         const map = await setupMap(true);
         const tile = map.getTile({x: 0, y: 0})
 
-        expect(tile.instanceId).toBe(0)
+        expect(tile.instanceId).toBe("0:0")
         expect(tile.entityId).toBe("test:grass")
         expect(map.tiles.length).toBe(9)
     })
@@ -121,8 +121,8 @@ describe("Test update from state", () => {
 
         const unit = map.getUnit('0')
         expect(map.allUnits().length).toBe(1)
-        expect(unit.instanceId).toBe(0)
-        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe(0)
+        expect(unit.instanceId).toBe("0")
+        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe('0')
 
         map.updateState({
             ...VelvetDawn.getState(),
@@ -146,8 +146,8 @@ describe("Test update from state", () => {
         })
 
         expect(map.allUnits().length).toBe(2)
-        expect(map.getUnitAtPosition({x: 1, y: 0}).instanceId).toBe(0)
-        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe(1)
+        expect(map.getUnitAtPosition({x: 1, y: 0}).instanceId).toBe('0')
+        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe('1')
 
         map.updateState({
             ...VelvetDawn.getState(),
@@ -155,11 +155,11 @@ describe("Test update from state", () => {
                 updates: [
                     {...blankEntity, instanceId: "1", unit: "a", position: {x: 0, y: 0}}
                 ],
-                removed: []
+                removed: [{...blankEntity, instanceId: "1", unit: "a", position: {x: 1, y: 0}}]
             },
         })
 
-        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe(1)
+        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe('1')
         expect(map.getUnitAtPosition({x: 1, y: 0})).toBeUndefined()
         expect(map.allUnits().length).toBe(1)
     })
@@ -171,11 +171,11 @@ describe("Test move entity", () => {
 
         const unit = map.getUnit('0')
         expect(map.allUnits().length).toBe(1)
-        expect(unit.instanceId).toBe(0)
-        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe(0)
+        expect(unit.instanceId).toBe('0')
+        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe('0')
 
         map.move("0", [{x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2}])
-        expect(map.getUnitAtPosition({x: 2, y: 2}).instanceId).toBe(0)
+        expect(map.getUnitAtPosition({x: 2, y: 2}).instanceId).toBe('0')
         expect(unit.getPosition()).toStrictEqual({x: 2, y: 2})
     })
 })
@@ -187,8 +187,8 @@ describe("Test remove entity in setup", () => {
 
         const unit = map.getUnit('0')
         expect(map.allUnits().length).toBe(1)
-        expect(unit.instanceId).toBe(0)
-        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe(0)
+        expect(unit.instanceId).toBe('0')
+        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe('0')
 
         // Didn't remove as not in setup
         map.removeEntityDuringSetup({x: 0, y: 0})

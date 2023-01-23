@@ -3,7 +3,7 @@ import time
 import uuid
 from typing import Optional, List
 
-import velvet_dawn.db.instance as db
+import velvet_dawn.db.gateway as db
 import velvet_dawn.models
 from velvet_dawn import errors
 from velvet_dawn.db.instances import UnitInstance
@@ -127,7 +127,11 @@ def move(instance: UnitInstance, x: float, y: float) -> UnitInstance:
         string_data = json.dumps(current_instance.data)
         db.hset(ALL_UNITS, current_instance.instance_id, string_data)
         db.hset(UNITS_BY_PLAYER.format(current_instance.player), current_instance.instance_id, string_data)
-        db.hset(UNITS_BY_POSITION.format(current_instance.tile_x, current_instance.tile_y), current_instance.instance_id, string_data)
+        db.hset(
+            UNITS_BY_POSITION.format(current_instance.tile_x, current_instance.tile_y),
+            current_instance.instance_id,
+            string_data
+        )
         db.hset(UNITS_BY_ID.format(current_instance.entity_id), current_instance.instance_id, string_data)
 
         # Add updates
@@ -147,7 +151,10 @@ def remove(instance: UnitInstance):
     if current_instance:
         db.hdel(ALL_UNITS, current_instance.instance_id)
         db.hdel(UNITS_BY_PLAYER.format(current_instance.player), current_instance.instance_id)
-        db.hdel(UNITS_BY_POSITION.format(current_instance.tile_x, current_instance.tile_y), current_instance.instance_id)
+        db.hdel(
+            UNITS_BY_POSITION.format(current_instance.tile_x, current_instance.tile_y),
+            current_instance.instance_id
+        )
         db.hdel(UNITS_BY_ID.format(current_instance.entity_id), current_instance.instance_id)
 
         # Add to removed

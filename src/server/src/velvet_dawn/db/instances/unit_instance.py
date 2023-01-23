@@ -43,6 +43,9 @@ class UnitInstance(Instance):
     def player(self):
         return self.data['player']
 
+    def __hash__(self):
+        return hash(f"units#{self.instance_id}")
+
     def json(self):
         return {
             "instanceId": self.instance_id,

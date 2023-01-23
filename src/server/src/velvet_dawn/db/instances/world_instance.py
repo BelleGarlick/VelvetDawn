@@ -18,6 +18,17 @@ class WorldInstance(Instance):
             cls.instance = super(WorldInstance, cls).__new__(cls)
         return cls.instance
 
+    @property
+    def id(self):
+        return "world"
+
+    @property
+    def entity_id(self):
+        return "world"
+
+    def __hash__(self):
+        return hash("world")
+
     def set_attribute(self, key, value):
         velvet_dawn.db.attributes.set_world_attribute(key, value)
 

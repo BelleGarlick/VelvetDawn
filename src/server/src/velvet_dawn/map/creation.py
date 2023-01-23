@@ -3,11 +3,9 @@ import velvet_dawn.map.neighbours
 from typing import List, Dict, Set
 
 from velvet_dawn.config import Config
-from velvet_dawn.dao import db
 from velvet_dawn import datapacks
 from velvet_dawn.logger import logger
 from velvet_dawn.models.coordinate import Coordinate
-from velvet_dawn.dao.models import KeyValues, Keys, TileInstance
 
 
 # TODO Comment everything to then try and optimise it
@@ -43,32 +41,20 @@ def new(config: Config):
         next_cell = get_next_tile(unchecked_cells)
     logger.info("Completed.")
 
-    db.session.query(TileInstance).delete()
+    velvet_dawn.db.tiles.clear()
 
     # TODO Test that variants and colours are picked in test
-    tile_count = 0
-    tiles = []
     for col in range(len(map)):
         for row in range(len(map[0])):
             item = map[col][row].pop()
-            tiles.append(TileInstance(id=tile_count, x=col, y=row, tile_id=item))
-            tile_count += 1
 
-    db.session.bulk_save_objects(tiles)
-    db.session.merge(KeyValues(key=Keys.MAP_WIDTH, value=str(config.map_width)))
-    db.session.merge(KeyValues(key=Keys.MAP_HEIGHT, value=str(config.map_height)))
-    db.session.commit()
+            tile = velvet_dawn.db.tiles.set_tile(x=col, y=row, tile_id=item)
 
-    # Configure all tile attributes not that the tiles have been initiated
-    for db_tile in db.session.query(TileInstance).all():
-        tile = datapacks.tiles[db_tile.tile_id]
-        tile.attributes.set("texture.color", value=tile.textures.choose_color())
-        tile.attributes.set("texture.background", value=tile.textures.choose_image())
-
-        tile.attributes.save_to_db(db_tile)
-        tile.tags.save_to_db(db_tile)
-        
-    db.session.commit()
+            tile_def = datapacks.tiles[item]
+            tile_def.attributes.set("texture.color", value=tile_def.textures.choose_color())
+            tile_def.attributes.set("texture.background", value=tile_def.textures.choose_image())
+            tile_def.attributes.save_to_db(tile)
+            tile_def.tags.save_to_db(tile)
 
 
 def get_next_tile(unchecked_cells: List[Coordinate]):

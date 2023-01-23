@@ -13,7 +13,7 @@ units_blueprint = Blueprint('units_blueprint', __name__)
 @api_wrapper(return_state=True)
 def move_unit(user):
     try:
-        entity_pk = int(request.form.get("entity"))
+        entity_pk = request.form.get("entity")
         path = json.loads(request.form.get("path"))
     except Exception:
         raise errors.ValidationError(

@@ -28,6 +28,7 @@ def get_state(config: Config, user: str, full_state: bool = False):
             "updates": [x.json() for x in velvet_dawn.db.units.get_all_units()],
             "removed": []
         }
+
     else:
         unit_changes = velvet_dawn.db.units.get_updates()
         attribute_updates = velvet_dawn.db.attributes.get_attribute_updates()

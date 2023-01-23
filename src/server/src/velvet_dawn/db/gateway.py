@@ -1,5 +1,10 @@
+import json
+import os.path
+
 import redis
 from typing import Optional, List
+
+from velvet_dawn import errors
 from velvet_dawn.config import Config
 
 
@@ -30,14 +35,50 @@ def set_redis():
     pass
 
 
+def dump_data_json(data: dict):
+    exported_data = {}
+    for key in data:
+        if isinstance(data[key], list):
+            exported_data[key] = ["__list__"] + data[key]
+        elif isinstance(data[key], set):
+            exported_data[key] = ["__set__"] + list(data[key])
+        elif isinstance(data[key], dict):
+            exported_data[key] = dump_data_json(data[key])
+        else:
+            exported_data[key] = data[key]
+
+    return exported_data
+
+
+def parse_data_json(data: dict):
+    parsed_data = {}
+    for key in data:
+        if isinstance(data[key], list):
+            if data[key][0] == "__list__":
+                parsed_data[key] = data[key][1:]
+            elif data[key][0] == "__set__":
+                parsed_data[key] = set(data[key][1:])
+            else:
+                raise errors.ValidationError("Invalid json data. All lists must start with item '__list__' or '__set__'")
+        elif isinstance(data[key], dict):
+            parsed_data[key] = parse_data_json(data[key])
+        else:
+            parsed_data[key] = data[key]
+
+    return parsed_data
+
+
 def save():
-    # todo only save on begin turns and such
-    pass
+    # TODO Save into specific worlds
+    with open("data.json", "w+") as file:
+        file.write(json.dumps(dump_data_json(_data), indent=4))
 
 
 def load():
-    # todo
-    pass
+    global _data
+    if os.path.exists("data.json"):
+        with open("data.json") as file:
+            _data = parse_data_json(json.load(file))
 
 
 def set_value(key: str, value: str):
