@@ -1,6 +1,6 @@
 import dataclasses
 
-from base_test import BaseTest
+from test.base_test import BaseTest
 from velvet_dawn.map import get_distance
 
 

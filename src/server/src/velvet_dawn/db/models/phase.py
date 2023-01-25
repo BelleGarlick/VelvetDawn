@@ -6,3 +6,4 @@ class Phase(str, enum.Enum):
     Setup = "setup"
     GAME = "game"
     GAME_OVER = "over"
+

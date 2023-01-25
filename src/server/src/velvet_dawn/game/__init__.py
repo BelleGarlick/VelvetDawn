@@ -1,9 +1,9 @@
 import velvet_dawn.teams
 from velvet_dawn.config import Config
+from velvet_dawn.db.models import Phase
 
 from velvet_dawn.models.game_state import GameState
 from velvet_dawn.models.mode import Mode
-from velvet_dawn.models.phase import Phase
 from velvet_dawn.game import phase, turns, setup
 
 

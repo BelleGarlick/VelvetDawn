@@ -94,7 +94,7 @@ def split_players_by_instance(instance: Instance):
         friendly_players, enemy_players = velvet_dawn.players.get_friendly_enemy_players_breakdown(player.team)
 
     else:
-        team = velvet_dawn.game.turns.get_active_turn(velvet_dawn.game.phase.get_phase())
+        team = velvet_dawn.game.turns.get_active_turn()
         friendly_players = {player.name for player in velvet_dawn.players.list() if player.team == team}
         enemy_players = {player.name for player in velvet_dawn.players.list() if player.team != team}
 

@@ -3,6 +3,7 @@ from velvet_dawn.dao import app
 from test.base_test import BaseTest
 from velvet_dawn.db.instances import WorldInstance
 from velvet_dawn.mechanics import selectors
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class TestSelfSelectors(BaseTest):
@@ -11,7 +12,7 @@ class TestSelfSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
             tile = velvet_dawn.db.tiles.get_tile(5, 0)
 
             selector = selectors.get_selector(unit.entity_id, "self")

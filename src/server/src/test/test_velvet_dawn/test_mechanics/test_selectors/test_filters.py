@@ -3,6 +3,7 @@ from test.base_test import BaseTest
 from velvet_dawn.dao import app
 from velvet_dawn.db.instances import WorldInstance
 from velvet_dawn.mechanics import selectors
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class TestFilteredSelectors(BaseTest):
@@ -52,7 +53,7 @@ class TestFilteredSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
 
             selector_range_0 = selectors.get_selector(unit.entity_id, "tiles[range=0]")
             selector_range_1 = selectors.get_selector(unit.entity_id, "tiles[range=1]")
@@ -66,7 +67,7 @@ class TestFilteredSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
 
             selector_range_0 = selectors.get_selector(unit.entity_id, "tiles[min-range=0]")
             selector_range_1 = selectors.get_selector(unit.entity_id, "tiles[min-range=1]")
@@ -80,7 +81,7 @@ class TestFilteredSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
 
             selector_self = selectors.get_selector(unit.entity_id, "self[exclude-self]")
             selector_units = selectors.get_selector(unit.entity_id, "units[exclude-self]")

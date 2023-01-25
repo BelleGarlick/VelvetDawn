@@ -6,7 +6,7 @@ import velvet_dawn.map.neighbours
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
 from velvet_dawn.db.instances import UnitInstance, TileInstance
-from velvet_dawn.models.phase import Phase
+from velvet_dawn.db.models import Phase
 from velvet_dawn.models.coordinate import Coordinate
 from velvet_dawn.dao.models import Player
 
@@ -26,10 +26,10 @@ def move(player: Player, entity_pk: str, path: List[dict], config: Config):
         path: List of {x, y} positions the entity moves, starting with its current pos
         config: The came config
     """
-    if velvet_dawn.game.phase.get_phase() != Phase.GAME:
+    if velvet_dawn.db.key_values.get_phase() != Phase.GAME:
         raise errors.GamePhaseError("game")
 
-    if velvet_dawn.game.turns.get_active_turn(Phase.GAME) != player.team:
+    if velvet_dawn.game.turns.get_active_turn() != player.team:
         raise errors.InvalidTurnError()
 
     entity = velvet_dawn.db.units.get_unit_by_instance_id(entity_pk)
@@ -47,7 +47,7 @@ def move(player: Player, entity_pk: str, path: List[dict], config: Config):
 
     # Update the entity to the new position based on the path and the remaining moves
     entity.set_attribute("movement.remaining", remaining_moves)
-    instance = velvet_dawn.db.units.move(entity, path[-1]['x'], path[-1]['y'])
+    instance = velvet_dawn.db.units.move(entity, Coordinate(path[-1]['x'], path[-1]['y']))
     db.session.commit()
 
     # Run enter movement triggers

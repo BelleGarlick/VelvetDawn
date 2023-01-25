@@ -2,6 +2,7 @@ import velvet_dawn.units
 from test.base_test import BaseTest
 from velvet_dawn.dao import app
 from velvet_dawn.mechanics import selectors
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class TestChainedSelectors(BaseTest):
@@ -22,7 +23,7 @@ class TestChainedSelectors(BaseTest):
 
             selector = selectors.get_selector("0", "world>units>commander>tile.max.health.example")
 
-            tiles = selector.get_chained_selection(velvet_dawn.db.units.get_units_at_positions(5, 0)[0])
+            tiles = selector.get_chained_selection(velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0])
 
             # 3 units with two commanders each on 1 tile results in 2 tiles
             self.assertEqual(2, len(tiles))

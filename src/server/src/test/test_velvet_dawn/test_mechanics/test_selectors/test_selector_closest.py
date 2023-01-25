@@ -2,6 +2,7 @@ import velvet_dawn.units
 from velvet_dawn.dao import app
 from test.base_test import BaseTest
 from velvet_dawn.mechanics import selectors
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class TestSelectorsClosest(BaseTest):
@@ -19,7 +20,7 @@ class TestSelectorsClosest(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
 
             selector_closest_unit = selectors.get_selector("0", "closest")
             selector_closest_enemy = selectors.get_selector("0", "closest-enemy")

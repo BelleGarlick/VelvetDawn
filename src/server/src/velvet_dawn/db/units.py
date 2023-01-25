@@ -7,6 +7,7 @@ import velvet_dawn.db.gateway as db
 import velvet_dawn.models
 from velvet_dawn import errors
 from velvet_dawn.db.instances import UnitInstance
+from velvet_dawn.models.coordinate import Coordinate
 
 """ Units interface for interacting with the various
 unit caches.
@@ -108,12 +109,12 @@ def spawn(unit_def, player_name: str, x: float, y: float) -> UnitInstance:
     return instance
 
 
-def move(instance: UnitInstance, x: float, y: float) -> UnitInstance:
+def move(instance: UnitInstance, position: Coordinate) -> UnitInstance:
     """ Move a unit """
     current_instance = get_unit_by_instance_id(instance.instance_id)
     if current_instance:
         # If same, return self
-        if current_instance.x == x and current_instance.y == y:
+        if current_instance.x == position.x and current_instance.y == position.y:
             return current_instance
 
         db.hdel(
@@ -121,8 +122,8 @@ def move(instance: UnitInstance, x: float, y: float) -> UnitInstance:
             current_instance.instance_id
         )
 
-        current_instance.data['position']['x'] = x
-        current_instance.data['position']['y'] = y
+        current_instance.data['position']['x'] = position.x
+        current_instance.data['position']['y'] = position.y
 
         string_data = json.dumps(current_instance.data)
         db.hset(ALL_UNITS, current_instance.instance_id, string_data)
@@ -176,10 +177,10 @@ def get_all_player_units(player: str) -> List[UnitInstance]:
     return [UnitInstance(json.loads(x)) for x in db.hvals(UNITS_BY_PLAYER.format(player))]
 
 
-def get_units_at_positions(x: int, y: int) -> List[UnitInstance]:
+def get_units_at_positions(coord: Coordinate) -> List[UnitInstance]:
     """ Get units at position """
     return [UnitInstance(json.loads(x)) for x in db.hvals(UNITS_BY_POSITION.format(
-        x, y
+        coord.x, coord.y
     ))]
 
 

@@ -2,6 +2,7 @@ import velvet_dawn
 from test.base_test import BaseTest
 from velvet_dawn import errors
 from velvet_dawn.dao import app
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class TestUnitAbilities(BaseTest):
@@ -13,12 +14,12 @@ class TestUnitAbilities(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(6, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(6, 0))[0]
             abilities = velvet_dawn.datapacks.entities[unit.entity_id].abilities.abilities
 
             # Unit not found raised
             with self.assertRaises(errors.ValidationError):
-                velvet_dawn.units.abilities.run_unit_ability(unit.player, -1, abilities[0].id)
+                velvet_dawn.units.abilities.run_unit_ability(unit.player, "-1", abilities[0].id)
 
             # Invalid ability
             with self.assertRaises(errors.ValidationError):
@@ -49,7 +50,7 @@ class TestUnitAbilities(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(6, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(6, 0))[0]
             abilities_list = velvet_dawn.datapacks.entities[unit.entity_id].abilities.abilities
 
             abilities = velvet_dawn.units.abilities.get_unit_ability_updates(unit.id)

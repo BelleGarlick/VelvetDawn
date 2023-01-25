@@ -1,5 +1,6 @@
 import velvet_dawn.db.units
 from test.base_test import BaseTest
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class TestDbUnits(BaseTest):
@@ -14,7 +15,7 @@ class TestDbUnits(BaseTest):
         velvet_dawn.db.units.remove(instance)
         self.assertEqual(0, len(velvet_dawn.db.units.get_all_units()))
         self.assertEqual(0, len(velvet_dawn.db.units.get_all_player_units("1")))
-        self.assertEqual(0, len(velvet_dawn.db.units.get_units_at_positions(0, 0)))
+        self.assertEqual(0, len(velvet_dawn.db.units.get_units_at_positions(Coordinate(0, 0))))
         self.assertEqual(0, len(velvet_dawn.db.units.get_units_by_unit_id('testing:commander')))
         self.assertIsNone(velvet_dawn.db.units.get_unit_by_instance_id(instance.instance_id))
 
@@ -23,10 +24,10 @@ class TestDbUnits(BaseTest):
         commander_def = velvet_dawn.datapacks.entities['testing:commander']
 
         instance = velvet_dawn.db.units.spawn(commander_def, "1", 0, 0)
-        velvet_dawn.db.units.move(instance, 10.2, 10.3)
+        velvet_dawn.db.units.move(instance, Coordinate(10.2, 10.3))
 
-        self.assertEqual(0, len(velvet_dawn.db.units.get_units_at_positions(0, 0)))
-        self.assertEqual(1, len(velvet_dawn.db.units.get_units_at_positions(10, 10)))
+        self.assertEqual(0, len(velvet_dawn.db.units.get_units_at_positions(Coordinate(0, 0))))
+        self.assertEqual(1, len(velvet_dawn.db.units.get_units_at_positions(Coordinate(10, 10))))
 
         all_units = velvet_dawn.db.units.get_all_units()
         self.assertTrue(all_units[0].x == 10.2, all_units[0].y == 10.3)
@@ -53,10 +54,10 @@ class TestDbUnits(BaseTest):
         self.assertEqual(1, len(updates['updates']))
 
         # Move to same position wont be a new update
-        velvet_dawn.db.units.move(instance, 0, 0)
+        velvet_dawn.db.units.move(instance, Coordinate(0, 0))
         self.assertEqual(1, len(velvet_dawn.db.units.get_updates()['updates']))
 
-        velvet_dawn.db.units.move(instance, 1, 0)
+        velvet_dawn.db.units.move(instance, Coordinate(1, 0))
         self.assertEqual(2, len(velvet_dawn.db.units.get_updates()['updates']))
 
         velvet_dawn.db.units.remove(instance)
@@ -89,8 +90,8 @@ class TestDbUnits(BaseTest):
 
         velvet_dawn.db.units.spawn(commander_def, "1", 0, 0)
 
-        self.assertEqual(1, len(velvet_dawn.db.units.get_units_at_positions(0, 0)))
-        self.assertEqual(0, len(velvet_dawn.db.units.get_units_at_positions(0, 1)))
+        self.assertEqual(1, len(velvet_dawn.db.units.get_units_at_positions(Coordinate(0, 0))))
+        self.assertEqual(0, len(velvet_dawn.db.units.get_units_at_positions(Coordinate(0, 1))))
 
     def test_get_units_by_id(self):
         velvet_dawn.datapacks.init(self.get_config())

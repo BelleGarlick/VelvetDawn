@@ -3,6 +3,7 @@ from velvet_dawn.dao import app
 from test.base_test import BaseTest
 from velvet_dawn.db.instances import WorldInstance
 from velvet_dawn.mechanics import selectors
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class TestLocalSelectors(BaseTest):
@@ -22,7 +23,7 @@ class TestLocalSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
 
             selector = selectors.get_selector("0", "commander")
             selector_commanders = selectors.get_selector("0", "commanders")
@@ -42,7 +43,7 @@ class TestLocalSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            player_a_commander = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            player_a_commander = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
             tile = velvet_dawn.db.tiles.get_tile(5, 0)
 
             selector = selectors.get_selector("0", "commander")

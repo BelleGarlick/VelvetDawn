@@ -3,6 +3,7 @@ from typing import List
 import velvet_dawn
 from .selector import Selector
 from ...db.instances import UnitInstance, TileInstance, Instance
+from ...models.coordinate import Coordinate
 
 """ Units selectors, allow the user to get the units in the game """
 
@@ -22,9 +23,9 @@ class SelectorUnit(Selector):
             return self.filters.filter(instance, [instance])
 
         if isinstance(instance, TileInstance):
-            unit = velvet_dawn.db.units.get_units_at_positions(x=instance.x, y=instance.y)
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(instance.x, instance.y))
             if unit:
-                return self.filters.filter(instance, [unit])
+                return self.filters.filter(instance, unit)
 
         return []
 

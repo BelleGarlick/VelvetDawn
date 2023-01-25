@@ -2,6 +2,7 @@ import velvet_dawn
 from test.base_test import BaseTest
 from velvet_dawn import errors
 from velvet_dawn.dao import app
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class TestConditionalIf(BaseTest):
@@ -10,7 +11,7 @@ class TestConditionalIf(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
 
             conditional_equals = velvet_dawn.mechanics.conditionals.get_conditional(
                 "0", {"if": "self.testing", "equals": 5})

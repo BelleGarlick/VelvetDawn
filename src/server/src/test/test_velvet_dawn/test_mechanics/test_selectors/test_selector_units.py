@@ -4,7 +4,7 @@ from test.base_test import BaseTest
 from velvet_dawn.db.instances import WorldInstance
 from velvet_dawn.mechanics import selectors
 from velvet_dawn.mechanics.selectors import SelectorUnit, SelectorUnits, SelectorFriendlies, SelectorEnemies
-
+from velvet_dawn.models.coordinate import Coordinate
 
 """ Test the unit selectors get the correct selection 
 for the different instance types.
@@ -28,7 +28,7 @@ class TestUnitSelectors(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
 
             selector = selectors.get_selector(unit.id, "unit")
             units_selector = selectors.get_selector(unit.id, "units")

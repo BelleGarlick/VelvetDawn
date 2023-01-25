@@ -2,17 +2,16 @@ import math
 
 import velvet_dawn
 from velvet_dawn.config import Config
-from velvet_dawn.dao import db
-from velvet_dawn.dao.models import KeyValues, Keys
+from velvet_dawn.db import key_values
 from velvet_dawn.db.instances import TileInstance
 
 from velvet_dawn.map.creation import new
 from velvet_dawn.map.spawn import allocate_spawn_points, get_allocated_spawn_area, is_point_spawnable
+from velvet_dawn.models.coordinate import Coordinate
 
 
 def get(config: Config):
-    width = db.session.query(KeyValues).get(Keys.MAP_WIDTH)
-    height = db.session.query(KeyValues).get(Keys.MAP_HEIGHT)
+    width, height = key_values.get_map_size()
 
     map_side_invalid = False
     if not (width and height):
@@ -47,7 +46,7 @@ def is_traversable(x: int, y: int) -> bool:
         If the tile is traversable
     """
     # First check if there is already an entity at that position
-    if velvet_dawn.db.units.get_units_at_positions(x, y):
+    if velvet_dawn.db.units.get_units_at_positions(Coordinate(x, y)):
         return False
 
     db_tile = velvet_dawn.db.tiles.get_tile(x, y)

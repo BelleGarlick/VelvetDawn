@@ -207,7 +207,7 @@ class TestTriggers(BaseTest):
             velvet_dawn.players.join("player2", "")
             velvet_dawn.game.setup.update_setup("testing:commander", 1)
             velvet_dawn.game.phase.start_setup_phase(config)
-            velvet_dawn.game.setup.place_entity("player1", "testing:commander", 15, 0, config)
+            velvet_dawn.game.setup.place_entity("player1", "testing:commander", 15, 0)
 
             commander = velvet_dawn.units.list()[0]
             self.assertEqual(0.1, commander.get_attribute("health"))
@@ -225,7 +225,7 @@ class TestTriggers(BaseTest):
             velvet_dawn.players.join("player2", "")
             velvet_dawn.game.setup.update_setup("testing:commander", 1)
             velvet_dawn.game.phase.start_setup_phase(config)
-            velvet_dawn.game.setup.place_entity("player1", "testing:commander", 6, 0, config)
+            velvet_dawn.game.setup.place_entity("player1", "testing:commander", 6, 0)
             velvet_dawn.game.phase.start_game_phase(config)
 
             commander = velvet_dawn.units.list()[0]

@@ -2,6 +2,7 @@ import math
 
 import velvet_dawn
 from velvet_dawn.db.instances.instance import Instance
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class UnitInstance(Instance):
@@ -34,6 +35,10 @@ class UnitInstance(Instance):
     @property
     def y(self):
         return self.data['position']["y"]
+
+    @property
+    def position(self) -> Coordinate:
+        return Coordinate(x=self.x, y=self.y)
 
     @property
     def tile_y(self):

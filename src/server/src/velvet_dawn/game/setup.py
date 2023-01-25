@@ -1,11 +1,11 @@
 from typing import List
 
 import velvet_dawn
-from velvet_dawn.config import Config
 from velvet_dawn import datapacks, errors
 from velvet_dawn.db.instances import UnitInstance
+from velvet_dawn.db.models import Phase
+from velvet_dawn.models.coordinate import Coordinate
 from velvet_dawn.models.game_setup import GameSetup
-from velvet_dawn.models.phase import Phase
 
 
 """ velvet_dawn.game.setup
@@ -60,7 +60,7 @@ def update_setup(entity_id: str, count: int):
             If the entity is a commaner then this will
             be ignored.
     """
-    if velvet_dawn.game.phase.get_phase() != Phase.Lobby:
+    if velvet_dawn.db.key_values.get_phase() != Phase.Lobby:
         raise errors.ValidationError("Game setup units may only be changed in the lobby by the admin")
 
     # Check entity exists
@@ -75,8 +75,8 @@ def is_setup_valid(player):
     return bool(get_setup(player).commanders)
 
 
-def place_entity(player: str, entity_id: str, x: int, y: int, config: Config):
-    if velvet_dawn.game.phase.get_phase() != Phase.Setup:
+def place_entity(player: str, entity_id: str, x: int, y: int):
+    if velvet_dawn.db.key_values.get_phase() != Phase.Setup:
         raise errors.ValidationError("Game setup may only be changed during game setup")
 
     setup = get_setup(player)
@@ -124,11 +124,11 @@ def remove_entity(player_id: str, x: int, y: int):
     Raises:
         ValidationError: If user has no entity in the cell
     """
-    if velvet_dawn.game.phase.get_phase() != Phase.Setup:
+    if velvet_dawn.db.key_values.get_phase() != Phase.Setup:
         raise errors.ValidationError("Game setup may only be changed during game setup")
 
     units = [
-        x for x in velvet_dawn.db.units.get_units_at_positions(x, y)
+        x for x in velvet_dawn.db.units.get_units_at_positions(Coordinate(x, y))
         if x.player == player_id
     ]
     if not units:

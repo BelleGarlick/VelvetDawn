@@ -17,8 +17,7 @@ export interface GameSetup {
 }
 
 export interface TurnData {
-    team: string | undefined  // current team who's turn it is
-    number: number  // The turn number
+    team: string | undefined  // current team whos turn it is
     start: number  // The unix epoch time the turn started
     seconds: number  // The current length of the turn in seconds
 }
@@ -46,7 +45,6 @@ export const createBlankState = (): GameState => {
         phase: GamePhase.Lobby,
         turn: {
             team: null,
-            number: -1,
             start: -1,
             seconds: -1
         },

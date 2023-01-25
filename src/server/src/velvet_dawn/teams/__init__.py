@@ -1,12 +1,13 @@
 from typing import List, Optional
 
+import velvet_dawn
 from velvet_dawn.constants import SPECTATORS_TEAM_ID
 from velvet_dawn.dao import db
 from velvet_dawn.dao.models import Player, Team
 from .. import game, constants
+from ..db.models import Phase
 from ..logger import logger
 from ..models.mode import Mode
-from ..models.phase import Phase
 
 
 def list(exclude_spectators: bool = False) -> List[Team]:
@@ -46,7 +47,7 @@ def auto_update_teams():
     players = get_players_not_in_teams()
 
     # If in game, add player to the spectators team
-    if game.phase.get_phase() != Phase.Lobby:
+    if velvet_dawn.db.key_values.get_phase() != Phase.Lobby:
         for player in players:
             add_player_to_spectators(player.name)
         return

@@ -9,7 +9,8 @@ from velvet_dawn.server.blueprints import (
     setup_blueprint,
     turn_blueprint,
     datapack_blueprint,
-    units_blueprint
+    units_blueprint,
+    combat_blueprint
 )
 from velvet_dawn.server.utils import api_wrapper, config
 
@@ -18,6 +19,7 @@ app.register_blueprint(setup_blueprint, url_prefix="/setup")
 app.register_blueprint(turn_blueprint, url_prefix="/turns")
 app.register_blueprint(datapack_blueprint, url_prefix="/datapacks")
 app.register_blueprint(units_blueprint, url_prefix="/units")
+app.register_blueprint(combat_blueprint, url_prefix="/combat")
 
 
 @app.after_request

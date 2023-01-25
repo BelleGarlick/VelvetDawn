@@ -8,7 +8,6 @@ from velvet_dawn.models.game_setup import GameSetup
 @dataclasses.dataclass
 class TurnData:
 
-    turn: int
     turn_start: float
     turn_seconds: int
     active_turn: int
@@ -16,7 +15,6 @@ class TurnData:
     def json(self):
         return {
             "team": self.active_turn,
-            "number": self.turn,
             "start": self.turn_start,
             "seconds": self.turn_seconds,
         }

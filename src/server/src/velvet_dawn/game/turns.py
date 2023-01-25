@@ -5,24 +5,25 @@ from velvet_dawn import errors
 import velvet_dawn
 from velvet_dawn.config import Config
 from velvet_dawn.dao import db
-from velvet_dawn.dao.models import Keys, Player, Team
+from velvet_dawn.dao.models import Player, Team
 from velvet_dawn.db.instances import WorldInstance
+from velvet_dawn.db.models import Phase
 from velvet_dawn.logger import logger
 from velvet_dawn.models.game_state import TurnData
-from velvet_dawn.models.phase import Phase
 
 
-def get_active_turn(phase: Phase):
+def get_active_turn():
     """ Get the current turn.
 
     If not in the game phase then no-one has the turn
     otherwise, try to load from the key or set to
     the first team.
     """
+    phase = velvet_dawn.db.key_values.get_phase()
     if phase != Phase.GAME:
         return None
 
-    active_turn = velvet_dawn.dao.get_value(Keys.ACTIVE_TURN)
+    active_turn = velvet_dawn.db.key_values.get_active_turn()
     if active_turn:
         return active_turn
 
@@ -42,16 +43,17 @@ def current_turn_data(config: Config, current_phase: Phase) -> TurnData:
         TurnData to include the current turn number, player's turn
           when the turn started and how long the turn is
     """
-    turn = velvet_dawn.dao.get_value(Keys.TURN, _type=int, default=-1)
+    turn = velvet_dawn.db.key_values.get_turn_number()
 
-    turn_start = velvet_dawn.dao.get_value(Keys.TURN_START, _type=float)
+
+    turn_start = velvet_dawn.db.key_values.get_turn_start()
     turn_start = turn_start if turn_start else _update_turn_start_time()
 
     return TurnData(
         turn=turn,
         turn_seconds=_current_turn_time(config, current_phase),
         turn_start=turn_start,
-        active_turn=get_active_turn(current_phase)
+        active_turn=get_active_turn()
     )
 
 
@@ -59,9 +61,9 @@ def ready(player: str):
     """ Ready a player, but if the phase is setup, then
     check they've placed a commander.
     """
-    from velvet_dawn.game import phase, setup
+    from velvet_dawn.game import setup
 
-    if phase.get_phase() == Phase.Setup:
+    if velvet_dawn.db.key_values.get_phase() == Phase.Setup:
         player_setup = setup.get_setup(player)
         if not player_setup.placed_commander:
             raise errors.ValidationError("You must place your commander.")
@@ -91,7 +93,7 @@ def check_end_turn_case(config: Config):
     # This func should only be called by the host when loading the game state
     from velvet_dawn.game import phase
 
-    current_phase = phase.get_phase()
+    current_phase = velvet_dawn.db.key_values.get_phase()
     if current_phase == Phase.Lobby or current_phase == Phase.GAME_OVER:
         return
 
@@ -103,7 +105,7 @@ def check_end_turn_case(config: Config):
             begin_next_turn(config)
 
     current_time = time.time()
-    start_time = velvet_dawn.dao.get_value(Keys.TURN_START, _type=float)
+    start_time = velvet_dawn.db.key_values.get_turn_start()
     start_time = start_time if start_time else _update_turn_start_time()
     allowed_turn_time = _current_turn_time(config, current_phase)
 
@@ -132,7 +134,7 @@ def begin_next_turn(config: Config):
 
     # Find the next team's turn
     # If current none, default to the last team for when looped through, else loop through and find the next iteration
-    current_turn = velvet_dawn.dao.get_value(Keys.ACTIVE_TURN)
+    current_turn = velvet_dawn.db.key_values.get_active_turn()
 
     # If there is a turn, then trigger the end turn actions, otherwise it means there
     # is no turn as the game has only just begin
@@ -146,7 +148,7 @@ def begin_next_turn(config: Config):
         if team.team_id == current_turn:
             new_team_turn = teams[i + 1 - len(teams)].team_id
 
-    velvet_dawn.dao.set_value(Keys.ACTIVE_TURN, new_team_turn)
+    velvet_dawn.db.key_values.set_active_turn(new_team_turn)
 
     # Update turn's player's entities to reset there remaining moves
     players = velvet_dawn.players.list(team=new_team_turn)
@@ -231,7 +233,7 @@ def _check_all_players_ready(current_phase: Phase) -> bool:
         players = velvet_dawn.players.list(exclude_spectators=True)
 
     elif current_phase == Phase.GAME:
-        current_turn = get_active_turn(current_phase)
+        current_turn = get_active_turn()
         players = velvet_dawn.players.list(team=current_turn)
 
     for player in players:
@@ -246,9 +248,7 @@ def _update_turn_start_time() -> float:
     Returns:
         Current time.
     """
-    now = time.time()
-    velvet_dawn.dao.set_value(Keys.TURN_START, now)
-    return now
+    return velvet_dawn.db.key_values.set_turn_start(time.time())
 
 
 def _current_turn_time(config: Config, current_phase: Phase) -> int:

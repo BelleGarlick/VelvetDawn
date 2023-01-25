@@ -4,9 +4,8 @@ import velvet_dawn
 from test.base_test import BaseTest
 from velvet_dawn import errors
 from velvet_dawn.config import Config
-from velvet_dawn.dao import app, db
-from velvet_dawn.models import Phase
-
+from velvet_dawn.dao import app
+from velvet_dawn.db.models import Phase
 
 """ Test the entities movement is validated correctly on the server """
 
@@ -21,11 +20,11 @@ def setup_game(test_config) -> Tuple[Config, Tuple[int, int]]:
     velvet_dawn.map.new(test_config)
     velvet_dawn.players.join("player1", "password")
     velvet_dawn.players.join("player2", "password")
-    velvet_dawn.game.phase._set_phase(Phase.Lobby)
+    velvet_dawn.db.key_values.set_phase(Phase.Lobby)
     velvet_dawn.game.setup.update_setup("civil-war:commander", 1)
     velvet_dawn.game.phase.start_setup_phase(test_config)
-    velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", entity_position[0], entity_position[1], test_config)
-    velvet_dawn.game.setup.place_entity("player2", "civil-war:commander", entity_position[0], 18, test_config)
+    velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", entity_position[0], entity_position[1])
+    velvet_dawn.game.setup.place_entity("player2", "civil-war:commander", entity_position[0], 18)
     velvet_dawn.game.phase.start_game_phase(test_config)
 
     return test_config, entity_position
@@ -41,13 +40,13 @@ class TestUnitMovement(BaseTest):
             entity, player2entity = velvet_dawn.units.list()
             first_pos = {'x': entity_position[0], 'y': entity_position[1]}
 
-            velvet_dawn.game.phase._set_phase(Phase.Lobby)
+            velvet_dawn.db.key_values.set_phase(Phase.Lobby)
             with self.assertRaises(errors.GamePhaseError):
                 velvet_dawn.units.movement.move(player1, entity.id, [
                     {'x': first_pos['x'], 'y': first_pos['y']},
                     {'x': first_pos['x'], 'y': first_pos['y'] + 1},
                 ], test_config)
-            velvet_dawn.game.phase._set_phase(Phase.GAME)
+            velvet_dawn.db.key_values.set_phase(Phase.GAME)
 
             velvet_dawn.game.turns.begin_next_turn(test_config)
             with self.assertRaises(errors.InvalidTurnError):

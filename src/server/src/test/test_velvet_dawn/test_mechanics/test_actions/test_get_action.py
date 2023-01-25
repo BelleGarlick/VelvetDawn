@@ -3,6 +3,7 @@ from velvet_dawn import errors
 from velvet_dawn.dao import app
 from test.base_test import BaseTest
 from velvet_dawn.mechanics.actions import ActionModify
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class TestGetAction(BaseTest):
@@ -24,7 +25,7 @@ class TestGetAction(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            unit = velvet_dawn.db.units.get_units_at_positions(5, 0)[0]
+            unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
             action = velvet_dawn.mechanics.actions.get_action("0", {
                 "modify": "self.health",
                 "set": 100,

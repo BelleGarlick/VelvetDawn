@@ -4,10 +4,10 @@ from velvet_dawn import errors
 import velvet_dawn.players
 from test.base_test import BaseTest
 from velvet_dawn.config import Config
+from velvet_dawn.db.models import Phase
 from velvet_dawn.server.app import config
 from velvet_dawn.dao import app, db
-from velvet_dawn.dao.models import Keys, Player
-from velvet_dawn.models.phase import Phase
+from velvet_dawn.dao.models import Player
 
 
 class TestGameTurns(BaseTest):
@@ -24,7 +24,7 @@ class TestGameTurns(BaseTest):
 
             time.sleep(2)
             velvet_dawn.game.turns.check_end_turn_case(test_config)
-            self.assertEqual(velvet_dawn.game.phase.get_phase(), Phase.GAME)
+            self.assertEqual(velvet_dawn.db.key_values.get_phase(), Phase.GAME)
 
     def test_check_end_turn_case_in_setup_when_ready(self):
         """ Test if the turn should end """
@@ -36,7 +36,7 @@ class TestGameTurns(BaseTest):
             db.session.query(Player).update({Player.ready: True})
             db.session.commit()
             velvet_dawn.game.turns.check_end_turn_case(config)
-            self.assertEqual(velvet_dawn.game.phase.get_phase(), Phase.GAME)
+            self.assertEqual(velvet_dawn.db.key_values.get_phase(), Phase.GAME)
 
     def test_check_end_turn_case_in_game_from_time(self):
         """ Test if the turn should end """
@@ -50,14 +50,14 @@ class TestGameTurns(BaseTest):
             velvet_dawn.game.turns._update_turn_start_time()
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
-                velvet_dawn.game.turns.get_active_turn(Phase.GAME)
+                velvet_dawn.game.turns.get_active_turn()
             )
 
             time.sleep(2)
             velvet_dawn.game.turns.check_end_turn_case(test_config)
             self.assertEqual(
                 velvet_dawn.players.get_player("player2").team,
-                velvet_dawn.game.turns.get_active_turn(Phase.GAME)
+                velvet_dawn.game.turns.get_active_turn()
             )
 
     def test_check_end_turn_case_in_game_when_ready(self):
@@ -69,7 +69,7 @@ class TestGameTurns(BaseTest):
 
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
-                velvet_dawn.game.turns.get_active_turn(Phase.GAME)
+                velvet_dawn.game.turns.get_active_turn()
             )
 
             db.session.query(Player).where(Player.name == "player1").update({Player.ready: True})
@@ -77,7 +77,7 @@ class TestGameTurns(BaseTest):
             velvet_dawn.game.turns.check_end_turn_case(config)
             self.assertEqual(
                 velvet_dawn.players.get_player("player2").team,
-                velvet_dawn.game.turns.get_active_turn(Phase.GAME)
+                velvet_dawn.game.turns.get_active_turn()
             )
 
     def test_begin_next_turn_resets_entity_movement(self):
@@ -90,10 +90,10 @@ class TestGameTurns(BaseTest):
             velvet_dawn.datapacks.init(test_config)
             velvet_dawn.map.new(test_config)
             velvet_dawn.players.join("player1", "password")
-            velvet_dawn.game.phase._set_phase(Phase.Lobby)
+            velvet_dawn.db.key_values.set_phase(Phase.Lobby)
             velvet_dawn.game.setup.update_setup("civil-war:commander", 1)
             velvet_dawn.game.phase.start_setup_phase(test_config)
-            velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", test_config.map_width // 2, 0, config)
+            velvet_dawn.game.setup.place_entity("player1", "civil-war:commander", test_config.map_width // 2, 0)
 
             unit = velvet_dawn.units.list("player1")[0]
             self.assertEqual(0, unit.get_attribute("movement.remaining"))
@@ -110,13 +110,13 @@ class TestGameTurns(BaseTest):
         with app.app_context():
             velvet_dawn.players.join("player1", "password")
             velvet_dawn.players.join("player2", "password")
-            self.assertIsNone(velvet_dawn.game.turns.get_active_turn(Phase.Setup))
+            self.assertIsNone(velvet_dawn.game.turns.get_active_turn())
 
             velvet_dawn.game.phase.start_game_phase(config)
 
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
-                velvet_dawn.game.turns.get_active_turn(Phase.GAME)
+                velvet_dawn.game.turns.get_active_turn()
             )
 
             velvet_dawn.game.turns.ready("player1")
@@ -129,14 +129,14 @@ class TestGameTurns(BaseTest):
 
             self.assertEqual(
                 velvet_dawn.players.get_player("player2").team,
-                velvet_dawn.game.turns.get_active_turn(Phase.GAME)
+                velvet_dawn.game.turns.get_active_turn()
             )
 
             velvet_dawn.game.turns.begin_next_turn(config)
 
             self.assertEqual(
                 velvet_dawn.players.get_player("player1").team,
-                velvet_dawn.game.turns.get_active_turn(Phase.GAME)
+                velvet_dawn.game.turns.get_active_turn()
             )
 
     def test_check_all_players_ready_during_setup(self):
@@ -164,7 +164,7 @@ class TestGameTurns(BaseTest):
     def test_ready_setup_placed_commander(self):
         with app.app_context():
             velvet_dawn.players.join("player1", "password")
-            velvet_dawn.game.phase._set_phase(Phase.Setup)
+            velvet_dawn.db.key_values.set_phase(Phase.Setup)
 
             # No commanders played so can't ready up
             with self.assertRaises(errors.ValidationError):
@@ -193,10 +193,10 @@ class TestGameTurns(BaseTest):
 
     def test_update_turn_start_time(self):
         with app.app_context():
-            self.assertIsNone(velvet_dawn.dao.get_value(Keys.TURN_START))
+            self.assertIsNone(velvet_dawn.db.key_values.get_turn_start())
 
             updated_time = velvet_dawn.game.turns._update_turn_start_time()
-            self.assertEqual(round(updated_time), round(velvet_dawn.dao.get_value(Keys.TURN_START, _type=float)))
+            self.assertEqual(round(updated_time), round(velvet_dawn.db.key_values.get_turn_start()))
 
     def test_current_turn_time(self):
         with app.app_context():

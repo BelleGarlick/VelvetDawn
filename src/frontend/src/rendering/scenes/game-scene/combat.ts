@@ -1,6 +1,7 @@
 import {Position} from "models";
 import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
 import {RenderingFacade} from "../../facade";
+import * as Api from "api";
 
 /** Combats class for getting the list of positions
  * the selected unit can attack and calling the api
@@ -84,9 +85,7 @@ export class Combat {
     }
 
     attack(instanceId: string, position: Position) {
-        console.log("Attack this")
-        console.log(instanceId)
-        console.log(position)
-        // TODO Attack target
+        // TODO Catch error and show in chat
+        Api.combat.attack(instanceId, position).then(VelvetDawn.setState)
     }
 }

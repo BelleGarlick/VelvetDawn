@@ -1,10 +1,11 @@
 import dataclasses
+from typing import Union
 
 
 @dataclasses.dataclass
 class Coordinate:
-    x: int
-    y: int
+    x: Union[int, float]
+    y: Union[int, float]
 
     def __hash__(self):
         return self.x * 10000 + self.y

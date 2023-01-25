@@ -2,6 +2,7 @@ import velvet_dawn
 from test.base_test import BaseTest
 from velvet_dawn import errors
 from velvet_dawn.dao import app
+from velvet_dawn.models.coordinate import Coordinate
 
 
 class TestUnitUpgrades(BaseTest):
@@ -14,7 +15,7 @@ class TestUnitUpgrades(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            upgradable_unit = velvet_dawn.db.units.get_units_at_positions(4, 0)[0]
+            upgradable_unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(4, 0))[0]
             upgrades = velvet_dawn.datapacks.entities[upgradable_unit.entity_id].upgrades.upgrades
 
             # Unit not found raised
@@ -58,7 +59,7 @@ class TestUnitUpgrades(BaseTest):
         with app.app_context():
             self.prepare_game()
 
-            upgradable_unit = velvet_dawn.db.units.get_units_at_positions(4, 0)[0]
+            upgradable_unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(4, 0))[0]
 
             upgrades = velvet_dawn.units.upgrades.get_unit_upgrade_updates(upgradable_unit.id)
             self.assertEqual(0, len(upgrades.upgraded))

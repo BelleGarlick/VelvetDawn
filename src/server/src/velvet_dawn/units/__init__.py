@@ -1,6 +1,6 @@
 from typing import List
 import velvet_dawn
-from . import movement, upgrades, abilities
+from . import movement, upgrades, abilities, combat
 
 from ..db.instances import UnitInstance
 
@@ -18,3 +18,7 @@ def list(player: str = None, commander_only=False) -> List[UnitInstance]:
         ]
 
     return units
+
+
+def kill(unit: UnitInstance):
+    pass
