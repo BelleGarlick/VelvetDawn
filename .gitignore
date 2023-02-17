@@ -6,6 +6,8 @@ src/server/venv/*
 src/server/src/test/.pytest_cache/*
 src/server/src/instance/game.db
 src/server/src/instance/game.db-journal
+src/jserver/.idea/*
+src/jserver/target/*
 Lib/*
 Scripts/*
 pyvenv.cfg
