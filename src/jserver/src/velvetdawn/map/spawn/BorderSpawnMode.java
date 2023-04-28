@@ -18,14 +18,25 @@ public class BorderSpawnMode extends SpawnMode {
 
     Map<Player, Set<Coordinate>> allocation = new HashMap<>();
 
+    public BorderSpawnMode(VelvetDawn velvetDawn, Config config) {
+        super(velvetDawn, config);
+    }
+
+    @Override
+    public List<Coordinate> listAllSpawnPoints() {
+        List<Coordinate> items = new ArrayList<>();
+        this.allocation.values().forEach(items::addAll);
+        return items;
+    }
+
     /** Get the allocated spawn tiles for a given user */
     @Override
-    public Set<Coordinate> getSpawnCoordinatesForPlayer(VelvetDawn velvetDawnCore, Config config, Player player) {
+    public Set<Coordinate> getSpawnCoordinatesForPlayer(Player player) {
         return this.allocation.getOrDefault(player, Set.of());
     }
 
     @Override
-    public void assignSpawnPoints(VelvetDawn velvetDawn, Config config) throws Exception {
+    public void assignSpawnPoints() throws Exception {
         System.out.println("Allocating spawn area.");
 
         List<Team> teams = velvetDawn.teams.listWithoutSpectators();
@@ -36,16 +47,14 @@ public class BorderSpawnMode extends SpawnMode {
         var maxTeamSize = velvetDawn.teams.maxTeamSizeWithoutSpectators();
 
         // Calculate initial spawn points
-        var spawns = getCentralSpawnOrdinates(
-                config, teams.size(), maxTeamSize);
+        var spawns = getCentralSpawnOrdinates(teams.size(), maxTeamSize);
 
-        var baseNeighbours = calculateSpawnBaseHalfWidth(config, maxTeamSize);
         for (int i = 0; i < spawns.size(); i++) {
             var spawnPoint = spawns.get(i);
             Set<Coordinate> spawnArea = new HashSet<>(Set.of(spawnPoint));
 
-            for (int j = 0; j < calculateNeighbourDepth(config, maxTeamSize); j++) {
-                for (Coordinate point: spawnArea)
+            for (int j = 0; j < calculateNeighbourDepth(maxTeamSize); j++) {
+                for (Coordinate point: new HashSet<>(spawnArea))
                     spawnArea.addAll(velvetDawn.map.getNeighbours(point));
             }
 
@@ -56,48 +65,34 @@ public class BorderSpawnMode extends SpawnMode {
     }
 
     /** Calculate the number of initial sidewards neighbours before adding neighbour depth */
-    private int calculateSpawnBaseHalfWidth(Config config, int maxTeamSize) {
+    public int calculateSpawnBaseHalfWidth(int maxTeamSize) {
         return config.spawn.spawnRadiusMultiplier * maxTeamSize + config.spawn.baseSpawnRadius + 1;
     }
 
     /** Calculate the number of neighbouring cell depth needed */
-    private int calculateNeighbourDepth(Config config, int maxTeamSize) {
+    private int calculateNeighbourDepth(int maxTeamSize) {
         return config.spawn.spawnRadiusMultiplier * maxTeamSize;
-    }
-
-    /** Calculate the half_width of the spawn areas defined by the config
-     *
-     * @param config Used to get spawning params
-     * @param maxTeamSize Used to calculate the same spawn area size
-     */
-    private int calculateSpawnAreaHalfWidth(Config config, int maxTeamSize) {
-        int width_either_side = calculateSpawnBaseHalfWidth(config, maxTeamSize);
-        width_either_side += calculateNeighbourDepth(config, maxTeamSize);
-
-        return width_either_side;
     }
 
     /** Calculate the central spawn ordinates of a spawn region for each team
      *
-     * @param config The Game config
      * @param teamCount The number of teams in the game
      * @param maxTeamSize The max players in a team
      * @return List of co-ordinates that define the center of the spawn area
      */
-    public List<Coordinate> getCentralSpawnOrdinates(Config config, int teamCount, int maxTeamSize) throws Exception {
-        int mapSize = 1 + 2 * config.map.borderRadius;
-
+    public List<Coordinate> getCentralSpawnOrdinates(int teamCount, int maxTeamSize) throws Exception {
         // Calculate non-spawnable width near the corners
-        int insetPadding = calculateSpawnAreaHalfWidth(config, maxTeamSize);
+        int insetPadding = calculateSpawnBaseHalfWidth(maxTeamSize);
 
         // Calc the number of perimeter cells that we cant to
         // distribute teams around
-        int mapPerimeter = 4 * mapSize - 4;
+        int mapPerimeter = this.getTotalPerimeterSize();
 
         // Spacing between team cells
         int cornersRemoved = insetPadding > 0 ? 4 : 0;  // If 0 width then corner spawning is possible
         int spawnablePerimeterPositions = mapPerimeter
-                - 4 * Math.min(mapSize, 2 * insetPadding)
+                - 2 * Math.min(config.map.width, 2 * insetPadding)
+                - 2 * Math.min(config.map.height, 2 * insetPadding)
                 + cornersRemoved;
         if (spawnablePerimeterPositions <= 0)
             throw new Exception("Map too small for spawning constraints. Consider increasing the map size.");
@@ -107,24 +102,25 @@ public class BorderSpawnMode extends SpawnMode {
         // cell. Every time the current_team_point rounded up
         // equals the cell we're iteraing through, we mark this
         // cell as a spawn point and increase the new team mark
-        var currentPoint = new Coordinate(0, -config.map.borderRadius);
-        int currentTeamMark = 0;
+        var currentPoint = new Coordinate((float) (config.map.width / 2), 0);
+        float currentTeamMark = 0;
 
         List<Coordinate> spawnPoints = new ArrayList<>();
         int perimeterCount = 0;
 
-        int minMapOrd = -config.map.borderRadius + insetPadding;
-        int maxMapOrd = config.map.borderRadius - insetPadding;
-
-        for (int i = 0; i < mapPerimeter; i++) {
-            Coordinate cell = getCellFromPerimeterIndex(config, i);
-            if ((minMapOrd <= cell.x && cell.x <= maxMapOrd) || (minMapOrd <= cell.y && cell.y <= maxMapOrd)) {
+        for (int i = config.map.width / 2; i < mapPerimeter + config.map.width / 2; i++) {
+            var cell = getCellFromPerimeterIndex(i % mapPerimeter);
+            if (
+                    (insetPadding <= cell.x && cell.x < config.map.width - insetPadding)
+                || (insetPadding <= cell.y && cell.y < config.map.height - insetPadding)
+            ) {
                 if (Math.floor(currentTeamMark) == perimeterCount) {
                     spawnPoints.add(currentPoint);
                     currentTeamMark += gapBetweenTeams;
                 }
                 perimeterCount += 1;
-                currentPoint = getNextCoordinate(config, cell);
+
+                currentPoint = getNextCoordinate(cell);
             }
         }
 
@@ -134,24 +130,22 @@ public class BorderSpawnMode extends SpawnMode {
     /** This function treats the perimeter as a band around the map
      * where each item is indexable starting in the top center at index 0
      *
-     * @param config For getting the border and map size
      * @param perimeterIndex The index to get the coordinate for
      * @return The coordinate at that position
      */
     @NotNull
-    public Coordinate getCellFromPerimeterIndex(@NotNull Config config, int perimeterIndex) {
-        int mapRadius = config.map.borderRadius;
+    public Coordinate getCellFromPerimeterIndex(int perimeterIndex) {
+        int width = config.map.width;
+        int height = config.map.height;
 
-        if (perimeterIndex <= mapRadius)
-            return new Coordinate(perimeterIndex, -config.map.borderRadius);
-        else if (perimeterIndex <= 3 * mapRadius)
-            return new Coordinate(config.map.borderRadius, perimeterIndex - 2 * config.map.borderRadius);
-        else if (perimeterIndex <= 5 * mapRadius)
-            return new Coordinate(-(perimeterIndex - 4 * config.map.borderRadius), config.map.borderRadius);
-        else if (perimeterIndex <= 7 * mapRadius)
-            return new Coordinate(-config.map.borderRadius, -(perimeterIndex - 6 * config.map.borderRadius));
+        if (perimeterIndex < width)
+            return new Coordinate(perimeterIndex, 0);
+        else if (perimeterIndex < width + height - 1)
+            return new Coordinate(width - 1, perimeterIndex - (width - 1));
+        else if (perimeterIndex < width + height + width - 2)
+            return new Coordinate(width - 1 - (perimeterIndex - (height + width - 2)), height - 1);
         else
-            return new Coordinate(perimeterIndex - 8 * config.map.borderRadius, -config.map.borderRadius);
+            return new Coordinate(0, height - 1 - (perimeterIndex - (height + width + width - 3)));
     }
 
     /** This function will return the next point as we walk
@@ -163,28 +157,32 @@ public class BorderSpawnMode extends SpawnMode {
      * back to a cell.
      *
      * @param currentPoint The current point to get the next point for
-     * @param config The velvet dawn config
      */
-    public Coordinate getNextCoordinate(Config config, Coordinate currentPoint) {
-        int mapSize = 1 + 2 * config.map.borderRadius;
-        int totalPerimeterSize = 4 * mapSize - 4;
+    public Coordinate getNextCoordinate(Coordinate currentPoint) {
+        int width = config.map.width;
+        int height = config.map.height;
+
+        int perimeterIndex = 0;
 
         // Convert cell to perimeter index
-        int perimeterIndex = -1;
-        if (currentPoint.tileY() == -config.map.borderRadius)
-            perimeterIndex = (currentPoint.tileX() + totalPerimeterSize) % totalPerimeterSize;
-        else if (currentPoint.tileX() == config.map.borderRadius)
-            perimeterIndex = (currentPoint.tileY() + 2 * config.map.borderRadius);
-        else if (currentPoint.tileY() == config.map.borderRadius)
-            perimeterIndex = -(currentPoint.tileX() - (4 * config.map.borderRadius));
-        else if (currentPoint.tileX() == -config.map.borderRadius)
-            perimeterIndex = -(currentPoint.tileY() - (6 * config.map.borderRadius));
+        if (currentPoint.y == 0)
+            perimeterIndex = (int) currentPoint.x;
+        else if (currentPoint.x == width - 1)
+            perimeterIndex = (int) (currentPoint.y + width - 1);
+        else if (currentPoint.y == height - 1)
+            perimeterIndex = (int) ((width + height - 2) + (width - currentPoint.x - 1));
+        else if (currentPoint.x == 0)
+            perimeterIndex = (int) ((width + height + width - 3) + (height - currentPoint.y - 1));
 
         // Shift perimeter index
         perimeterIndex += 1;
-        perimeterIndex = (perimeterIndex + totalPerimeterSize) % totalPerimeterSize;
+        perimeterIndex = (perimeterIndex + this.getTotalPerimeterSize()) % this.getTotalPerimeterSize();
 
         // Convert perimeter index back to cell
-        return getCellFromPerimeterIndex(config, perimeterIndex);
+        return getCellFromPerimeterIndex(perimeterIndex);
+    }
+
+    private int getTotalPerimeterSize() {
+        return 2 * config.map.height + 2 * config.map.width - 4;
     }
 }

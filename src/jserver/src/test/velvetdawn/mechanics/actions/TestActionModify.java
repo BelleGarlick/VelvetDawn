@@ -5,7 +5,7 @@ import test.BaseTest;
 import velvetdawn.VelvetDawn;
 import velvetdawn.mechanics.actions.ActionModify;
 import velvetdawn.models.anytype.Any;
-import velvetdawn.utils.Json;
+import velvetdawn.models.anytype.AnyJson;
 
 import java.util.ArrayList;
 
@@ -23,26 +23,26 @@ public class TestActionModify extends BaseTest {
         var velvetDawn = new VelvetDawn(this.getConfig());
 
         // Wrong major key
-        assertThrows(Exception.class, () -> ActionModify.fromJson(velvetDawn, "id", new Json()
+        assertThrows(Exception.class, () -> ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modifies", "self.health").set("set", 0)));
 
         // No function type
-        assertThrows(Exception.class, () -> ActionModify.fromJson(velvetDawn, "id", new Json()
+        assertThrows(Exception.class, () -> ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modifies", "self.health")));
 
         // too many function type
-        assertThrows(Exception.class, () -> ActionModify.fromJson(velvetDawn, "id", new Json()
+        assertThrows(Exception.class, () -> ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.health")
                 .set("set", 0)
                 .set("add", 1)));
 
         // Can't modify non-attribute
-        assertThrows(Exception.class, () -> ActionModify.fromJson(velvetDawn, "id", new Json()
+        assertThrows(Exception.class, () -> ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self")
                 .set("set", 0)));
 
         // Just right
-        var action = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var action = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.health")
                 .set("sub", 0));
         assertEquals(action.function, ActionModify.ActionModifierFunction.SUB);
@@ -52,24 +52,24 @@ public class TestActionModify extends BaseTest {
     public void test_modifier_working() throws Exception {
         var velvetDawn = this.prepareGame();
 
-        var entity = new ArrayList<>(velvetDawn.entities.list()).get(0);
+        var entity = velvetDawn.entities.list().get(0);
 
-        var actionSet = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionSet = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.health").set("set", 50));
 
-        var actionAdd = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionAdd = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.health").set("add", 10));
 
-        var actionSub = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionSub = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.health").set("sub", 5));
 
-        var actionMul = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionMul = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.health").set("mul", 2));
 
         // Test resetting and reset to a default if the attribute doens't exists
-        var actionReset = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionReset = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.health").set("reset", 0));
-        var actionResetOther = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionResetOther = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.healthy").set("reset", 9));
 
         assertEquals(100, entity.attributes.get("health").toNumber(), 0);
@@ -92,14 +92,14 @@ public class TestActionModify extends BaseTest {
     public void test_modifier_function_value() throws Exception {
         var velvetDawn = this.prepareGame();
 
-        var unit = new ArrayList<>(velvetDawn.entities.list()).get(0);
+        var unit = velvetDawn.entities.list().get(0);
         unit.attributes.set("actual", Any.from(12));
 
-        var actionRaw = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionRaw = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.example").set("set", "raw-value"));
-        var actionRandom = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionRandom = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.example").set("set", "__rand__"));
-        var actionSelector = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionSelector = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.example").set("set", "@self.actual"));
 
         // Tet raw
@@ -121,19 +121,19 @@ public class TestActionModify extends BaseTest {
     public void test_modifier_tags() throws Exception {
         var velvetDawn = this.prepareGame();
 
-        var unit = new ArrayList<>(velvetDawn.entities.list()).get(0);
+        var unit = velvetDawn.entities.list().get(0);
 
-        var actionAddTag = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionAddTag = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self").set("add-tag", "tagg"));
 
-        var actionRemoveTag = ActionModify.fromJson(velvetDawn, "id", new Json()
+        var actionRemoveTag = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self").set("remove-tag", "tagg"));
 
-        assertFalse(unit.tags.has("tagg"));
+        assertFalse(unit.tags.contains("tagg"));
         actionAddTag.run(unit);
-        assertTrue(unit.tags.has("tagg"));
+        assertTrue(unit.tags.contains("tagg"));
         actionRemoveTag.run(unit);
-        assertFalse(unit.tags.has("tagg"));
+        assertFalse(unit.tags.contains("tagg"));
     }
 }
 

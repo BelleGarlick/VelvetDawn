@@ -1,7 +1,10 @@
 package velvetdawn.utils;
 
 import com.google.gson.JsonObject;
+import velvetdawn.models.anytype.AnyJson;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,8 +53,8 @@ public class Path {
         return String.join("\n", Files.readAllLines(path));
     }
 
-    public Json loadAsJson() throws IOException {
-        return Json.fromString(this.load());
+    public AnyJson loadAsJson() throws Exception {
+        return AnyJson.parse(this.load());
     }
 
     /** Walk directory
@@ -106,7 +109,36 @@ public class Path {
         return null;
     }
 
-    public void saveJson(JsonObject json) {
+    public void delete() throws IOException {
+        Files.delete(this.toPath());
+    }
 
+    public void rmtree() throws IOException {
+        for (Path path: this.list()) {
+            if (path.isDirectory())
+                path.rmtree();
+            else
+                path.delete();
+        }
+    }
+
+    public void mkdir() throws IOException {
+        Files.createDirectories(this.toPath());
+    }
+
+    public void writeJson(AnyJson data) throws Exception {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(this.path));
+        writer.write(data.toGson().toString());
+        writer.close();
+    }
+
+    public void writeJson(JsonObject data) throws Exception {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(this.path));
+        writer.write(data.toString());
+        writer.close();
+    }
+
+    public String absolutePath() {
+        return this.toPath().toAbsolutePath().toString();
     }
 }

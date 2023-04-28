@@ -6,7 +6,6 @@ import velvetdawn.models.Coordinate;
 import velvetdawn.models.config.Config;
 import velvetdawn.models.datapacks.tiles.TileDefinition;
 import velvetdawn.models.instances.TileInstance;
-import velvetdawn.models.map.Chunk;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,17 +18,17 @@ public class CollapsingMap {
     private final VelvetDawn velvetDawn;
     private final Config config;
 
-    private final Map<Integer, Map<Integer, Set<String>>> map = new HashMap<>();
+    public final Map<Integer, Map<Integer, Set<String>>> map = new HashMap<>();
 
     public CollapsingMap(VelvetDawn velvetDawn, Config config) {
         this.velvetDawn = velvetDawn;
         this.config = config;
 
-        for (int i = -config.map.borderRadius; i <= config.map.borderRadius; i++) {
+        for (int i = 0; i < config.map.width; i++) {
             if (!this.map.containsKey(i))
                 this.map.put(i, new HashMap<>());
 
-            for (int j = -config.map.borderRadius; j <= config.map.borderRadius; j++) {
+            for (int j = 0; j < config.map.height; j++) {
                 this.map.get(i).put(j, new HashSet<>(
                         velvetDawn.datapacks.tiles
                                 .values()
@@ -58,12 +57,14 @@ public class CollapsingMap {
         return null;
     }
 
-    public Chunk toChunk() {
-
+    public Map<Integer, Map<Integer, TileInstance>> toTiles() {
         // TODO Test that variants and colours are picked in test
-        Chunk chunk = new Chunk();
-        for (int col = -config.map.borderRadius; col <= config.map.borderRadius; col++) {
-            for (int row = -config.map.borderRadius; row <= config.map.borderRadius; row++) {
+        Map<Integer, Map<Integer, TileInstance>> tiles = new HashMap<>();
+
+        for (int col = 0; col < config.map.width; col++) {
+            tiles.put(col, new HashMap<>());
+
+            for (int row = 0; row < config.map.height; row++) {
                 String item = (String) this.get(new Coordinate(col, row)).toArray()[0];
 
                 TileInstance tile = new TileInstance("%s-%s", item, new Coordinate(col, row));
@@ -73,10 +74,10 @@ public class CollapsingMap {
                 tile.attributes.set("texture.color", tileDef.textures.chooseColor());
                 tile.attributes.set("texture.background", tileDef.textures.chooseImage());
 
-                chunk.setTile(tile);
+                tiles.get(col).put(row, tile);
             }
         }
 
-        return chunk;
+        return tiles;
     }
 }

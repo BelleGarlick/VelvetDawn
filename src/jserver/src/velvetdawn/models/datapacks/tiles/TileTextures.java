@@ -1,9 +1,9 @@
 package velvetdawn.models.datapacks.tiles;
 
 import velvetdawn.models.anytype.Any;
-import velvetdawn.models.anytype.AnyNull;
+import velvetdawn.models.anytype.AnyJson;
+import velvetdawn.models.anytype.AnyList;
 import velvetdawn.models.anytype.AnyString;
-import velvetdawn.utils.Json;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,8 @@ public class TileTextures {
 
     private static final Set<String> AvailableKeys = Set.of("color", "image", "notes");
 
-    private List<String> colors = new ArrayList<>();
-    private List<String> images = new ArrayList<>();
+    public List<String> colors = new ArrayList<>();
+    public List<String> images = new ArrayList<>();
 
     /** Choose the tile colour */
     public Any chooseColor() {
@@ -46,7 +46,7 @@ public class TileTextures {
     }
 
     /** Parse the data for load the colors and textures */
-    public void load(String datapackId, Json data) throws Exception {
+    public TileTextures load(String datapackId, AnyJson data) throws Exception {
         this.colors = parseTexturesType(datapackId, "color", data);
         this.images = parseTexturesType(datapackId, "image", data);
 
@@ -55,33 +55,42 @@ public class TileTextures {
             if (!AvailableKeys.contains(key))
                 throw new Exception(String.format("%s textures unknown key: '%s'", datapackId, key));
         }
+
+        return this;
     }
 
-    private List<String> parseTexturesType(String parentId, String key, Json data) throws Exception {
+    private List<String> parseTexturesType(String parentId, String key, AnyJson data) throws Exception {
         if (!data.containsKey(key))
             return List.of();
 
-        try {
-            return List.of(
-                    data.get(key).validateInstanceIsString("").value
-            );
-        } catch (Exception ignored) {}
+        Any value = data.get(key);
 
-        try {
-            List<String> listValues = data.getStringList(key, List.of(), "");
-            if (listValues != null)
-                return listValues;
-        } catch (Exception ignored) {}
+        if (value instanceof AnyString)
+            return List.of(value.toString());
 
-        Json jsonValues = data.getJson(key, new Json(), null);
-        List<String> listItems = new ArrayList<>();
-        if (jsonValues != null) {
-            for (String subkey: jsonValues.keys()) {
-                float value = jsonValues.get(subkey).validateInstanceIsFloat(String.format("Count of %s %s must be a number in %s", key, subkey, parentId)).value;
+        if (value instanceof AnyList) {
+            ArrayList<String> items = new ArrayList<>();
+            for (Any item: ((AnyList) value).items) {
+                items.add(item
+                        .validateInstanceIsString(String.format("Error in %s. List of textures must be a string", parentId))
+                        .value);
+            }
+            return items;
+        }
 
-                for (int i = 0; i < value; i++)
+
+        if (value instanceof AnyJson) {
+            List<String> listItems = new ArrayList<>();
+
+            for (String subkey : ((AnyJson) value).keys()) {
+                float item = ((AnyJson) value).get(subkey)
+                        .validateInstanceIsFloat(String.format("Count of %s %s must be a number in %s", key, subkey, parentId)).value;
+
+                for (int i = 0; i < item; i++)
                     listItems.add(subkey);
             }
+
+            return listItems;
         }
 
         throw new Exception(String.format("Malformed %s tag in %s", key, parentId));

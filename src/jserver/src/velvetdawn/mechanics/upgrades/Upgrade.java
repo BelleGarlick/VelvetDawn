@@ -7,8 +7,8 @@ import velvetdawn.mechanics.conditionals.Conditional;
 import velvetdawn.mechanics.conditionals.Conditionals;
 import velvetdawn.models.ActionRunnableReason;
 import velvetdawn.models.anytype.Any;
+import velvetdawn.models.anytype.AnyJson;
 import velvetdawn.models.instances.Instance;
-import velvetdawn.utils.Json;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class Upgrade {
 
-    private static Set<String> ValidKeys = Set.of(
+    private static final Set<String> ValidKeys = Set.of(
             "id", "name", "enabled", "requires", "actions",
             "icon", "hidden", "notes", "description"
     );
@@ -30,7 +30,7 @@ public class Upgrade {
     private final List<Conditional> hidden = new ArrayList<>();
     private final List<Action> actions = new ArrayList<>();
 
-    private List<String> requires = new ArrayList<>();
+    public List<String> requires = new ArrayList<>();
 
     public Upgrade(String upgradeId, String name, String icon, String description) {
         this.id = upgradeId;
@@ -39,8 +39,8 @@ public class Upgrade {
         this.description = description;
     }
 
-    public Json toJson() {
-        return new Json()
+    public AnyJson toJson() {
+        return new AnyJson()
                 .set("id", this.id)
                 .set("name", this.name)
                 .set("icon", this.icon)
@@ -54,7 +54,7 @@ public class Upgrade {
      *                      automatically provide an id.
      * @param data The json object to load from.
      */
-    public static Upgrade fromJson(VelvetDawn velvetDawn, String parentId, int upgradeNumber, Json data) throws Exception {
+    public static Upgrade fromJson(VelvetDawn velvetDawn, String parentId, int upgradeNumber, AnyJson data) throws Exception {
         // TODO TEst what happens if the value is not a string
         // Parse the id
         String upgradeId = data.get("id", Any.from(String.format("%s-upgrade-%s", parentId, upgradeNumber)))
@@ -67,41 +67,46 @@ public class Upgrade {
                 .validateInstanceIsString(String.format("%s has invalid upgrade name.", parentId))
                 .value;
 
-        String description = data.get("description")
-                .validateInstanceIsStringOrNull("Upgrade description must be a string or null")
-                .toString();
+        String description = null;
+        if (data.containsKey("description"))
+            description = data.get("description")
+                    .validateInstanceIsString("Upgrade description must be a string or null")
+                    .toString();
 
-        String icon = data.get("icon")
-                .validateInstanceIsStringOrNull(String.format("%s has upgrade with missing/invalid icon.", parentId))
-                .toString();
+        String icon = null;
+        if (data.containsKey("icon"))
+            icon = data.get("icon")
+                    .validateInstanceIsString(String.format("%s has upgrade with missing/invalid icon.", parentId))
+                    .toString();
 
         var upgrade = new Upgrade(upgradeId, upgradeName, icon, description);
 
         if (!velvetDawn.datapacks.resources.containsKey(upgrade.icon))
-            System.out.println(String.format("[WARN] %s upgrade has missing icon '%s'", parentId, upgrade.icon));
+            System.out.printf("[WARN] %s upgrade has missing icon '%s'%n", parentId, upgrade.icon);
 
         // Parse enabled conditions
-        var enabledConditions = data.getStrictJsonList("enabled", List.of(), String.format(
-                "Upgrade enabled in %s is invalid. Enabled attributes must be a list of conditions.", parentId));
-        for (Json json: enabledConditions)
-            upgrade.enabled.add(Conditionals.get(velvetDawn, parentId, json));
+        var errorMessage = String.format("Upgrade enabled in %s is invalid. Enabled attributes must be a list of conditions.", parentId);
+        var enabledConditions = data.get("enabled", Any.list()).validateInstanceIsList(errorMessage);
+        for (Any json: enabledConditions.items)
+            upgrade.enabled.add(Conditionals.get(velvetDawn, parentId, json.validateInstanceIsJson(errorMessage)));
 
         // Parse hidden conditions
-        var hiddenConditions = data.getStrictJsonList("hidden", List.of(), String.format(
-                "Upgrade hidden in %s is invalid. Hidden attributes must be a list of conditions.", parentId));
-        for (Json json: hiddenConditions)
-            upgrade.hidden.add(Conditionals.get(velvetDawn, parentId, json));
+        errorMessage = String.format("Upgrade hidden in %s is invalid. Hidden attributes must be a list of conditions.", parentId);
+        var hiddenConditions = data.get("hidden", Any.list()).validateInstanceIsList(errorMessage);
+        for (Any json: hiddenConditions.items)
+            upgrade.hidden.add(Conditionals.get(velvetDawn, parentId, json.validateInstanceIsJson(errorMessage)));
 
         // Parse actions
-        var upgradeActions = data.getStrictJsonList("actions", List.of(), String.format(
-                "Upgrade actions in %s is invalid. Actions must be a list of action objects.", parentId));
-        for (Json json: upgradeActions)
-            upgrade.actions.add(Actions.fromJson(velvetDawn, parentId, json));
+        errorMessage = String.format("Upgrade actions in %s is invalid. Actions must be a list of action objects.", parentId);
+        var upgradeActions = data.get("actions", Any.list()).validateInstanceIsList(errorMessage);
+        for (Any json: upgradeActions.items)
+            upgrade.actions.add(Actions.fromJson(velvetDawn, parentId, json.validateInstanceIsJson(errorMessage)));
 
         // Upgrade requirements
-        upgrade.requires = data.getStringList("requires", List.of(),
-                String.format("Upgrade requirements (in %s) must be a list of strings. Found '%s'.",
-                        parentId, upgrade.requires));
+        errorMessage = String.format("Upgrade requirements (in %s) must be a list of strings.", parentId);
+        var requirements = data.get("requires", Any.list()).validateInstanceIsList(errorMessage);
+        for (Any item: requirements.items)
+            upgrade.requires.add(item.validateInstanceIsString(errorMessage).toString());
 
         // check invalid key
         for (String key: data.keys()) {
@@ -121,7 +126,7 @@ public class Upgrade {
     /** Check if the upgrade should be hidden and therefore not ran */
     public ActionRunnableReason isHidden(Instance instance) {
         for (Conditional condition: this.hidden) {
-            if (!condition.isTrue(instance))
+            if (condition.isTrue(instance))
                 return new ActionRunnableReason(true, condition.notTrueReason);
         }
 

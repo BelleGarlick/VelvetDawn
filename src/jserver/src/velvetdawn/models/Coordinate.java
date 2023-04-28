@@ -7,6 +7,10 @@ public class Coordinate {
     public final float x;
     public final float y;
 
+    public Coordinate() {
+        this(0, 0);
+    }
+
     public Coordinate(float x, float y) {
         this.x = x;
         this.y = y;
@@ -31,5 +35,22 @@ public class Coordinate {
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
+    }
+
+    public Coordinate up() {
+        return new Coordinate(this.x, this.y - 1);
+    }
+    public Coordinate down() {
+        return new Coordinate(this.x, this.y + 1);
+    }
+    public Coordinate left() {
+        return new Coordinate(this.x - 1, this.y);
+    }
+    public Coordinate right() {
+        return new Coordinate(this.x + 1, this.y);
+    }
+
+    public boolean tileEquals(Coordinate coordinate) {
+        return this.tileX() == coordinate.tileX() && this.tileY() == coordinate.tileY();
     }
 }

@@ -3,7 +3,7 @@ package velvetdawn.map.generation;
 import velvetdawn.VelvetDawn;
 import velvetdawn.models.Coordinate;
 import velvetdawn.models.config.Config;
-import velvetdawn.models.map.Chunk;
+import velvetdawn.models.instances.TileInstance;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,33 +16,52 @@ import java.util.stream.Collectors;
 
 public class MapGeneration {
 
-    public Chunk generate(VelvetDawn velvetDawn, Config config) {
-        int mapSize = config.map.borderRadius * 2 + 1;
+    private final VelvetDawn velvetDawn;
+    private final Config config;
 
+    public MapGeneration(VelvetDawn velvetDawn, Config config) {
+        this.velvetDawn = velvetDawn;
+        this.config = config;
+    }
+
+    public Map<Integer, Map<Integer, TileInstance>> generate() throws Exception {
         Random random = new Random();
-        System.out.println(String.format("Creating map with seed: %s.", config.map.seed));
+        System.out.printf("Creating map with seed: %s.%n", config.map.seed);
         random.setSeed(config.map.seed);
 
         var map = new CollapsingMap(velvetDawn, config);
 
         List<Coordinate> uncheckedCells = new ArrayList<>();
-        for (int x = -config.map.borderRadius; x <= config.map.borderRadius; x++) {
-            for (int y = -config.map.borderRadius; y <= config.map.borderRadius; y++)
+        for (int x = 0; x < config.map.width; x++) {
+            for (int y = 0; y < config.map.height; y++)
                 uncheckedCells.add(new Coordinate(x, y));
         }
 
         Coordinate nextCell = getNextTile(random, uncheckedCells);
         int i = 0;
         while (nextCell != null) {
-            if (i % 100 == 0)
-                System.out.println(String.format("%s/%s", i + 1, mapSize * mapSize));
+            if (i % 1000 == 0) {
+                System.out.printf("\r%s/%s\n", i, config.map.width * config.map.height);
+            }
             i += 1;
-            collapseCell(velvetDawn, config, random, map, nextCell);
+            collapseCell(random, map, nextCell);
             nextCell = getNextTile(random, uncheckedCells);
         }
         System.out.println("Completed.");
 
-        return map.toChunk();
+        return map.toTiles();
+    }
+
+    private void printMap(CollapsingMap map) {
+        for (int i = 0; i < map.map.size(); i++) {
+            var row = map.map.get(i);
+            for (int j = 0; j < row.size(); j++) {
+                int count = row.get(j).size();
+                System.out.print(count + (count >= 10 ? " " : "  "));
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
     private Coordinate getNextTile(Random random, List<Coordinate> uncheckedCells) {
@@ -55,7 +74,7 @@ public class MapGeneration {
         return cell;
     }
 
-    private Set<String> getPossibleNeighbours(VelvetDawn velvetDawn, Set<String> cellOptions) {
+    private Set<String> getPossibleNeighbours(Set<String> cellOptions) {
         Set<String> possibleTiles = new HashSet<>();
         cellOptions.forEach(option -> {
             possibleTiles.addAll(velvetDawn.datapacks.tiles.get(option).neighbours.keys());
@@ -64,7 +83,7 @@ public class MapGeneration {
         return possibleTiles;
     }
 
-    public void collapseCell(VelvetDawn velvetDawn, Config config, Random random, CollapsingMap map, Coordinate cell) {
+    public void collapseCell(Random random, CollapsingMap map, Coordinate cell) throws Exception {
         // TODO Only get probabilities from fully collapsed cells
         List<String> collapsedCellProbs = new ArrayList<>();
         var cellProbabilites = getNeighbouringCellProbabilities(velvetDawn, map, cell);
@@ -77,7 +96,7 @@ public class MapGeneration {
         var cellChoise = collapsedCellProbs.get(randomIndex);
 
         map.set(cell, new HashSet<>(Set.of(cellChoise)));
-        var possibleNeighbours = getPossibleNeighbours(velvetDawn, map.get(cell));
+        var possibleNeighbours = getPossibleNeighbours(map.get(cell));
 
         ArrayList<NeighbourInformation> neighbourUpdates = new ArrayList<>(List.of(
                 new NeighbourInformation(
@@ -96,10 +115,13 @@ public class MapGeneration {
 
                 int currentPossibilities = map.get(neighbour).size();
                 map.get(neighbour).retainAll(neighbours.possibleNeighbours);
+                if (map.get(neighbour).isEmpty())
+                    throw new Exception("Error on map generation");
+
                 if (map.get(neighbour).size() < currentPossibilities) {
                     // TODO Only add neighbours if in range
                     neighbourUpdates.add(new NeighbourInformation(
-                            getPossibleNeighbours(velvetDawn, map.get(neighbour)),
+                            getPossibleNeighbours(map.get(neighbour)),
                             velvetDawn.map.getNeighbours(neighbour)
                     ));
                 }
@@ -115,7 +137,7 @@ public class MapGeneration {
         // breakpoint()
     }
 
-    public Map<String, Integer> getNeighbouringCellProbabilities(VelvetDawn velvetDawn, CollapsingMap map, Coordinate cell) {
+    public Map<String, Integer> getNeighbouringCellProbabilities(VelvetDawn velvetDawn, CollapsingMap map, Coordinate cell) throws Exception {
         Map<String, Integer> probabilityMap = map.get(cell).stream().collect(Collectors.toMap(key -> key, key -> 0));
         List<Coordinate> neighbouringCellCoords = velvetDawn.map.getNeighbours(cell);
 
@@ -128,17 +150,18 @@ public class MapGeneration {
                 continue;
 
             Map<String, Integer> weightedPossibleNeighbours = new HashMap<>();
-            possibleTiles.forEach(tile -> {
-                velvetDawn.datapacks.tiles.get(tile).neighbours.keys().forEach((tileKey) -> {
+            for (String tile: possibleTiles) {
+                var tileDef = velvetDawn.datapacks.tiles.get(tile);
+                for (String tileKey: tileDef.neighbours.keys()) {
                     weightedPossibleNeighbours.put(
                             tileKey,
                             (int) (weightedPossibleNeighbours.getOrDefault(tileKey, 0)
                                                         + velvetDawn.datapacks.tiles.get(tile).neighbours.get(tileKey).toNumber())
                     );
-                });
-            });
+                }
+            }
 
-            probabilityMap.keySet().forEach(key -> {
+            new ArrayList<>(probabilityMap.keySet()).forEach(key -> {
                 if (!weightedPossibleNeighbours.containsKey(key))
                     probabilityMap.remove(key);
                 else {

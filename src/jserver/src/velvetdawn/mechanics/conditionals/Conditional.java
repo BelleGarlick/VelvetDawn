@@ -5,9 +5,8 @@ import velvetdawn.mechanics.FunctionValue;
 import velvetdawn.mechanics.selectors.Selector;
 import velvetdawn.mechanics.selectors.Selectors;
 import velvetdawn.models.anytype.Any;
-import velvetdawn.models.anytype.AnyNull;
+import velvetdawn.models.anytype.AnyJson;
 import velvetdawn.models.instances.Instance;
-import velvetdawn.utils.Json;
 
 import java.util.Map;
 import java.util.Set;
@@ -62,7 +61,7 @@ public abstract class Conditional {
     }
 
     /** Parse the data into the conditional */
-    public Conditional fromJson(VelvetDawn velvetDawn, String parentId, Json data) throws Exception {
+    public Conditional fromJson(VelvetDawn velvetDawn, String parentId, AnyJson data) throws Exception {
         this.selector = Selectors.get(
                 velvetDawn,
                 parentId,
@@ -73,9 +72,11 @@ public abstract class Conditional {
 
         data.remove("notes");
 
-        this.notTrueReason = data.get("reason", Any.Null())
-                .validateInstanceIsStringOrNull(String.format("Reason in conditional for %s must be a string", parentId))
-                .toString();
+        this.notTrueReason = null;
+        if (data.containsKey("reason"))
+            this.notTrueReason = data.get("reason")
+                .validateInstanceIsString(String.format("Reason in conditional for %s must be a string", parentId))
+                .value;
         data.remove("reason");
 
         if (data.keys().size() != 1) {

@@ -6,9 +6,10 @@ import velvetdawn.mechanics.actions.Actions;
 import velvetdawn.mechanics.conditionals.Conditional;
 import velvetdawn.mechanics.conditionals.Conditionals;
 import velvetdawn.models.ActionRunnableReason;
-import velvetdawn.models.instances.EntityInstance;
+import velvetdawn.models.anytype.Any;
+import velvetdawn.models.anytype.AnyJson;
+import velvetdawn.models.instances.entities.EntityInstance;
 import velvetdawn.models.instances.Instance;
-import velvetdawn.utils.Json;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,8 @@ public class Ability {
         this.description = description;
     }
 
-    public Json toJson() {
-        return new Json()
+    public AnyJson toJson() {
+        return new AnyJson()
                 .set("id", this.id)
                 .set("name", this.name)
                 .set("icon", this.icon)
@@ -53,34 +54,54 @@ public class Ability {
      * @param data The json data
      * @return The new Ability
      */
-    public static Ability fromJson(VelvetDawn velvetDawn, String parentId, int abilityNumber, Json data) throws Exception {
+    public static Ability fromJson(VelvetDawn velvetDawn, String parentId, int abilityNumber, AnyJson data) throws Exception {
         String id = String.format("%s-ability-%s", parentId, abilityNumber);
         String name = data.get("name")
                 .validateInstanceIsString(String.format("Ability name in %s is invalid", parentId))
                 .value;
-        String description = data.get("description")
-                .validateInstanceIsStringOrNull(String.format("Entity description in %s must be a string or null", parentId))
-                .toString();
-        String icon = data.get("icon")
-                .validateInstanceIsStringOrNull(String.format("%s has ability with missing/invalid icon.", parentId))
-                .toString();
+
+        String description = null;
+        if (data.containsKey("description"))
+            description = data.get("description")
+                    .validateInstanceIsString(String.format("Entity description in %s must be a string or null", parentId))
+                    .value;
+
+        String icon = null;
+        if (data.containsKey("icon"))
+            icon = data.get("icon")
+                    .validateInstanceIsString(String.format("%s has ability with missing/invalid icon.", parentId))
+                    .value;
 
         var ability = new Ability(id, name, icon, description);
 
         if (!velvetDawn.datapacks.resources.containsKey(ability.icon))
-            System.out.println(String.format("[WARN] %s ability has missing icon '%s'", parentId, ability.icon));
+            System.out.printf("[WARN] %s ability has missing icon '%s'%n", parentId, ability.icon);
 
         // Parse hidden conditions
-        var hiddenConditions = data.getStrictJsonList("hidden", List.of(), String.format(
-                "Ability hidden in %s is invalid. Hidden attributes must be a list of conditions.", parentId));
-        for (Json json: hiddenConditions)
-            ability.hidden.add(Conditionals.get(velvetDawn, parentId, json));
+        var error = String.format(
+                "Ability hidden in %s is invalid. Hidden attributes must be a list of json objects.", parentId);
+        var hiddenConditions = data
+                .get("hidden", Any.list())
+                .validateInstanceIsList(error);
+        for (Any json: hiddenConditions.items)
+            ability.hidden.add(Conditionals.get(velvetDawn, parentId, json.validateInstanceIsJson(error)));
+
+        // Parse enabled conditions
+        error = String.format(
+                "Ability enabled in %s is invalid. Enabled attributes must be a list of json objects.", parentId);
+        var enabledConditions = data
+                .get("enabled", Any.list())
+                .validateInstanceIsList(error);
+        for (Any json: enabledConditions.items)
+            ability.enabled.add(Conditionals.get(velvetDawn, parentId, json.validateInstanceIsJson(error)));
 
         // Parse actions
-        var abilityActions = data.getStrictJsonList("actions", List.of(), String.format(
-                "Ability actions in %s is invalid. Actions must be a list of action objects.", parentId));
-        for (Json json: abilityActions)
-            ability.actions.add(Actions.fromJson(velvetDawn, parentId, json));
+        error = String.format(
+                "Ability actions in %s is invalid. Actions must be a list of action objects.", parentId);
+        var abilityActions = data.get("actions", Any.list())
+                .validateInstanceIsList(error);
+        for (Any json: abilityActions.items)
+            ability.actions.add(Actions.fromJson(velvetDawn, parentId, json.validateInstanceIsJson(error)));
 
         // check invalid key
         for (String key: data.keys()) {
@@ -100,7 +121,7 @@ public class Ability {
     /** Check if the ability should be hidden and therefore not ran */
     public ActionRunnableReason isHidden(Instance instance) {
         for (Conditional condition: this.hidden) {
-            if (!condition.isTrue(instance))
+            if (condition.isTrue(instance))
                 return new ActionRunnableReason(true, condition.notTrueReason);
         }
 
@@ -109,12 +130,13 @@ public class Ability {
 
     /** Check if the ability should be disabled and therefore not ran */
     public ActionRunnableReason isEnabled(EntityInstance instance) {
+        ActionRunnableReason reason = new ActionRunnableReason(true);
         for (Conditional condition: this.enabled) {
             if (!condition.isTrue(instance)) {
-                return new ActionRunnableReason(true, condition.notTrueReason);
+                reason = new ActionRunnableReason(false, condition.notTrueReason);
             }
         }
 
-        return new ActionRunnableReason(false);
+        return reason;
     }
 }

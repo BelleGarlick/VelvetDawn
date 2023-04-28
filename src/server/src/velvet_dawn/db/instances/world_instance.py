@@ -9,13 +9,13 @@ This can be accessed through the 'world' selector.
 """
 
 
-class WorldInstance(Instance):
+class OldWorldInstance(Instance):
 
     instance = None
 
     def __new__(cls):
         if cls.instance is None:
-            cls.instance = super(WorldInstance, cls).__new__(cls)
+            cls.instance = super(OldWorldInstance, cls).__new__(cls)
         return cls.instance
 
     @property
@@ -38,11 +38,3 @@ class WorldInstance(Instance):
     def reset_attribute(self, key, value_if_not_exists):
         velvet_dawn.db.attributes.reset_world_attribute(key, value_if_not_exists)
 
-    def add_tag(self, tag: str):
-        velvet_dawn.db.tags.add_world_tag(tag)
-
-    def remove_tag(self, tag: str):
-        velvet_dawn.db.tags.remove_world_tag(tag)
-
-    def has_tag(self, tag: str):
-        return velvet_dawn.db.tags.is_world_tagged(tag)

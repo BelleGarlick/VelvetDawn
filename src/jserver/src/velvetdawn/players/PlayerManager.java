@@ -1,12 +1,12 @@
 package velvetdawn.players;
 
 import org.jetbrains.annotations.NotNull;
+import velvetdawn.models.anytype.AnyJson;
 import velvetdawn.models.config.Config;
 import velvetdawn.VelvetDawn;
 import velvetdawn.models.Team;
-import velvetdawn.models.instances.EntityInstance;
+import velvetdawn.models.instances.entities.EntityInstance;
 import velvetdawn.models.instances.Instance;
-import velvetdawn.utils.Json;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -77,8 +77,8 @@ public class PlayerManager {
         return player;
     }
 
-    public void disconnect(VelvetDawn velvetDawn, Config config, Player player) {
-        this.save(config, player);
+    public void disconnect(Player player) {
+        velvetDawn.save();
         this.players.remove(player.name);
         velvetDawn.entities.removeForPlayer(player);
         // todo if a player hasn't pinged in 30s then this should be called
@@ -110,19 +110,13 @@ public class PlayerManager {
         return getFriendlyEnemyPlayersBreakdown(velvetDawn.game.turns.getActiveTurn());
     }
 
-    public void saveAll(Config config) {
-        for (Player player: this.players.values()) {
-            this.save(config, player);
-        }
-    }
-
-    public void save(Config config, Player player) {
+    public void save(Config config, Player player) throws Exception {
         var json = player.toJson();
-        config.getWorldSavePath().getChild("players").getChild(player.name + ".json").saveJson(json);
+        config.getWorldSavePath().getChild("players").getChild(player.name + ".json").writeJson(json);
     }
 
     public void load(Config config, String playerName) throws Exception {
-        Json playerJson = config.getWorldSavePath().getChild("players").getChild(playerName + ".json").loadAsJson();
+        AnyJson playerJson = config.getWorldSavePath().getChild("players").getChild(playerName + ".json").loadAsJson();
         var player = Player.fromJson(playerJson);
         this.players.put(player.name, player);
     }

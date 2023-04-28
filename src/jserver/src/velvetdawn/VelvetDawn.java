@@ -20,12 +20,14 @@ public class VelvetDawn {
     public final PlayerManager players;
     public final EntityManager entities = new EntityManager(this);
 
-    public VelvetDawn(Config config) {
+    public VelvetDawn(Config config) throws Exception {
         this.config = config;
 
         this.game = new Game(this, config);
         this.map = new MapManager(this, config);
         this.players = new PlayerManager(this, config);
+
+        this.datapacks.init(this, config);
     }
 
     public void save() {
@@ -35,9 +37,5 @@ public class VelvetDawn {
 //        players.save();
 //        entities.save();
 //        this.game.save();
-    }
-
-    public void init() throws Exception {
-        this.datapacks.init(this, config);
     }
 }

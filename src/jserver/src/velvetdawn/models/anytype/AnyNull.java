@@ -7,11 +7,6 @@ public class AnyNull extends AnyFloat {
     }
 
     @Override
-    public String toSaveString() {
-        return "n#";
-    }
-
-    @Override
     public String toString() {
         return null;
     }
@@ -22,5 +17,12 @@ public class AnyNull extends AnyFloat {
     }
 
     @Override
-    public Any validateInstanceIsStringOrNull(String s) {return this;}
+    public Any copy() {
+        return new AnyNull();
+    }
+
+    @Override
+    public Any deepcopy() {
+        return this.copy();
+    }
 }

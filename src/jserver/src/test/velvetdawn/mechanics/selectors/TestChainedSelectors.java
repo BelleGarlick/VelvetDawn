@@ -49,38 +49,37 @@ public class TestChainedSelectors extends BaseTest {
     public void test_selector_get_value() throws Exception {
         var velvetDawn = this.prepareGame();
 
-        var entities = new ArrayList<>(velvetDawn.entities.list());
+        var entities = velvetDawn.entities.list();
 
         // No attributes on units, so returns none
         assertTrue(Selectors.get(velvetDawn, "0", "entities.example")
                 .funcGetValue(WorldInstance.getInstance()) instanceof AnyNull);
 
-
         // Test with one number
         entities.get(0).attributes.set("example", Any.from(5));
-        assertEquals(5, Selectors.get(velvetDawn, "0", "units.example")
+        assertEquals(5, Selectors.get(velvetDawn, "0", "entities.example")
                 .funcGetValue(WorldInstance.getInstance()).toNumber(), 0);
 
         // Test the average of the two numbers
         entities.get(1).attributes.set("example", Any.from(3));
-        assertEquals(4, Selectors.get(velvetDawn, "0", "units.example")
+        assertEquals(4, Selectors.get(velvetDawn, "0", "entities.example")
                 .funcGetValue(WorldInstance.getInstance()).toNumber(), 0);
 
         // Test mixed values
         entities.get(1).attributes.set("example", Any.from("dsadsa"));
-        assertNull(Selectors.get(velvetDawn, "0", "units.example")
-                .funcGetValue(WorldInstance.getInstance()));
+        assertTrue(Selectors.get(velvetDawn, "0", "entities.example")
+                .funcGetValue(WorldInstance.getInstance()) instanceof AnyNull);
 
         // Test not equal strings
         entities.get(0).attributes.set("example", Any.from("dsadsa"));
         entities.get(1).attributes.set("example", Any.from("aaaaa"));
-        assertNull(Selectors.get(velvetDawn, "0", "units.example")
-                .funcGetValue(WorldInstance.getInstance()));
+        assertTrue(Selectors.get(velvetDawn, "0", "entities.example")
+                .funcGetValue(WorldInstance.getInstance()) instanceof AnyNull);
 
         // Test equal strings
         entities.get(0).attributes.set("example", Any.from("aaaaa"));
         entities.get(1).attributes.set("example", Any.from("aaaaa"));
-        assertEquals("aaaaa", Selectors.get(velvetDawn,"0", "units.example")
+        assertEquals("aaaaa", Selectors.get(velvetDawn,"0", "entities.example")
                 .funcGetValue(WorldInstance.getInstance()).toString());
     }
 }

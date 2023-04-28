@@ -3,7 +3,8 @@ from typing import List, Optional
 import velvet_dawn
 from velvet_dawn import errors
 
-from velvet_dawn.db.instances import Instance, WorldInstance
+from velvet_dawn.db.instances import Instance
+from velvet_dawn.models.instances.instance import WorldInstance
 
 """ Filtering module
 

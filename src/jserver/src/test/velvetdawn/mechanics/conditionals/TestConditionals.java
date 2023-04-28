@@ -6,7 +6,7 @@ import velvetdawn.mechanics.conditionals.Comparison;
 import velvetdawn.mechanics.conditionals.Conditionals;
 import velvetdawn.mechanics.conditionals.CountConditional;
 import velvetdawn.mechanics.conditionals.StandardConditional;
-import velvetdawn.utils.Json;
+import velvetdawn.models.anytype.AnyJson;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -21,33 +21,33 @@ public class TestConditionals extends BaseTest {
         var velvetDawn = this.prepareGame();
 
         // Random key
-        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new Json()
+        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new AnyJson()
                 .set("if", "self")
                 .set("fsa", "random key")));
 
         // Two operations
-        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new Json()
+        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new AnyJson()
                 .set("if", "self")
                 .set("gt", 5)
                 .set("lt", 5)));
 
         // Cannot compare greater than to a string
-        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new Json()
+        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new AnyJson()
                 .set("if", "self")
                 .set("gt", "5")));
 
         // Cannot compare tags on an attribute
-        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new Json()
+        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new AnyJson()
                 .set("if", "self.attribute")
                 .set("tagged", "atag")));
 
         // Cannot compare tagged on a count condition
-        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new Json()
+        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new AnyJson()
                 .set("count", "self")
                 .set("tagged", "atag")));
 
         // Test standard comparison
-        var conditional = Conditionals.get(velvetDawn, "", new Json()
+        var conditional = Conditionals.get(velvetDawn, "", new AnyJson()
                 .set("if", "self")
                 .set("equals", "testing:commander")
                 .set("reason", "Instance is not a commander")
@@ -59,7 +59,7 @@ public class TestConditionals extends BaseTest {
         assertTrue(conditional instanceof StandardConditional);
 
         // Test count
-        conditional = Conditionals.get(velvetDawn, "", new Json()
+        conditional = Conditionals.get(velvetDawn, "", new AnyJson()
                         .set("count", "entity")
                         .set("equals", 4)
                         .set("reason", "There must be four units")
@@ -71,7 +71,7 @@ public class TestConditionals extends BaseTest {
         assertTrue(conditional instanceof CountConditional);
 
         // Test invalid key (not if/count)
-        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new Json()
+        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new AnyJson()
                 .set("basic", "entity")
                 .set("equals", 4)
                 .set("reason", "There must be four units")

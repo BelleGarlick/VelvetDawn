@@ -3,8 +3,9 @@ package velvetdawn.mechanics;
 import velvetdawn.VelvetDawn;
 import velvetdawn.mechanics.actions.Action;
 import velvetdawn.mechanics.actions.Actions;
+import velvetdawn.models.anytype.Any;
+import velvetdawn.models.anytype.AnyJson;
 import velvetdawn.models.instances.Instance;
-import velvetdawn.utils.Json;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class Triggers {
 
     // TODO implement attack and attacked, spawn, death and kill
     // TODO Add validation for this
-    Set<String> WORLD_TRIGGERS = Set.of("game", "turn", "turn-end");
+    Set<String> WORLD_TRIGGERS = Set.of("game", "turn", "turn-end", "round");
     Set<String> TILE_TRIGGERS = Stream.concat(
             Stream.of("enter", "leave", "target", "targeted", "death", "kill", "attack", "attacked"),
             WORLD_TRIGGERS.stream()).collect(Collectors.toSet());
@@ -31,7 +32,7 @@ public class Triggers {
             Stream.of("friendly-turn", "friendly-turn-end", "enemy-turn", "enemy-turn-end", "spawn"),
             TILE_TRIGGERS.stream()).collect(Collectors.toSet());
 
-    private final Map<String, List<Action>> triggers = new HashMap<>();
+    public final Map<String, List<Action>> triggers = new HashMap<>();
 
     /** Parse and load a dict defining triggers and it's
      * actions into this class
@@ -39,19 +40,20 @@ public class Triggers {
      * @param parentId The definition id of the entity or tile
      * @param data The data defining the entity/tile's triggers
      */
-    public void load(VelvetDawn velvetDawn, String parentId, Json data) throws Exception {
+    public void load(VelvetDawn velvetDawn, String parentId, AnyJson data) throws Exception {
         // Iterate through each key in the dict to check it 's valid
         for (String key: data.keys()) {
             if (key.equals("notes"))
                 continue;
 
             if (!UNIT_TRIGGERS.contains(key))
-                throw new Exception(String.format("Invalid trigger key %s", key));
+                throw new Exception(String.format("Invalid trigger key '%s'", key));
 
-            var jsonActions = data.getStrictJsonList(key, List.of(), String.format("Trigger '%s' must be a list of actions", key));
+            var errorMessage = String.format("Trigger '%s' must be a list of actions", key);
+            var jsonActions = data.get(key, Any.list()).validateInstanceIsList(errorMessage);
             List<Action> actions = new ArrayList<>();
-            for (Json action: jsonActions) {
-                actions.add(Actions.fromJson(velvetDawn, parentId, action));
+            for (Any action: jsonActions.items) {
+                actions.add(Actions.fromJson(velvetDawn, parentId, action.validateInstanceIsJson(errorMessage)));
             }
 
             this.triggers.put(key, actions);

@@ -3,9 +3,9 @@ package velvetdawn.models.instances.attributes;
 import lombok.Builder;
 import velvetdawn.VelvetDawn;
 import velvetdawn.models.anytype.Any;
+import velvetdawn.models.anytype.AnyJson;
 import velvetdawn.models.anytype.AnyNull;
 import velvetdawn.models.anytype.AnyString;
-import velvetdawn.utils.Json;
 
 import java.util.Set;
 
@@ -26,7 +26,7 @@ public class Attribute {
         this.value = value;
     }
 
-    public static Attribute load(VelvetDawn velvetDawn, String parentId, Json data) throws Exception {
+    public static Attribute load(VelvetDawn velvetDawn, String parentId, AnyJson data) throws Exception {
         for (String key: data.keys()) {
             if (!AvailableKeys.contains(key))
                 throw new Exception(String.format("%s's attributes have unknown key: '%s'", parentId, key));

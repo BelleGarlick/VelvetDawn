@@ -2,10 +2,11 @@ package velvetdawn.entities;
 
 import velvetdawn.VelvetDawn;
 import velvetdawn.models.Coordinate;
-import velvetdawn.models.instances.EntityInstance;
-import velvetdawn.models.instances.EntityInstanceUpdate;
+import velvetdawn.models.instances.entities.EntityInstance;
+import velvetdawn.models.instances.entities.EntityInstanceUpdate;
 import velvetdawn.players.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -15,17 +16,19 @@ import java.util.stream.Collectors;
 
 public class EntityManager {
 
+    private final VelvetDawn velvetDawn;
+
     private final Set<EntityInstance> entities = new HashSet<>();
 
-    private final VelvetDawn velvetDawn;
-    private final Movement movement = new Movement();
+    public final Movement movement;
 
     public EntityManager(VelvetDawn velvetDawn) {
         this.velvetDawn = velvetDawn;
+        this.movement = new Movement(velvetDawn);
     }
 
-    public Collection<EntityInstance> list() {
-        return this.entities;
+    public List<EntityInstance> list() {
+        return new ArrayList<>(this.entities);
     }
 
     /** Spawn an entity
@@ -38,15 +41,32 @@ public class EntityManager {
         if (!velvetDawn.datapacks.entities.containsKey(entityId))
             throw new Exception(String.format("Unknown entity Id %s", entityId));
 
+        var definition = velvetDawn.datapacks.entities.get(entityId);
+
         var entity = new EntityInstance(
+                velvetDawn,
                 player,
                 UUID.randomUUID().toString(),
                 entityId,
                 position
         );
 
+        // Update entity before spawning
+        entity.tags.addAll(definition.tags);
+        definition.attributes.attributes.keySet().forEach(key ->
+            entity.attributes.set(key, definition.attributes.get(key)));
+
+        // Store new data
         player.entities.add(entity);
         this.entities.add(entity);
+
+        // Trigger on spawn
+        definition.triggers.onSpawn(entity);
+
+        //    # Add to updates
+        //                submission_data = instance.json()
+        //        submission_data['time'] = time.time()
+        //        db.sadd(UNIT_UPDATES_UPDATED, [json.dumps(submission_data)])
 
         return entity;
     }
@@ -73,12 +93,16 @@ public class EntityManager {
 
     public List<EntityInstance> getAtPosition(Coordinate position) {
         // TODO Optimise
-        return this.entities.stream().filter(entityInstance -> {
-            return entityInstance.position.tileX() != position.tileX() || entityInstance.position.tileY() != position.tileY();
-        }).collect(Collectors.toList());
+        return this.entities.stream().filter(entityInstance -> entityInstance.position.tileEquals(position)).collect(Collectors.toList());
     }
 
-    public void move(EntityInstance instance, Coordinate coordinate) {
-        this.movement.move(instance, coordinate);
+    public void setPosition(EntityInstance instance, Coordinate coordinate) {
+        // TODO Store in map - remove item from map
+        instance.position = coordinate;
+        // TODO Store in map - add item to new position in hashmap
+    }
+
+    public Set<EntityInstance> all() {
+        return this.entities;
     }
 }

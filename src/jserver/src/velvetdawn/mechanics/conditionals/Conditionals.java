@@ -1,7 +1,7 @@
 package velvetdawn.mechanics.conditionals;
 
 import velvetdawn.VelvetDawn;
-import velvetdawn.utils.Json;
+import velvetdawn.models.anytype.AnyJson;
 
 public class Conditionals {
 
@@ -10,7 +10,7 @@ public class Conditionals {
      * @param parentId The entity the condition is being attached to.
      * @param data The dictionary of information.
      */
-    public static Conditional get(VelvetDawn velvetDawn, String parentId, Json data) throws Exception {
+    public static Conditional get(VelvetDawn velvetDawn, String parentId, AnyJson data) throws Exception {
         // TODO Test invalid data type
 //        if not isinstance(data, dict):
 //            raise errors.ValidationError(f"Conditional items must be a dictionary not '{data}' in {id}")
@@ -20,6 +20,6 @@ public class Conditionals {
         else if (data.keys().contains("count"))
             return new CountConditional().fromJson(velvetDawn, parentId, data);
 
-        throw new Exception(String.format("Unknown conditional operation '%s' in %s. Please see datapack documentation.", data.toString(), parentId));
+        throw new Exception(String.format("Unknown conditional operation '%s' in %s. Please see datapack documentation.", data, parentId));
     }
 }

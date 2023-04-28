@@ -4,7 +4,7 @@ import velvetdawn.models.Coordinate;
 
 public class WorldInstance extends Instance {
 
-    private static WorldInstance instance = new WorldInstance();
+    private static final WorldInstance instance = new WorldInstance();
 
     private WorldInstance() {
         super("world", "world", new Coordinate(0, 0));

@@ -6,7 +6,7 @@ import velvetdawn.models.Phase;
 import velvetdawn.models.Team;
 import velvetdawn.models.TurnData;
 import velvetdawn.models.anytype.AnyFloat;
-import velvetdawn.models.instances.EntityInstance;
+import velvetdawn.models.instances.entities.EntityInstance;
 import velvetdawn.models.instances.TileInstance;
 import velvetdawn.models.instances.WorldInstance;
 import velvetdawn.players.Player;
@@ -40,10 +40,7 @@ public class Turns {
         if (velvetDawn.game.phase != Phase.Game)
             return null;
 
-        if (this.activeTurn != null)
-            return this.activeTurn;
-
-        return velvetDawn.teams.listWithoutSpectators().get(0);
+        return this.activeTurn;
     }
 
     /** Get the current turn data returned to the user
@@ -76,13 +73,13 @@ public class Turns {
                 throw new Exception("You must place your commander.");
         }
 
-        System.out.println(String.format("Player '%s' ready.", player.name));
+        System.out.printf("Player '%s' ready.%n", player.name);
         player.ready = true;
     }
 
     /** Mark a player as not ready */
     public void unready(Player player) {
-        System.out.println(String.format("Player '%s' unready.", player.name));
+        System.out.printf("Player '%s' unready.%n", player.name);
         player.ready = false;
     }
 
@@ -112,7 +109,7 @@ public class Turns {
         var allowedTurnTime = this.currentTurnTime();
 
         if (currentTime > startTime + allowedTurnTime) {
-            System.out.println(String.format("%s has elapsed in setup, moving to next turn", allowedTurnTime));
+            System.out.printf("%s has elapsed in setup, moving to next turn%n", allowedTurnTime);
             if (velvetDawn.game.phase == Phase.Setup)
                 velvetDawn.game.startGamePhase();
             else if (velvetDawn.game.phase == Phase.Game)
@@ -155,14 +152,11 @@ public class Turns {
 
         // Update turn's player's entities to reset there remaining moves
         assert newTeamTurn != null;
-        newTeamTurn.listPlayersExcludeSpectators().forEach(player -> {
-            player.entities.forEach(entity -> {
-                entity.attributes.set(
-                        "movement.remaining",
-                        entity.attributes.get("movement.range", new AnyFloat(1))
-                );
-            });
-        });
+        velvetDawn.entities.all().forEach(entity ->
+            entity.attributes.set(
+                    "movement.remaining",
+                    entity.attributes.get("movement.range", new AnyFloat(1))
+            ));
 
         // Fire triggers on turn begins
         if (newTeamTurn == teams.get(0))
@@ -194,13 +188,13 @@ public class Turns {
 
         for (EntityInstance entity: velvetDawn.entities.list()) {
             var entityDef = velvetDawn.datapacks.entities.get(entity.datapackId);
-            entityDef.triggers.onTurnEnd(entity);
+            entityDef.triggers.onTurn(entity);
 
             if (playerBreakdown.friendlyPlayers.contains(entity.player))
                 entityDef.triggers.onFriendlyTurn(entity);
 
             if (playerBreakdown.enemyPlayers.contains(entity.player))
-                entityDef.triggers.onFriendlyTurn(entity);
+                entityDef.triggers.onEnemyTurn(entity);
         }
 
         for (TileInstance tile: velvetDawn.map.listTiles())
@@ -262,7 +256,7 @@ public class Turns {
     /** Return config turn time unless in setup phase */
     public long currentTurnTime() {
         return velvetDawn.game.phase == Phase.Setup
-                ? config.setupTime * 1000L
-                : config.turnTime * 1000L;
+                ? config.setupTime
+                : config.turnTime;
     }
 }

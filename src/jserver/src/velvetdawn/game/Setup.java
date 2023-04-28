@@ -4,7 +4,7 @@ import velvetdawn.VelvetDawn;
 import velvetdawn.models.Coordinate;
 import velvetdawn.models.GameSetup;
 import velvetdawn.models.Phase;
-import velvetdawn.models.instances.EntityInstance;
+import velvetdawn.models.instances.entities.EntityInstance;
 import velvetdawn.players.Player;
 
 import java.util.HashMap;
@@ -83,8 +83,7 @@ public class Setup {
             throw new Exception(String.format("Unknown entity id: '%s'", entityId));
 
         if (count == 0) {
-            if (this.setup.containsKey(entityId))
-                this.setup.remove(entityId);
+            this.setup.remove(entityId);
         } else
             this.setup.put(entityId, count);
     }
@@ -120,6 +119,9 @@ public class Setup {
         if (!velvetDawn.datapacks.entities.containsKey(entityId))
             throw new Exception("Unknown entity error");
 
+        if (!velvetDawn.entities.getAtPosition(position).isEmpty())
+            throw new Exception("Entity already exists in this tile.");
+
         if (!velvetDawn.map.spawn.isPointSpawnable(player, position))
             throw new Exception("This point is not within your spawn territory");
 
@@ -146,7 +148,6 @@ public class Setup {
 
     /** Remove an entity from a cell
      *
-     * @param player The player Removing the entity
      * @param position The position to remove the entity from
      */
     public void removeEntity(Player player, Coordinate position) throws Exception {
@@ -154,13 +155,14 @@ public class Setup {
             throw new Exception("Game setup may only be changed during game setup");
 
         List<EntityInstance> entities = velvetDawn.entities.getAtPosition(position);
-        if (!entities.isEmpty())
+        if (entities.isEmpty())
             throw new Exception("No entity for you to remove here.");
 
         // TODO Filter for your own units
 
         for (EntityInstance entity: entities) {
-            velvetDawn.entities.remove(entity);
+            if (entity.player == player)
+                velvetDawn.entities.remove(entity);
         }
     }
 

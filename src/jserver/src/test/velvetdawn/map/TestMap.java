@@ -1,0 +1,27 @@
+package test.velvetdawn.map;
+
+import org.junit.Test;
+import test.BaseTest;
+import velvetdawn.VelvetDawn;
+import velvetdawn.map.MapManager;
+import velvetdawn.models.Coordinate;
+import velvetdawn.models.config.Config;
+
+import java.util.List;
+
+import static junit.framework.TestCase.assertEquals;
+
+public class TestMap extends BaseTest {
+
+    @Test
+    public void test_get_distance() throws Exception {
+        // Check correct distances
+        assertEquals(15, MapManager.getDistance(new Coordinate(0, 0), new Coordinate(10, 10)));
+        assertEquals(10, MapManager.getDistance(new Coordinate(10, 0), new Coordinate(10, 10)));
+        assertEquals(4, MapManager.getDistance(new Coordinate(7, 7), new Coordinate(10, 10)));
+
+        assertEquals(14, MapManager.getDistance(new Coordinate(0, 0), new Coordinate(7, 10)));
+        assertEquals(12, MapManager.getDistance(new Coordinate(10, 0), new Coordinate(7, 10)));
+        assertEquals(3, MapManager.getDistance(new Coordinate(7, 7), new Coordinate(7, 10)));
+    }
+}

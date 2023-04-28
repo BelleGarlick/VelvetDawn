@@ -1,8 +1,9 @@
 package velvetdawn.mechanics.selectors;
 
 import velvetdawn.VelvetDawn;
+import velvetdawn.map.MapManager;
 import velvetdawn.models.anytype.AnyString;
-import velvetdawn.models.instances.EntityInstance;
+import velvetdawn.models.instances.entities.EntityInstance;
 import velvetdawn.models.instances.Instance;
 import velvetdawn.models.instances.WorldInstance;
 
@@ -19,12 +20,12 @@ public class Filters {
 
     private final VelvetDawn velvetDawn;
 
-    private final Set<String> allowedIds = new HashSet<>();
-    private final Set<String> allowedTags = new HashSet<>();
-    private Float minRange = null;
+    public final Set<String> allowedIds = new HashSet<>();
+    public final Set<String> allowedTags = new HashSet<>();
+    public Float minRange = null;
     public Float maxRange = null;
-    private boolean excludeSelf = false;
-    private boolean commanderOnly = false;
+    public boolean excludeSelf = false;
+    public boolean commanderOnly = false;
 
     public Filters(VelvetDawn velvetDawn) {
         this.velvetDawn = velvetDawn;
@@ -82,7 +83,7 @@ public class Filters {
                     // If missing tag, filter out the item
                     if (!this.allowedTags.isEmpty()) {
                         for (String tag: this.allowedTags) {
-                            if (!item.tags.has(tag))
+                            if (!item.tags.contains(tag))
                                 return false;
                         }
                     }
@@ -98,8 +99,8 @@ public class Filters {
                         if (item instanceof WorldInstance)
                             return false;
                         else {
-                            int distance = velvetDawn.map.getDistance(instance.position, item.position);
-                            if (distance > this.minRange)
+                            int distance = MapManager.getDistance(instance.position, item.position);
+                            if (distance > this.maxRange)
                                 return false;
                         }
                     }
@@ -109,7 +110,7 @@ public class Filters {
                         if (item instanceof WorldInstance)
                             return false;
                         else {
-                            int distance = velvetDawn.map.getDistance(instance.position, item.position);
+                            int distance = MapManager.getDistance(instance.position, item.position);
                             if (distance < this.minRange)
                                 return false;
                         }

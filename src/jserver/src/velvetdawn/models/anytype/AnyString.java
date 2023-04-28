@@ -12,11 +12,6 @@ public class AnyString extends Any {
     }
 
     @Override
-    public String toSaveString() {
-        return "s#" + this.value;
-    }
-
-    @Override
     public Any add(Any value) {
         if (value instanceof AnyString)
             return new AnyString(this.value + ((AnyString) value).value);
@@ -60,9 +55,6 @@ public class AnyString extends Any {
         return this;
     }
 
-    @Override
-    public Any validateInstanceIsStringOrNull(String s) {return this;}
-
     public AnyString validateRegex(String regex, String error) throws Exception {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(this.value);
@@ -71,6 +63,16 @@ public class AnyString extends Any {
         }
 
         return this;
+    }
+
+    @Override
+    public Any copy() {
+        return new AnyString(this.value);
+    }
+
+    @Override
+    public Any deepcopy() {
+        return this.copy();
     }
 
     public AnyFloat castToFloat() {

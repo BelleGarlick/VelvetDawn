@@ -4,8 +4,8 @@ import velvetdawn.VelvetDawn;
 import velvetdawn.mechanics.FunctionValue;
 import velvetdawn.mechanics.selectors.Selector;
 import velvetdawn.mechanics.selectors.Selectors;
+import velvetdawn.models.anytype.AnyJson;
 import velvetdawn.models.instances.Instance;
-import velvetdawn.utils.Json;
 
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +49,7 @@ public class ActionModify extends Action {
     private FunctionValue functionValue = null;
 
     /** Parse the dict of tile/unit data to construct this action */
-    public static ActionModify fromJson(VelvetDawn velvetDawn, String parentId, Json data) throws Exception {
+    public static ActionModify fromJson(VelvetDawn velvetDawn, String parentId, AnyJson data) throws Exception {
         if (!data.containsKey("modify")) {
             throw new Exception("Modify functions must contain a 'modify' selector");
         }
@@ -110,28 +110,30 @@ public class ActionModify extends Action {
 
     /** Execute the attribute */
     public void run(Instance instance) throws Exception {
-        if (this.function == ActionModifierFunction.SET)
-            this.selector.funcSet(instance, this.functionValue.value(instance));
-
-        else if (this.function == ActionModifierFunction.ADD)
-            this.selector.funcAdd(instance, this.functionValue.value(instance));
-
-        else if (this.function == ActionModifierFunction.MUL)
-            this.selector.funcMul(instance, this.functionValue.value(instance));
-
-        else if (this.function == ActionModifierFunction.SUB)
-            this.selector.funcSub(instance, this.functionValue.value(instance));
-
-        else if (this.function == ActionModifierFunction.RESET)
-            this.selector.funcReset(instance, this.functionValue.value(instance));
-
-        else if (this.function == ActionModifierFunction.ADD_TAG)
-            this.selector.funcAddTag(instance, this.functionValue.value(instance));
-
-        else if (this.function == ActionModifierFunction.REMOVE_TAG)
-            this.selector.funcRemoveTag(instance, this.functionValue.value(instance));
-
-        else
-            throw new Exception(String.format("Unknown action function type: '%s'", this.function));
+        switch (this.function) {
+            case SET:
+                this.selector.funcSet(instance, this.functionValue.value(instance));
+                break;
+            case ADD:
+                this.selector.funcAdd(instance, this.functionValue.value(instance));
+                break;
+            case MUL:
+                this.selector.funcMul(instance, this.functionValue.value(instance));
+                break;
+            case SUB:
+                this.selector.funcSub(instance, this.functionValue.value(instance));
+                break;
+            case RESET:
+                this.selector.funcReset(instance, this.functionValue.value(instance));
+                break;
+            case ADD_TAG:
+                this.selector.funcAddTag(instance, this.functionValue.value(instance));
+                break;
+            case REMOVE_TAG:
+                this.selector.funcRemoveTag(instance, this.functionValue.value(instance));
+                break;
+            default:
+                throw new Exception(String.format("Unknown action function type: '%s'", this.function));
+        }
     }
 }

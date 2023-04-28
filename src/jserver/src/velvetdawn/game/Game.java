@@ -5,7 +5,7 @@ import velvetdawn.models.config.Config;
 import velvetdawn.VelvetDawn;
 import velvetdawn.models.GameState;
 import velvetdawn.models.Phase;
-import velvetdawn.models.instances.EntityInstance;
+import velvetdawn.models.instances.entities.EntityInstance;
 import velvetdawn.models.instances.TileInstance;
 import velvetdawn.models.instances.WorldInstance;
 import velvetdawn.players.Player;
@@ -72,8 +72,6 @@ public class Game {
     }
 
     public void startGamePhase() throws Exception {
-        System.out.println("Starting game");
-
         this.phase = Phase.Game;
 
         // Trigger game start

@@ -35,7 +35,7 @@ public class TestFunctionValue extends BaseTest {
                 new FunctionValue(velvetDawn, "0", Any.from("__rand__")).value(null).toNumber()
         );
 
-        var entity = new ArrayList<>(velvetDawn.entities.list()).get(0);
+        var entity = velvetDawn.entities.list().get(0);
         var function = new FunctionValue(velvetDawn, "0", Any.from("@self"));
         assertTrue(function.selectorValue instanceof Selector);
         assertEquals(entity.datapackId, function.value(entity).toString());

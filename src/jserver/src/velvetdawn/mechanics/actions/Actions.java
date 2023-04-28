@@ -2,7 +2,9 @@ package velvetdawn.mechanics.actions;
 
 import velvetdawn.VelvetDawn;
 import velvetdawn.mechanics.conditionals.Conditionals;
-import velvetdawn.utils.Json;
+import velvetdawn.models.anytype.Any;
+import velvetdawn.models.anytype.AnyJson;
+import velvetdawn.models.anytype.AnyList;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class Actions {
      * @param data The dictionary defining which action should be used
      * @return The chosen action object
      */
-    public static Action fromJson(VelvetDawn velvetDawn, String parentId, Json data) throws Exception {
+    public static Action fromJson(VelvetDawn velvetDawn, String parentId, AnyJson data) throws Exception {
         // TODO Validate what happens if not a data object
 //        if not isinstance(data, dict)
 //            raise errors.ValidationError(f"Invalid actionable in {id}. '{data}' must be a dictionary")
@@ -35,9 +37,11 @@ public class Actions {
             throw new Exception(String.format("Invalid action '%s' on %s", data, parentId));
 
         // Create the comparison objects
-        var conditions = data.getStrictJsonList("conditions", List.of(), String.format("Conditionals in actions must be a list of json objects (%s)", parentId));
-        for (Json condition: conditions)
-            builtAction.addCondition(Conditionals.get(velvetDawn, parentId, condition));
+        var error = String.format("Conditionals in actions must be a list of json objects (%s)", parentId);
+        var conditions = data.get("conditions", new AnyList())
+                .validateInstanceIsList(error);
+        for (Any condition: conditions.items)
+            builtAction.addCondition(Conditionals.get(velvetDawn, parentId, condition.validateInstanceIsJson(error)));
 
         return builtAction;
     }

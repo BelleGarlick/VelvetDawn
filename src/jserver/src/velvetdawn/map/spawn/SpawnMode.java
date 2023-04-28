@@ -5,22 +5,30 @@ import velvetdawn.models.Coordinate;
 import velvetdawn.models.config.Config;
 import velvetdawn.players.Player;
 
+import java.util.List;
 import java.util.Set;
 
 public abstract class SpawnMode {
 
-    public abstract Set<Coordinate> getSpawnCoordinatesForPlayer(VelvetDawn velvetDawnCore, Config config, Player player);
+    protected final VelvetDawn velvetDawn;
+    protected final Config config;
 
-    /** Check if the given point exists within the player's spawn territory */
-    public boolean isPointSpawnable(VelvetDawn velvetDawnCore, Config config, Player player, Coordinate coordinate) {
-        Set<Coordinate> spawnPoints = this.getSpawnCoordinatesForPlayer(velvetDawnCore, config, player);
-
-        boolean valid = false;
-        for (Coordinate coord: spawnPoints)
-            valid = valid || coord.equals(coordinate);
-
-        return valid;
+    public SpawnMode(VelvetDawn velvetDawn, Config config) {
+        this.velvetDawn = velvetDawn;
+        this.config = config;
     }
 
-    public abstract void assignSpawnPoints(VelvetDawn velvetDawn, Config config) throws Exception;
+    public abstract List<Coordinate> listAllSpawnPoints();
+
+    public abstract Set<Coordinate> getSpawnCoordinatesForPlayer(Player player);
+
+    /** Check if the given point exists within the player's spawn territory */
+    public boolean isPointSpawnable(Player player, Coordinate coordinate) {
+        return this
+                .getSpawnCoordinatesForPlayer(player)
+                .stream()
+                .anyMatch(coord -> coord.tileEquals(coordinate));
+    }
+
+    public abstract void assignSpawnPoints() throws Exception;
 }

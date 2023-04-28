@@ -4,33 +4,33 @@
     {
       "id": "healing-rate-1",
       "name": "Healing Rate I",
-      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
-      "actions": [{"modify": "self.healing-rate", "add": 5}, {"modify": "commander", "add-tag": "tag:used-upgrade"}]
+      "enabled": [{"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.healing-rate", "add": 5}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}]
     },
     {
       "id": "healing-rate-2",
       "name": "Healing Rate II",
       "requires": ["healing-rate-1"],
-      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
-      "actions": [{"modify": "self.healing-rate", "add": 5}, {"modify": "commander", "add-tag": "tag:used-upgrade"}]
+      "enabled": [{"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.healing-rate", "add": 5}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}]
     },
     {
       "name": "Healing Rate III",
       "requires": ["healing-rate-2"],
-      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
-      "actions": [{"modify": "self.healing-rate", "add": 5}, {"modify": "commander", "add-tag": "tag:used-upgrade"}]
+      "enabled": [{"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.healing-rate", "add": 5}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}]
     },
     {
       "id": "healing-range-1",
       "name": "Healing Range I",
-      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
-      "actions": [{"modify": "self.healing-range", "add": 1}, {"modify": "commander", "add-tag": "tag:used-upgrade"}]
+      "enabled": [{"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.healing-range", "add": 1}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}]
     },
     {
       "name": "Healing Range II",
       "requires": ["healing-range-1"],
-      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
-      "actions": [{"modify": "self.healing-range", "add": 1}, {"modify": "commander", "add-tag": "tag:used-upgrade"}]
+      "enabled": [{"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.healing-range", "add": 1}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}]
     }
   ]
 }

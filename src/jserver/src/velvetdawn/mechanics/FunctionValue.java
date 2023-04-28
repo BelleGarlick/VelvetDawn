@@ -25,7 +25,7 @@ public class FunctionValue {
          - {"if": '...', "gt": "__rand__"}
     */
 
-    public static enum FunctionValueType {
+    public enum FunctionValueType {
         RAW,
         SELECTOR,
         RANDOM

@@ -1,13 +1,15 @@
 package velvetdawn.datapacks;
 
+import velvetdawn.models.anytype.Any;
 import velvetdawn.models.anytype.AnyBool;
+import velvetdawn.models.anytype.AnyJson;
+import velvetdawn.models.anytype.AnyList;
 import velvetdawn.models.config.Config;
 import velvetdawn.VelvetDawn;
 import velvetdawn.models.datapacks.entities.EntityDefinition;
 import velvetdawn.models.datapacks.ResourceDefinition;
 import velvetdawn.models.datapacks.tiles.TileDefinition;
 import velvetdawn.models.datapacks.WorldDefinition;
-import velvetdawn.utils.Json;
 import velvetdawn.utils.Path;
 
 import java.io.IOException;
@@ -15,9 +17,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+
 public class DatapackManager {
 
-    public final Map<String, Json> abstractDefinitions = new HashMap<>();
+    public final Map<String, AnyJson> abstractDefinitions = new HashMap<>();
     public final Map<String, EntityDefinition> entities = new HashMap<>();
     public final Map<String, TileDefinition> tiles = new HashMap<>();
     public final Map<String, ResourceDefinition> resources = new HashMap<>();
@@ -53,11 +56,20 @@ public class DatapackManager {
 //            throw ValidationError("Datapack '{datapack}' not found.");
 
 
-//        datapack_id = _load_datapack_metadata(datapack_path)
-//
+        loadDatapackMetadata(velvetDawn, path, packId);
+
         loadResources(path.getChild("resources"), packId);
         loadTiles(velvetDawn, path.getChild("tiles"), packId);
         loadEntities(velvetDawn, path.getChild("entities"), packId);
+    }
+
+    private void loadDatapackMetadata(VelvetDawn velvetDawn, Path datapackPath, String datapackId) throws Exception {
+        var dataPath = datapackPath.getChild("datapack.json");
+        var data = new AnyJson();
+        if (dataPath.exists())
+            data = dataPath.loadAsJson();
+
+        this.world.load(velvetDawn, data);
     }
 
     /** Load entities into the entity map
@@ -66,14 +78,14 @@ public class DatapackManager {
      * @param datapackId The datapack id
      */
     private void loadEntities(VelvetDawn velvetDawn, Path entityPath, String datapackId) throws Exception {
-        Map<Path, Json> items = this.loadItemsInDir(entityPath, datapackId);
+        Map<Path, AnyJson> items = this.loadItemsInDir(entityPath, datapackId);
         for (Path path: items.keySet()) {
             var data = items.get(path);
             var entityId = this.constructId(datapackId, entityPath, path, false, data);
             System.out.println(" - " + entityId);
 
             // TODO extend entity data
-            this.entities.put(entityId, EntityDefinition.fromJson(velvetDawn, entityId, data));
+            this.entities.put(entityId, EntityDefinition.fromJson(velvetDawn, entityId, extend(data)));
         }
     }
 
@@ -84,14 +96,14 @@ public class DatapackManager {
      * @param datapackId The datapack id
      */
     public void loadTiles(VelvetDawn velvetDawn, Path tilesPath, String datapackId) throws Exception {
-        Map<Path, Json> items = this.loadItemsInDir(tilesPath, datapackId);
+        Map<Path, AnyJson> items = this.loadItemsInDir(tilesPath, datapackId);
         for (Path path: items.keySet()) {
             var data = items.get(path);
             var tileId = this.constructId(datapackId, tilesPath, path, false, data);
             System.out.println(" - " + tileId);
 
             // TODO extend tile data
-            this.tiles.put(tileId, TileDefinition.loadFromJson(velvetDawn, tileId, data));
+            this.tiles.put(tileId, TileDefinition.loadFromJson(velvetDawn, tileId, extend(data)));
         }
     }
 
@@ -102,14 +114,14 @@ public class DatapackManager {
      * @param datapackId The datapack prefix
      */
     public void loadResources(Path resourcesPath, String datapackId) throws Exception {
-        Json overrides = new Json();
+        AnyJson overrides = new AnyJson();
 
         for (Path path: resourcesPath.walk()) {
             if (path.name().equals("overrides.json"))
                 overrides = path.loadAsJson();
             else {
                 var resourceId = this.constructId(datapackId, resourcesPath, path, true, null);
-                System.out.println(String.format(" - %s", resourceId));
+                System.out.printf(" - %s%n", resourceId);
 
                 String fileType = path.getFileType();
                 ResourceDefinition.ResourceType type;
@@ -153,10 +165,10 @@ public class DatapackManager {
      * @param datapackId: The datapack id
      * @return datapaths
      */
-    public Map<Path, Json> loadItemsInDir(Path rootPath, String datapackId) throws Exception {
-        var dataPaths = new HashMap<Path, Json>();
+    public Map<Path, AnyJson> loadItemsInDir(Path rootPath, String datapackId) throws Exception {
+        var dataPaths = new HashMap<Path, AnyJson>();
         for (Path path: rootPath.walk()) {
-            Json data = path.loadAsJson();
+            AnyJson data = path.loadAsJson();
 
             var isAbstract = data.get("abstract", new AnyBool(false))
                     .validateInstanceIsBool(String.format("'abstact' key on %s must be a boolean", datapackId))
@@ -183,8 +195,8 @@ public class DatapackManager {
      * @param data If given, then will check to see if the file has an assigned id
      * @return New Id
      */
-    public String constructId(String datapackId, Path loaderDirPath, Path filePath, boolean includeFileType, Json data) throws Exception {
-        if (data.containsKey("id"))
+    public String constructId(String datapackId, Path loaderDirPath, Path filePath, boolean includeFileType, AnyJson data) throws Exception {
+        if (data != null && data.containsKey("id"))
             return data.get("id")
                     .validateInstanceIsString(String.format("Id's must be a string, found in %s", filePath.toPath().toAbsolutePath())).value;
 
@@ -199,5 +211,67 @@ public class DatapackManager {
         }
 
         return datapackId + ":" + String.join(".", fileParts);
+    }
+
+    /** Extend a given dictionary with the abstract definitions
+     *  if the given dict has an `"extends": []` attribute
+     * 
+     * @param main The dict to extend
+     * @return The extended json
+     */
+    public AnyJson extend(AnyJson main) throws Exception {
+        var merged = new AnyJson();
+
+        var extensions = main.get("extends", new AnyList())
+                .validateInstanceIsList("Extends must be a list of string ID's");
+    
+        for (Any item: extensions.items) {
+            String key = item.validateInstanceIsString("Extends must be a list of string ID's").value;
+            if (!this.abstractDefinitions.containsKey(key)) 
+                throw new Exception(String.format("Abstract file '%s' not found. Please mark this file with a `'abstract': true` in the file's definition.", key));
+
+            mergeJson(merged, abstractDefinitions.get(key));
+        }
+
+        return mergeJson(merged, main);
+    }
+
+    /** Merge the two dicts without keeping a reference, allowing
+     for the data to be modified in the givens dicts without updating
+     the original
+
+    @param mergeInto: Dict to copy into from `merge_from`
+    @param mergeFrom: The reference dict to copy data from
+    @return Combinations of the two dicts
+    */
+    public static AnyJson mergeJson(AnyJson mergeInto, AnyJson mergeFrom) throws Exception {
+        for (String key: mergeFrom.keys()) {
+            var value = mergeFrom.get(key);
+
+            if (value instanceof AnyJson) {
+                value = mergeJson(
+                        (AnyJson) mergeInto
+                                .get(key, new AnyJson())
+                                .validateInstanceIsJson(String.format("Inconsistent data types on key '%s'", key))
+                                .deepcopy(),
+                        (AnyJson) value.deepcopy());
+            }
+
+            if (value instanceof AnyList) {
+                var arr = new AnyList();
+                arr.items.addAll(((AnyList) value.deepcopy()).items);
+                arr.items.addAll(((AnyList) mergeInto
+                        .get(key, Any.list())
+                        .validateInstanceIsList(String.format("Inconsistent data types on key '%s'", key))
+                        .deepcopy())
+                        .items);
+
+                value = arr;
+            }
+
+            mergeInto.set(key, value);
+        }
+
+        return mergeInto;
     }
 }

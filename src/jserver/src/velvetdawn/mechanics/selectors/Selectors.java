@@ -102,7 +102,7 @@ public class Selectors {
                 return new SelectorEnemies(velvetDawn);
         }
 
-        throw new Exception("Invalid selector");
+        throw new Exception(String.format("Invalid selector: '%s'", key));
     }
 
     /** Instantiate a selector with the filters and attribute

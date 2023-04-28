@@ -1,28 +1,42 @@
 package velvetdawn.models.config;
 
 import velvetdawn.models.anytype.AnyFloat;
-import velvetdawn.utils.Json;
+import velvetdawn.models.anytype.AnyJson;
 
 public class SpawnConfig {
 
     public enum SpawnMode {
         Boundary,
         Central,
-        Random
+        Random,
+        Circular
     }
 
-    public SpawnMode mode = SpawnMode.Central;
+    public SpawnMode mode = SpawnMode.Boundary;
     public int baseSpawnRadius = 5;
     public int spawnRadiusMultiplier = 0;
 
-    /** Parse the spawn mode json */
-    public void load(Json configJson) throws Exception {
-        var spawnConfig = configJson.getJson("spawn", new Json(), "Config 'spawn' must be a json object.");
+    public SpawnConfig() {}
+    public SpawnConfig(SpawnMode mode, int baseSpawnRadius, int spawnRadiusMultiplier) {
+        this.mode = mode;
+        this.baseSpawnRadius = baseSpawnRadius;
+        this.spawnRadiusMultiplier = spawnRadiusMultiplier;
+    }
 
-        var spawnMode = spawnConfig.get("move")
-                .validateInstanceIsStringOrNull("Spawn mode 'move' must be a string or null");
+    /** Parse the spawn mode json */
+    public void load(AnyJson configJson) throws Exception {
+        var spawnConfig = configJson
+                .get("spawn", new AnyJson())
+                .validateInstanceIsJson("Config 'spawn' must be a json object.");
+
+        String spawnMode = null;
+        if (spawnConfig.containsKey("mode"))
+            spawnMode = spawnConfig
+                    .get("mode")
+                    .validateInstanceIsString("Spawn mode 'move' must be a string")
+                    .value;
         if (spawnMode != null) {
-            switch (spawnMode.toString()) {
+            switch (spawnMode) {
                 case "boundary": {
                     this.mode = SpawnMode.Boundary;
                     break;

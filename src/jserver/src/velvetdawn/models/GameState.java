@@ -1,7 +1,7 @@
 package velvetdawn.models;
 
 import lombok.Builder;
-import velvetdawn.models.instances.EntityInstanceUpdate;
+import velvetdawn.models.instances.entities.EntityInstanceUpdate;
 import velvetdawn.models.instances.TileInstanceUpdate;
 import velvetdawn.players.Player;
 

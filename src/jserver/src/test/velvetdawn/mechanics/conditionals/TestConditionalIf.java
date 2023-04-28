@@ -5,8 +5,8 @@ import test.BaseTest;
 import velvetdawn.mechanics.conditionals.Conditionals;
 import velvetdawn.models.Coordinate;
 import velvetdawn.models.anytype.Any;
-import velvetdawn.models.instances.EntityInstance;
-import velvetdawn.utils.Json;
+import velvetdawn.models.anytype.AnyJson;
+import velvetdawn.models.instances.entities.EntityInstance;
 
 import java.util.ArrayList;
 
@@ -22,30 +22,30 @@ public class TestConditionalIf extends BaseTest {
 
         EntityInstance entity = velvetDawn.entities.getAtPosition(new Coordinate(5, 0)).get(0);
 
-        var conditionalEquals = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalEquals = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("if", "self.testing")
                 .set("equals", 5));
-        var conditionalNotEquals = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalNotEquals = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("if", "self.testing")
                 .set("ne", 5));
-        var conditionalLessThan = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalLessThan = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("if", "self.testing")
                 .set("lt", 5));
-        var conditionalLessThanEquals = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalLessThanEquals = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("if", "self.testing")
                 .set("lte", 5));
-        var conditionalGreaterThan = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalGreaterThan = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("if", "self.testing")
                 .set("gt", 5));
-        var conditionalGreaterThanEquals = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalGreaterThanEquals = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("if", "self.testing")
                 .set("gte", 5));
-        var conditionalHasTag = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalHasTag = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("if", "self")
                 .set("tagged", "x"));
 
         // cant compare tag on attribute
-        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "0", new Json()
+        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("if", "self.testing")
                 .set("tagged", "x")));
 
@@ -70,15 +70,15 @@ public class TestConditionalIf extends BaseTest {
     public void test_conditional_if_function_value() throws Exception {
         var velvetDawn = this.prepareGame();
 
-        EntityInstance entity = new ArrayList<>(velvetDawn.entities.list()).get(0);
+        EntityInstance entity = velvetDawn.entities.list().get(0);
         entity.attributes.set("example1", Any.from(5));
         entity.attributes.set("example2", Any.from(5));
         entity.attributes.set("example3", Any.from(3));
 
-        var conditional_equals = Conditionals.get(velvetDawn, "0", new Json()
+        var conditional_equals = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("if", "self.example1")
                 .set("equals", "@self.example2"));
-        var conditional_not_equals = Conditionals.get(velvetDawn, "0", new Json()
+        var conditional_not_equals = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("if", "self.example1")
                 .set("equals", "@self.example3"));
 

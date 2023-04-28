@@ -14,9 +14,9 @@ class TestConditionalCount(BaseTest):
             unit = velvet_dawn.db.units.get_units_at_positions(Coordinate(5, 0))[0]
 
             conditional_equals = velvet_dawn.mechanics.conditionals.get_conditional(
-                "0", {"count": "units", "equals": 4})
+                "0", {"count": "entities", "equals": 4})
             conditional_not_equals = velvet_dawn.mechanics.conditionals.get_conditional(
-                "0", {"count": "units", "ne": 4})
+                "0", {"count": "entities", "ne": 4})
             conditional_less_than = velvet_dawn.mechanics.conditionals.get_conditional(
                 "0", {"count": "units", "lt": 4})
             conditional_less_than_equals = velvet_dawn.mechanics.conditionals.get_conditional(

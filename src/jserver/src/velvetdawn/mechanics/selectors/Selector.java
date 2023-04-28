@@ -134,6 +134,7 @@ public abstract class Selector {
 
         boolean allString = true;
         boolean allNumber = true;
+        boolean allNull = true;
         String stringValue = null;
         List<Float> numberValues = new ArrayList<>();
 
@@ -142,16 +143,22 @@ public abstract class Selector {
                     ? new AnyString(item.datapackId)
                     : item.attributes.get(this.attribute);
 
+            if (value instanceof AnyNull)
+                continue;
+
             if (value instanceof AnyString) {
                 allNumber = false;
+                allNull = false;
 
                 if (stringValue == null)
                     stringValue = value.toString();
                 else if (!Objects.equals(stringValue, value.toString()))
                     return Any.Null();
 
-            } else if (value instanceof AnyFloat) {
+            }
+            else if (value instanceof AnyFloat) {
                 allString = false;
+                allNull = false;
                 numberValues.add(value.toNumber());
             } else {
                 // Invalid type
@@ -159,8 +166,7 @@ public abstract class Selector {
             }
         }
 
-        // Must have no valid values, e.g. all [None, None]
-        if (allString && allNumber)
+        if (allNull)
             return Any.Null();
 
         if (allString)
@@ -183,7 +189,7 @@ public abstract class Selector {
             return false;
 
         for (Instance item: instances) {
-            if (!item.tags.has(tag.toString()))
+            if (!item.tags.contains(tag.toString()))
                 return false;
         }
 

@@ -7,12 +7,12 @@
       "description": "Increase max health.",
       "icon": "civil-war:ui.icons.abilities.heart.png",
       "notes": "Upgrade the max health of this unit.",
-      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "enabled": [{"if": "friendlies[commander]", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn.", "notes": "Add filter/selector for own player"}],
       "actions": [
         {
           "modify": "self.health.max",
           "multiply": 1.1
-        }, {"modify": "commander", "add-tag": "tag:used-upgrade"}]
+        }, {"modify": "friendlies[commander]", "add-tag": "tag:used-upgrade", "notes": "Add filter/selector for own player"}]
     },
     {
       "id": "max-health-2",
@@ -21,8 +21,8 @@
       "icon": "civil-war:ui.icons.abilities.heart.png",
       "notes": "Upgrade the max health of this unit.",
       "requires": ["max-health-1"],
-      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
-      "actions": [{"modify": "self.health.max", "multiply": 1.1}, {"modify": "commander", "add-tag": "tag:used-upgrade"}]
+      "enabled": [{"if": "friendlies[commander]", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn.", "notes": "Add filter/selector for own player"}],
+      "actions": [{"modify": "self.health.max", "multiply": 1.1}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}]
     },
     {
       "id": "max-health-3",
@@ -30,11 +30,11 @@
       "description": "Increase max health.",
       "icon": "civil-war:ui.icons.abilities.heart.png",
       "requires": ["max-health-2"],
-      "enabled": [{"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "enabled": [{"if": "friendlies[commander]", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn.", "notes": "Add filter/selector for own player"}],
       "notes": "Upgrade the max health of this unit.",
       "actions": [
         {"modify": "self.health.max", "multiply": 1.1},
-        {"modify": "commander", "add-tag": "tag:used-upgrade"}]
+        {"modify": "friendlies[commander]", "add-tag": "tag:used-upgrade", "notes": "Add filter/selector for own player"}]
     }
   ]
 }

@@ -6,8 +6,9 @@ import velvetdawn.mechanics.actions.ActionModify;
 import velvetdawn.mechanics.actions.Actions;
 import velvetdawn.models.Coordinate;
 import velvetdawn.models.anytype.Any;
-import velvetdawn.models.instances.EntityInstance;
-import velvetdawn.utils.Json;
+import velvetdawn.models.anytype.AnyJson;
+import velvetdawn.models.anytype.AnyList;
+import velvetdawn.models.instances.entities.EntityInstance;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ import static org.junit.Assert.assertThrows;
 public class TestGetAction extends BaseTest {
 
     @Test
-    public void test_get_actions() throws Exception {
+    public void testGetActions() throws Exception {
         var velvetDawn = this.prepareGame();
 
-        var action = Actions.fromJson(velvetDawn, "0", new Json()
+        var action = Actions.fromJson(velvetDawn, "0", new AnyJson()
                 .set("modify", "self.health")
                 .set("set", "x"));
 
@@ -29,20 +30,20 @@ public class TestGetAction extends BaseTest {
 
         // Invalid action
         assertThrows(Exception.class, () -> {
-            Actions.fromJson(velvetDawn, "0", new Json().set("random key", "self.health"));
+            Actions.fromJson(velvetDawn, "0", new AnyJson().set("random key", "self.health"));
         });
     }
 
     @Test
-    public void test_action_can_run() throws Exception {
+    public void testActioCanRun() throws Exception {
         var velvetDawn = this.prepareGame();
 
-        EntityInstance unit = velvetDawn.entities.getAtPosition(new Coordinate(0, -11)).get(0);
-        var action = Actions.fromJson(velvetDawn, "0", new Json()
+        EntityInstance unit = velvetDawn.entities.getAtPosition(new Coordinate(5, 0)).get(0);
+        var action = Actions.fromJson(velvetDawn, "0", new AnyJson()
                 .set("modify", "self.health")
                 .set("set", 100)
-                .set("conditions", List.of(
-                        new Json()
+                .set("conditions", AnyList.of(
+                        new AnyJson()
                                 .set("if", "self.health")
                                 .set("lte", 10)
                 )));

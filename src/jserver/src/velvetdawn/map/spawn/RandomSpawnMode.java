@@ -5,17 +5,29 @@ import velvetdawn.models.Coordinate;
 import velvetdawn.models.config.Config;
 import velvetdawn.players.Player;
 
+import java.util.List;
 import java.util.Set;
+
+// TODO Also create a distributed models
 
 public class RandomSpawnMode extends SpawnMode {
 
+    public RandomSpawnMode(VelvetDawn velvetDawn, Config config) {
+        super(velvetDawn, config);
+    }
+
     @Override
-    public Set<Coordinate> getSpawnCoordinatesForPlayer(VelvetDawn velvetDawnCore, Config config, Player player) {
+    public List<Coordinate> listAllSpawnPoints() {
+        return null;
+    }
+
+    @Override
+    public Set<Coordinate> getSpawnCoordinatesForPlayer(Player player) {
         // todo assign
         return null;
     }
 
     /** Spawn points are only assigned upon request for this mode */
     @Override
-    public void assignSpawnPoints(VelvetDawn velvetDawn, Config config) {}
+    public void assignSpawnPoints() {}
 }

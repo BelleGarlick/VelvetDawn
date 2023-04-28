@@ -7,7 +7,6 @@ public class VelvetDawnServer {
         Config config = new Config();
 
         VelvetDawn velvetDawn = new VelvetDawn(config);
-        velvetDawn.init();
 
 //        int count = 0;
 //        long start = System.currentTimeMillis();

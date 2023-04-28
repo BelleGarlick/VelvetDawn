@@ -2,16 +2,18 @@ package velvetdawn.models.instances;
 
 import velvetdawn.models.Coordinate;
 import velvetdawn.models.instances.attributes.Attributes;
-import velvetdawn.models.instances.tags.Tags;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Instance {
 
-    public final String datapackId;
+    public String datapackId;
     public Coordinate position;
     public final String instanceId;
 
     public final Attributes attributes = new Attributes();
-    public final Tags tags = new Tags();
+    public final Set<String> tags = new HashSet<>();
 
     protected Instance(String datapackId, String instanceId, Coordinate position) {
         this.datapackId = datapackId;

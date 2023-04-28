@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import test.BaseTest;
 import velvetdawn.VelvetDawn;
+import velvetdawn.models.anytype.AnyJson;
 import velvetdawn.models.instances.attributes.Attribute;
-import velvetdawn.utils.Json;
 
 
 public class TestAttributes extends BaseTest {
@@ -17,24 +17,24 @@ public class TestAttributes extends BaseTest {
 
         // Missing id
         assertThrows(Exception.class, () -> {
-            Attribute.load(new VelvetDawn(config), "", new Json());
+            Attribute.load(new VelvetDawn(config), "", new AnyJson());
         });
 
         // Malformed id
         assertThrows(Exception.class, () -> {
-            Attribute.load(new VelvetDawn(config), "", new Json().set("id", "%id"));
+            Attribute.load(new VelvetDawn(config), "", new AnyJson().set("id", "%id"));
         });
 
         // Malformed name
         assertThrows(Exception.class, () -> {
-            Attribute.load(new VelvetDawn(config), "", new Json()
+            Attribute.load(new VelvetDawn(config), "", new AnyJson()
                     .set("id", "example")
                     .set("name", "$£@"));
         });
 
         // Invalid icon
         assertThrows(Exception.class, () -> {
-            Attribute.load(new VelvetDawn(config), "", new Json()
+            Attribute.load(new VelvetDawn(config), "", new AnyJson()
                     .set("id", "example")
                     .set("name", "Fine Name")
                     .set("icon", false));
@@ -42,13 +42,13 @@ public class TestAttributes extends BaseTest {
 
         // Invalid key
         assertThrows(Exception.class, () -> {
-            Attribute.load(new VelvetDawn(config), "", new Json()
+            Attribute.load(new VelvetDawn(config), "", new AnyJson()
                     .set("id", "example")
                     .set("name", "Fine Name")
                     .set("invalid-key", false));
         });
 
-        Attribute.load(new VelvetDawn(config), "", new Json()
+        Attribute.load(new VelvetDawn(config), "", new AnyJson()
                 .set("id", "example")
                 .set("name", "Fine Name")
                 .set("icon", "An icon")

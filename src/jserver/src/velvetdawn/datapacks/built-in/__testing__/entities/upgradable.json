@@ -8,17 +8,17 @@
     {
       "id": "health_2",
       "name": "Health 2",
-      "hidden": [{"if": "self", "not-tagged": "tag:visible"}]
+      "hidden": [{"if": "self", "not-tagged": "visible"}]
     },
     {
       "id": "movement",
       "name": "Movement",
-      "enabled": [{"if": "self", "tagged": "tag:enabled"}]
+      "enabled": [{"if": "self", "tagged": "enabled"}]
     },
     {
       "name": "Super",
       "requires": ["movement", "health_2"],
-      "actions": [{"modify": "self", "add-tag": "tag:upgrade-added"}]
+      "actions": [{"modify": "self", "add-tag": "upgrade-added"}]
     }
   ]
 }

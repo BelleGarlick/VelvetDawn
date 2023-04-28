@@ -8,7 +8,7 @@
       "id": "inc-unit-range",
       "name": "Increase All Unit Movement Range I",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [
@@ -21,7 +21,7 @@
       "requires": ["inc-unit-range"],
       "name": "Increase All Unit Movement Range II",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [
@@ -34,7 +34,7 @@
       "id": "inc-unit-max-health",
       "name": "Increase All Unit Max Health I",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [
@@ -47,7 +47,7 @@
       "requires": ["inc-unit-max-health"],
       "name": "Increase All Unit Max Health II",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [
@@ -60,7 +60,7 @@
       "id": "inc-unit-attack",
       "name": "Increase All Unit Attack I",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [
@@ -73,7 +73,7 @@
       "requires": ["inc-unit-attack"],
       "name": "Increase All Unit Attack II",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [
@@ -86,7 +86,7 @@
       "id": "restore-health",
       "name": "Restore All Unit Health I",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [
@@ -99,7 +99,7 @@
       "requires": ["restore-health"],
       "name": "Restore All Unit Health II",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [
@@ -111,7 +111,7 @@
     {
       "name": "Decrease Enemy Max Health",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [
@@ -123,7 +123,7 @@
     {
       "name": "Decrease Enemy Movement",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [
@@ -135,7 +135,7 @@
     {
       "name": "Decrease Enemy Attack",
       "enabled": [
-        {"if": "commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
+        {"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."},
         {"if": "self.com-upgrades", "gt": 0, "reason": "Commanders may only use three upgrades."}
       ],
       "actions": [

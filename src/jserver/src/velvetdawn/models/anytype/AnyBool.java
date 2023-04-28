@@ -7,11 +7,6 @@ public class AnyBool extends AnyFloat {
     }
 
     @Override
-    public String toSaveString() {
-        return String.format("b#%s", this.value);
-    }
-
-    @Override
     public String toString() {
         return this.value == 0 ? "false" : "true";
     }
@@ -27,5 +22,15 @@ public class AnyBool extends AnyFloat {
     /** Validate the value is a bool type (overriden in the AnyBool) */
     public AnyBool validateInstanceIsBool(String s) {
         return this;
+    }
+
+    @Override
+    public Any copy() {
+        return new AnyBool(this.toBool());
+    }
+
+    @Override
+    public Any deepcopy() {
+        return this.copy();
     }
 }

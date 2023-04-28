@@ -2,7 +2,7 @@ package velvetdawn.mechanics.selectors.tiles;
 
 import velvetdawn.VelvetDawn;
 import velvetdawn.mechanics.selectors.Selector;
-import velvetdawn.models.instances.EntityInstance;
+import velvetdawn.models.instances.entities.EntityInstance;
 import velvetdawn.models.instances.Instance;
 import velvetdawn.models.instances.TileInstance;
 

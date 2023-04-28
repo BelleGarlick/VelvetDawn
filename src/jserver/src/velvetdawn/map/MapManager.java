@@ -8,22 +8,23 @@ import velvetdawn.models.config.Config;
 import velvetdawn.VelvetDawn;
 import velvetdawn.map.spawn.Spawn;
 import velvetdawn.models.Coordinate;
-import velvetdawn.models.instances.EntityInstance;
+import velvetdawn.models.instances.entities.EntityInstance;
 import velvetdawn.models.instances.TileInstance;
 import velvetdawn.models.instances.TileInstanceUpdate;
-import velvetdawn.models.map.Chunk;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MapManager {
 
     private final VelvetDawn velvetDawn;
     private final Config config;
 
-//    private final Map<Integer, Map<Integer, Chunk>> chunks = new HashMap<>();
-    private Chunk chunk;
+    private Map<Integer, Map<Integer, TileInstance>> map = new HashMap<>();
 
     public final Spawn spawn;
 
@@ -34,39 +35,24 @@ public class MapManager {
         this.spawn = new Spawn(velvetDawn, config);
     }
 
-    public Chunk getChunk(int chunkX, int chunkY) {
-        return chunk;
-//        if (this.chunks.containsKey(chunkX) && this.chunks.get(chunkX).containsKey(chunkY))
-//            return this.chunks.get(chunkX).get(chunkY);
-//        return null;
-    }
-
     public TileInstance getTile(Coordinate position) {
-        var chunk = this.getChunk(position.tileX() / Chunk.SIZE, position.tileY() / Chunk.SIZE);
-        if (chunk != null) {
-            return chunk.getTileFromAbsoluteTilePosition(position.tileX(), position.tileY());
+        if (this.map.containsKey(position.tileX())) {
+            return this.map.get(position.tileX()).getOrDefault(position.tileY(), null);
         }
 
         return null;
     }
 
-    public List<Chunk> listChunks() {
-        if (this.chunk == null)
-            return List.of();
-
-        return List.of(this.chunk);
-//                .stream()
-//                .map(Region::listChunks)
-//                .flatMap(Collection::stream)
-//                .collect(Collectors.toList());
-    }
-
     public List<TileInstance> listTiles() {
-        return this.listChunks()
+        return this.map.values()
                 .stream()
-                .map(Chunk::listTiles)
+                .map(Map::values)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+    }
+
+    public Map<Integer, Map<Integer, TileInstance>> getTiles() {
+        return this.map;
     }
 
     public Collection<EntityInstance> getEntitiesAtPosition(Coordinate position) {
@@ -84,7 +70,7 @@ public class MapManager {
      * @param to Poiny b
      * @return Number of hexagons between the two files
      */
-    public int getDistance(Coordinate from, Coordinate to) {
+    public static int getDistance(Coordinate from, Coordinate to) {
         int dcol = Math.abs(from.tileX() - to.tileX());
         int drow = Math.abs(from.tileY() - to.tileY());
 
@@ -108,14 +94,19 @@ public class MapManager {
     public List<Coordinate> getNeighbours(Coordinate point) {
         boolean isOdd = point.tileX() % 2 == 1;
 
-        return List.of(
+        return Stream.of(
             new Coordinate(point.tileX() - 1, isOdd ? point.tileY() : point.tileY() - 1),
             new Coordinate(point.tileX() - 1, isOdd ? point.tileY() + 1 : point.tileY()),
             new Coordinate(point.tileX(), point.tileY() - 1),
             new Coordinate(point.tileX(), point.tileY() + 1),
             new Coordinate(point.tileX() + 1, isOdd ? point.tileY() : point.tileY() - 1),
             new Coordinate(point.tileX() + 1, isOdd ? point.tileY() + 1 : point.tileY())
-        );
+        )
+                .filter(p -> p.tileX() >= 0
+                        && p.tileX() < config.map.width
+                        && p.tileY() >= 0
+                        && p.tileY() < config.map.height)
+                .collect(Collectors.toList());
     }
 
     public boolean isTraversable(Coordinate point) {
@@ -132,8 +123,8 @@ public class MapManager {
 
     public void generate() throws Exception {
         this.spawn.assignSpawnPoints();
-        MapGeneration map = new MapGeneration();
-        this.chunk = map.generate(velvetDawn, config);
+        MapGeneration map = new MapGeneration(velvetDawn, config);
+        this.map = map.generate();
     }
 
     public List<TileInstanceUpdate> getUpdatesBroadcast(boolean fullState) {

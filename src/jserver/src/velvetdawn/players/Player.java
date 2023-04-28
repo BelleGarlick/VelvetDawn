@@ -2,8 +2,8 @@ package velvetdawn.players;
 
 import com.google.gson.JsonObject;
 import velvetdawn.models.Team;
-import velvetdawn.models.instances.EntityInstance;
-import velvetdawn.utils.Json;
+import velvetdawn.models.anytype.AnyJson;
+import velvetdawn.models.instances.entities.EntityInstance;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,7 +27,7 @@ public class Player {
         this.admin = admin;
     }
 
-    public static Player fromJson(Json playerJson) throws Exception {
+    public static Player fromJson(AnyJson playerJson) throws Exception {
         var player = new Player(
                 playerJson.get("name").validateInstanceIsString("Invalid player save. Player names must be strings.").value,
                 playerJson.get("password").validateInstanceIsString("Invalid player save. Player passwords must be strings.").value,

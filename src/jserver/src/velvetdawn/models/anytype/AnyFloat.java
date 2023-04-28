@@ -17,11 +17,6 @@ public class AnyFloat extends Any {
     public boolean toBool() { return this.value != 0; }
 
     @Override
-    public String toSaveString() {
-        return String.format("f#%s", this.value);
-    }
-
-    @Override
     public Any add(Any value) {
         if (value instanceof AnyFloat)
             return new AnyFloat(this.toNumber() + ((AnyFloat) value).value);
@@ -66,5 +61,15 @@ public class AnyFloat extends Any {
         if (this.value < minValue)
             throw new Exception(s);
         return this;
+    }
+
+    @Override
+    public Any copy() {
+        return new AnyFloat(this.value);
+    }
+
+    @Override
+    public Any deepcopy() {
+        return this.copy();
     }
 }

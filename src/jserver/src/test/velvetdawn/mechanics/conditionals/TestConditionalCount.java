@@ -5,7 +5,7 @@ import test.BaseTest;
 import velvetdawn.mechanics.conditionals.Conditionals;
 import velvetdawn.models.Coordinate;
 import velvetdawn.models.anytype.Any;
-import velvetdawn.utils.Json;
+import velvetdawn.models.anytype.AnyJson;
 
 import java.util.ArrayList;
 
@@ -21,27 +21,27 @@ public class TestConditionalCount extends BaseTest {
 
         var unit = velvetDawn.entities.getAtPosition(new Coordinate(5, 0)).get(0);
 
-        var conditionalEquals = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalEquals = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("count", "entities")
                 .set("equals", 4));
-        var conditionalNotEquals = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalNotEquals = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("count", "entities")
                 .set("ne", 4));
-        var conditionalLessThan = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalLessThan = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("count", "entities")
                 .set("lt", 4));
-        var conditionalLessThanEquals = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalLessThanEquals = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("count", "entities")
                 .set("lte", 4));
-        var conditionalGreaterThan = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalGreaterThan = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("count", "entities")
                 .set("gt", 4));
-        var conditionalGreaterThanEquals = Conditionals.get(velvetDawn, "0", new Json()
+        var conditionalGreaterThanEquals = Conditionals.get(velvetDawn, "0", new AnyJson()
                 .set("count", "entities")
                 .set("gte", 4));
 
         // can't compare tag on attribute
-        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new Json()
+        assertThrows(Exception.class, () -> Conditionals.get(velvetDawn, "", new AnyJson()
                 .set("count", "self")
                 .set("tagged", "atag")));
 
@@ -57,14 +57,14 @@ public class TestConditionalCount extends BaseTest {
     public void test_conditional_if_function_value() throws Exception {
         var velvetDawn = this.prepareGame();
 
-        var unit = new ArrayList<>(velvetDawn.entities.list()).get(0);
+        var unit = velvetDawn.entities.list().get(0);
         unit.attributes.set("units-count-true", Any.from(4));
         unit.attributes.set("units-count-false", Any.from(5));
 
-        var conditionalEquals = Conditionals.get(velvetDawn, "", new Json()
+        var conditionalEquals = Conditionals.get(velvetDawn, "", new AnyJson()
                 .set("count", "entities")
                 .set("equals", "@self.units-count-true"));
-        var conditionalNotEquals = Conditionals.get(velvetDawn, "", new Json()
+        var conditionalNotEquals = Conditionals.get(velvetDawn, "", new AnyJson()
                 .set("count", "entities")
                 .set("equals", "@self.units-count-false"));
 

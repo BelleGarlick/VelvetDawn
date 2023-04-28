@@ -3,18 +3,17 @@
   "abilities": [
     {
       "name": "Ability 1",
-      "actions": [{"modify": "self", "add-tag": "tag:ability1-ran"}]
-
+      "actions": [{"modify": "self", "add-tag": "ability1-ran"}]
     },
     {
       "name": "Ability 2",
-      "hidden": [{"if": "self", "not-tagged": "tag:visible"}],
-      "actions": [{"modify": "self", "add-tag": "tag:ability2-ran"}]
+      "hidden": [{"if": "self", "not-tagged": "visible"}],
+      "actions": [{"modify": "self", "add-tag": "ability2-ran"}]
     },
     {
       "name": "Ability 3",
-      "enabled": [{"if": "self", "tagged": "tag:enabled"}],
-      "actions": [{"modify": "self", "add-tag": "tag:ability3-ran"}]
+      "enabled": [{"if": "self", "tagged": "enabled"}],
+      "actions": [{"modify": "self", "add-tag": "ability3-ran"}]
     }
   ]
 }

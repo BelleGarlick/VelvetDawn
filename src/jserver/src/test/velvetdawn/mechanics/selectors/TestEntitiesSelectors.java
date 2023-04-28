@@ -25,7 +25,7 @@ public class TestEntitiesSelectors extends BaseTest {
     public void test_selector_units() throws Exception {
         var velvetDawn = this.prepareGame();
 
-        var units_selector = Selectors.get(velvetDawn, "0", "units");
+        var units_selector = Selectors.get(velvetDawn, "0", "entities");
         var friendlies_selector = Selectors.get(velvetDawn, "0", "friendlies");
         var selector_enemies = Selectors.get(velvetDawn, "0", "enemies");
 
@@ -40,7 +40,7 @@ public class TestEntitiesSelectors extends BaseTest {
 
         var unit = new ArrayList<>(velvetDawn.entities.getAtPosition(new Coordinate(5, 0))).get(0);
 
-        var unitsSelector = Selectors.get(velvetDawn, unit.datapackId, "units");
+        var unitsSelector = Selectors.get(velvetDawn, unit.datapackId, "entities");
         var friendliesSelector = Selectors.get(velvetDawn, unit.datapackId, "friendlies");
         var selectorEnemies = Selectors.get(velvetDawn, unit.datapackId, "enemies");
 
@@ -60,7 +60,7 @@ public class TestEntitiesSelectors extends BaseTest {
         var tile = velvetDawn.map.getTile(new Coordinate(5, 0));
 
         // Get selectors
-        var units_selector = Selectors.get(velvetDawn, tile.datapackId, "units");
+        var units_selector = Selectors.get(velvetDawn, tile.datapackId, "entities");
         var friendliesSelector = Selectors.get(velvetDawn, tile.datapackId, "friendlies");
         var enemiesSelector = Selectors.get(velvetDawn, tile.datapackId, "enemies");
 
