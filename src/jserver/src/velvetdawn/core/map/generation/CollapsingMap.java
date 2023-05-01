@@ -68,7 +68,7 @@ public class CollapsingMap {
             for (int row = 0; row < config.map.height; row++) {
                 String item = (String) this.get(new Coordinate(col, row)).toArray()[0];
 
-                TileInstance tile = new TileInstance("%s-%s", item, new Coordinate(col, row));
+                TileInstance tile = new TileInstance(String.format("%s-%s", col, row), item, new Coordinate(col, row));
                 TileDefinition tileDef = velvetDawn.datapacks.tiles.get(item);
                 tileDef.attributes.instantiateInstanceAttributes(tile);
                 tile.tags.addAll(tileDef.tags);

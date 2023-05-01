@@ -9,7 +9,7 @@ export class UnitEntity extends Entity {
 
     public readonly player: string
 
-    private position: Position = undefined;
+    position: Position = undefined;
     private lastPosition: Position | undefined = undefined;
     private portion: number = 1
 

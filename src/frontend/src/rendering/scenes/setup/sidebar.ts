@@ -62,7 +62,7 @@ export class SetupSceneSidebar extends Renderable {
             this.commanderButtons.push(button);
         })
 
-        Object.keys(VelvetDawn.getState().setup.units).forEach((key) => {
+        Object.keys(VelvetDawn.getState().setup.entities).forEach((key) => {
             const unit = VelvetDawn.datapacks.entities[key];
             console.log("Creating key " + key)
 
@@ -109,8 +109,8 @@ export class SetupSceneSidebar extends Renderable {
                 if (entity.commander) {
                     placedUnits = setup.placedCommander ? 1 : 0
                 } else {
-                    placedUnits = setup.units[entity.id] - setup.remainingUnits[entity.id]
-                    availableUnits = setup.units[entity.id]
+                    placedUnits = setup.entities[entity.id] - setup.remainingEntities[entity.id]
+                    availableUnits = setup.entities[entity.id]
                 }
 
                 button

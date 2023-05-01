@@ -4,6 +4,7 @@ import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.mechanics.Triggers;
 import velvetdawn.core.models.anytype.AnyJson;
 import velvetdawn.core.models.instances.attributes.Attributes;
+import velvetdawn.core.models.instances.attributes.AttributesDefinition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +12,7 @@ import java.util.Set;
 public class WorldDefinition {
 
     public final Set<String> tags = new HashSet<>();
-    public final Attributes attributes = new Attributes();
+    public final AttributesDefinition attributes = new AttributesDefinition();
     public final Triggers triggers = new Triggers();
 
     /** Parse the world data for the given datapack */

@@ -15,18 +15,18 @@ export class NextTurnButton extends HexButton {
             .backgroundHoverColor("#99ee33")
             .text("Done")
             .onClick(() => {
-                if (VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready) {
+                if (VelvetDawn.players[VelvetDawn.loginDetails.username].ready) {
                     Api.turns.unready().then(x => VelvetDawn.setState(x))
-                    VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready = false
+                    VelvetDawn.players[VelvetDawn.loginDetails.username].ready = false
                 } else {
                     Api.turns.ready().then(x => VelvetDawn.setState(x))
-                    VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready = true
+                    VelvetDawn.players[VelvetDawn.loginDetails.username].ready = true
                 }
             });
     }
 
     draw(facade: RenderingFacade) {
-        const playerReady = VelvetDawn.getState().players[VelvetDawn.loginDetails.username].ready
+        const playerReady = VelvetDawn.players[VelvetDawn.loginDetails.username].ready
 
         const placedCommander = VelvetDawn.getState().setup.placedCommander
         let buttonText = playerReady ? "Unready" : "Ready"

@@ -1,11 +1,11 @@
 
 export enum ResourceType {
-    Audio = 'audio',
-    Image = 'image',
-    Font = 'font'
+    Audio = 'Audio',
+    Image = 'Image',
+    Font = 'Font'
 }
 
 export interface Resource {
-    id: string,
-    type: ResourceType
+    resourceId: string,
+    resourceType: ResourceType
 }

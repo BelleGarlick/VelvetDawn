@@ -1,5 +1,5 @@
 import * as Api from "api"
-import {GameState, Player, LoginDetails, createBlankState} from "models";
+import {createBlankState, GamePhase, GameState, LoginDetails, Player} from "models";
 import {Datapacks} from "./datapacks";
 import {SPECTATORS_TEAM} from "../constants";
 import {VelvetDawnMap} from "./map";
@@ -41,8 +41,8 @@ export class DebugOptions {
         ctx.textAlign = "left"
         ctx.font = "40px arial";
         ctx.fillText(`Render Times: ${this.lastRenderTime} ${renderRate} ${framesPerSecond}`, 10, constants.height - 10)
-        ctx.fillText(`Attribute updates: ${state.attrChanges.length}`, 10, constants.height - 60)
-        ctx.fillText(`Entity updates: ${state.unitChanges.updates.length + state.unitChanges.removed.length}`, 10, constants.height - 110)
+        ctx.fillText(`Attribute updates: ${state.attributeUpdates.length}`, 10, constants.height - 60)
+        ctx.fillText(`Entity updates: ${state.entityUpdates.length + state.entityRemovals.length}`, 10, constants.height - 110)
         ctx.fillText(`Ping: ${this.pingTime}`, 10, constants.height - 160)
     }
 
@@ -66,6 +66,7 @@ export class VelvetDawn {
     }
 
     public static datapacks = new Datapacks();
+    public static players: { [key: string]: Player } = {}
 
     private static firstLoad: boolean = true
     private static state: GameState = createBlankState()
@@ -87,10 +88,13 @@ export class VelvetDawn {
 
         return Promise.all([
             VelvetDawn.datapacks.init(),
-            VelvetDawn.map.init()
         ]).then(() => {
             Api.game.getState(true).then(VelvetDawn.setState)
         })
+    }
+
+    public static initMap() {
+        return VelvetDawn.map.init()
     }
 
     static refreshGameState() {
@@ -102,13 +106,15 @@ export class VelvetDawn {
     }
 
     static getPlayer(): Player {
-        if (VelvetDawn.loginDetails && VelvetDawn.state.players[VelvetDawn.loginDetails.username]) {
-            return VelvetDawn.state.players[VelvetDawn.loginDetails.username]
+        if (VelvetDawn.loginDetails && VelvetDawn.players[VelvetDawn.loginDetails.username]) {
+            return VelvetDawn.players[VelvetDawn.loginDetails.username]
         }
         return null
     }
 
     public static setState(state: GameState) {
+        state.players.forEach(player => VelvetDawn.players[player.name] = player);
+
         VelvetDawn.state = state
         VelvetDawn.map.updateState(state)
         Renderer.getInstance().getScene().onStateUpdate(state)
@@ -121,9 +127,9 @@ export class VelvetDawn {
     static listCurrentTurnPlayers() {
         const state = VelvetDawn.getState()
 
-        if (state.phase === 'setup') {
-            return Object.keys(state.players).map(x => {
-                const player = state.players[x]
+        if (state.phase === GamePhase.Setup) {
+            return Object.keys(VelvetDawn.players).map(x => {
+                const player = VelvetDawn.players[x]
                 return player.team !== SPECTATORS_TEAM
                  ? player
                  : null
@@ -132,8 +138,8 @@ export class VelvetDawn {
         } else {
             const turn = state.turn.team
 
-            return Object.keys(state.players).map(x => {
-                const player = state.players[x]
+            return Object.keys(VelvetDawn.players).map(x => {
+                const player = VelvetDawn.players[x]
                 return player.team === turn
                  ? player
                  : null
@@ -142,6 +148,6 @@ export class VelvetDawn {
     }
 
     static isPlayersTurn() {
-        return VelvetDawn.state.players[this.loginDetails.username].team === VelvetDawn.state.turn.team
+        return VelvetDawn.players[this.loginDetails.username].team === VelvetDawn.state.turn.team
     }
 }

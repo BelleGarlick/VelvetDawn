@@ -1,7 +1,8 @@
+
 export interface Player {
     name: string,
-    spectating: boolean,
     admin: boolean,
+    spectating: boolean,
     team: string,
     ready: boolean
 }

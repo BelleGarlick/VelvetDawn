@@ -58,6 +58,7 @@ public class VelvetDawnServer {
     }
 
     private static void getMap(Context ctx) {
+        System.out.println("Returning map");
         ctx.json(new MapResponse());
     }
 
@@ -66,7 +67,7 @@ public class VelvetDawnServer {
 
         VelvetDawnServerInstance.getInstance().game.turns.checkEndTurnCase();
 
-        ctx.json(GameState.from(player));
+        ctx.json(GameState.from(player, true));
     }
 
     private static void join(Context ctx) throws Exception {

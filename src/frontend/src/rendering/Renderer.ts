@@ -1,11 +1,12 @@
 import {VelvetDawn} from "../velvet-dawn/velvet-dawn";
-import { Perspective } from "./perspective";
+import {Perspective} from "./perspective";
 import {SetupPhase} from "./scenes/setup";
 import {Scene} from "./scenes/scene";
 import {GameScene} from "./scenes/game-scene";
 import {SpectatingScene} from "./scenes/spectating-scene";
 import {RenderingFacade} from "./facade";
 import {Position} from "models/position";
+import {GamePhase} from "models/game-state";
 
 
 const RESOLUTION = 2
@@ -133,12 +134,12 @@ export class Renderer {
             }
         }
 
-        else if (phase === "setup" && !(this.scene instanceof SetupPhase)) {
+        else if (phase === GamePhase.Setup && !(this.scene instanceof SetupPhase)) {
             this.scene = new SetupPhase()
             this.scene.onStart(this.facade)
         }
 
-        else if (phase === "game" && !(this.scene instanceof GameScene)) {
+        else if (phase === GamePhase.Setup && !(this.scene instanceof GameScene)) {
             this.scene = new GameScene()
             this.scene.onStart(this.facade)
         }

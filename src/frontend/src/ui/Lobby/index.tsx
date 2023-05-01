@@ -3,10 +3,9 @@ import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 import * as Api from "api"
 import {LobbyUsers} from "./LobbyUsers";
 import {LobbyUnits} from "./LobbyUnits";
-import {GameSetup, ViewState} from "models";
+import {GamePhase, GameSetup, ViewState} from "models";
 import {Renderer} from "../../rendering/Renderer";
 import { Button } from "ui/Button";
-import { Text } from "ui/Text";
 
 
 let time: any = -1
@@ -24,7 +23,7 @@ export function Lobby({ setView }: { setView: (x: ViewState) => void }) {
             setGameState(VelvetDawn.getState)
             setGameSetup(VelvetDawn.getState().setup)
 
-            if (VelvetDawn.getState().phase !== "lobby") {
+            if (VelvetDawn.getState().phase !== GamePhase.Lobby) {
                 setView(ViewState.Game)
 
                 Renderer.startScene()
@@ -55,9 +54,7 @@ export function Lobby({ setView }: { setView: (x: ViewState) => void }) {
         }}>
             {userIsAdmin && (<>
                 <Button onClick={() => {
-                    Api.setup.startSetup().then(x => {
-                        VelvetDawn.setState(x)
-                    })
+                    Api.setup.startSetup().then(x => VelvetDawn.setState(x))
                 }}>Start</Button>
                 <Button onClick={() => {
                     setView(ViewState.DatapackEditor)

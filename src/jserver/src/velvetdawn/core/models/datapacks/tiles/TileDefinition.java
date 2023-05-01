@@ -7,7 +7,6 @@ import velvetdawn.core.models.anytype.Any;
 import velvetdawn.core.models.anytype.AnyBool;
 import velvetdawn.core.models.anytype.AnyFloat;
 import velvetdawn.core.models.anytype.AnyJson;
-import velvetdawn.core.models.instances.attributes.Attribute;
 import velvetdawn.core.models.instances.attributes.AttributesDefinition;
 
 import java.util.HashSet;
@@ -51,8 +50,8 @@ public class TileDefinition {
                 .validateInstanceIsBool(String.format("%s movement traversable must be a boolean", datapackId));
 
         // Set
-        attributes.add(Attribute.builder().id(AttributeKeys.TileTraversable).value(traversable).build());
-        attributes.add(Attribute.builder().id(AttributeKeys.TileMovementWeight).value(movementWeight).build());
+        attributes.set(AttributeKeys.TileTraversable, traversable);
+        attributes.set(AttributeKeys.TileMovementWeight, movementWeight);
     }
 
     public static TileDefinition loadFromJson(VelvetDawn velvetDawn, String datapackId, AnyJson json) throws Exception {

@@ -1,25 +1,26 @@
 package velvetdawn.server.models;
 
-import com.google.gson.JsonElement;
-import velvetdawn.core.models.anytype.Any;
-import velvetdawn.core.models.anytype.AnyList;
 import velvetdawn.server.VelvetDawnServerInstance;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MapResponse {
 
-    public JsonElement tiles;
+    public int width;
+    public int height;
+    public List<APITileInstance> tiles;
 
     public MapResponse() {
-        var tiles = VelvetDawnServerInstance.getInstance().map.getTiles();
+        var velvetDawn = VelvetDawnServerInstance.getInstance();
 
-        var tileIds = new AnyList();
-        tiles.forEach(items -> {
-            var row = new AnyList();
-            items.forEach(item -> row.add(Any.from(item.datapackId)));
-            tileIds.add(row);
-        });
+        this.width = velvetDawn.map.width;
+        this.height = velvetDawn.map.height;
 
-        this.tiles = tileIds.toJsonElements();
+        this.tiles = velvetDawn.map.listTiles()
+                .stream()
+                .map(APITileInstance::from)
+                .collect(Collectors.toList());
     }
 
 }

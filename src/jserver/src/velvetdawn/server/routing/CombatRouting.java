@@ -17,11 +17,11 @@ public class CombatRouting {
 
         var entity = VelvetDawnServerInstance.getInstance()
                 .entities
-                .getById(ctx.formParam("attackerId"));
+                .getById(ctx.formParam("instanceId"));
 
         var position = new Coordinate(
-                Integer.parseInt(ctx.formParam("targetX")),
-                Integer.parseInt(ctx.formParam("targetY"))
+                Integer.parseInt(ctx.formParam("x")),
+                Integer.parseInt(ctx.formParam("y"))
         );
 
         entity.combat.attack(position);

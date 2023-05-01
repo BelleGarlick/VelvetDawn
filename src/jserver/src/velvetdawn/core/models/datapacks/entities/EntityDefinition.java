@@ -12,6 +12,7 @@ import velvetdawn.core.models.anytype.AnyJson;
 import velvetdawn.core.models.anytype.AnyList;
 import velvetdawn.core.models.anytype.AnyString;
 import velvetdawn.core.models.instances.attributes.Attributes;
+import velvetdawn.core.models.instances.attributes.AttributesDefinition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class EntityDefinition {
     public final String description;
 
     public final Set<String> tags = new HashSet<>();
-    public final Attributes attributes = new Attributes();
+    public final AttributesDefinition attributes = new AttributesDefinition();
     public final EntityTextures textures = new EntityTextures();
 
     public final Triggers triggers = new Triggers();

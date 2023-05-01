@@ -6,6 +6,7 @@ import velvetdawn.core.models.Coordinate;
 import velvetdawn.core.models.Phase;
 import velvetdawn.server.VelvetDawnServerInstance;
 import velvetdawn.server.auth.Authenticator;
+import velvetdawn.server.models.APIGameSetup;
 import velvetdawn.server.models.GameState;
 
 public class SetupRouting {
@@ -26,7 +27,7 @@ public class SetupRouting {
                 Integer.parseInt(ctx.formParam("count"))
         );
 
-        ctx.json(GameState.from(player));
+        ctx.json(APIGameSetup.from(player));
     }
 
     private static void addEntityDuringSetup(Context ctx) throws Exception {
@@ -36,8 +37,8 @@ public class SetupRouting {
                 player,
                 ctx.formParam("datapackId"),
                 new Coordinate(
-                        Integer.parseInt(ctx.formParam("targetX")),
-                        Integer.parseInt(ctx.formParam("targetY"))
+                        Integer.parseInt(ctx.formParam("x")),
+                        Integer.parseInt(ctx.formParam("y"))
                 )
         );
 
@@ -50,8 +51,8 @@ public class SetupRouting {
         VelvetDawnServerInstance.getInstance().game.setup.removeEntity(
                 player,
                 new Coordinate(
-                        Integer.parseInt(ctx.formParam("targetX")),
-                        Integer.parseInt(ctx.formParam("targetY"))
+                        Integer.parseInt(ctx.formParam("x")),
+                        Integer.parseInt(ctx.formParam("y"))
                 )
         );
 

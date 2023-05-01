@@ -52,8 +52,8 @@ public class EntityManager {
 
         // Update entity before spawning
         entity.tags.addAll(definition.tags);
-        definition.attributes.attributes.keySet().forEach(key ->
-            entity.attributes.set(key, definition.attributes.get(key)));
+        definition.attributes.attributes.forEach(item ->
+            entity.attributes.set(item.id, item.value));
 
         // Store new data
         player.entities.add(entity);
@@ -86,6 +86,11 @@ public class EntityManager {
     }
 
     public List<EntityInstanceUpdate> getUpdatesBroadcast(boolean fullState) {
+        // todo needs implementing
+        return List.of();
+    }
+
+    public List<String> getRemovalsBroadcast() {
         // todo needs implementing
         return List.of();
     }

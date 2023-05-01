@@ -53,8 +53,8 @@ export class TurnBanner extends Renderable {
     }
 
     getSubtitle() {
-        const currentRoundTime = (new Date().getTime() / 1000) - VelvetDawn.getState().turn.start
-        let remainingTime = VelvetDawn.getState().turn.seconds - currentRoundTime
+        const currentRoundTime = (new Date().getTime() / 1000) - (VelvetDawn.getState().turn.start ?? 0)
+        let remainingTime = (VelvetDawn.getState().turn.seconds ?? 0) - currentRoundTime
         remainingTime = Math.max(0, Math.round(remainingTime));
         const minutes = Math.floor(remainingTime / 60)
         const seconds = remainingTime % 60

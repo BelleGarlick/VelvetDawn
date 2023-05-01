@@ -10,13 +10,10 @@ import velvetdawn.core.map.spawn.Spawn;
 import velvetdawn.core.models.Coordinate;
 import velvetdawn.core.models.instances.entities.EntityInstance;
 import velvetdawn.core.models.instances.TileInstance;
-import velvetdawn.core.models.instances.TileInstanceUpdate;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,6 +21,8 @@ public class MapManager {
 
     private final VelvetDawn velvetDawn;
     private final Config config;
+    public int width;
+    public int height;
 
     private ArrayList<ArrayList<TileInstance>> map = new ArrayList<>();
 
@@ -33,6 +32,8 @@ public class MapManager {
         this.velvetDawn = velvetDawn;
         this.config = config;
 
+        this.width = config.map.width;
+        this.height = config.map.height;
         this.spawn = new Spawn(velvetDawn, config);
     }
 
@@ -103,9 +104,9 @@ public class MapManager {
             new Coordinate(point.tileX() + 1, isOdd ? point.tileY() + 1 : point.tileY())
         )
                 .filter(p -> p.tileX() >= 0
-                        && p.tileX() < config.map.width
+                        && p.tileX() < this.width
                         && p.tileY() >= 0
-                        && p.tileY() < config.map.height)
+                        && p.tileY() < this.height)
                 .collect(Collectors.toList());
     }
 
@@ -125,10 +126,5 @@ public class MapManager {
         this.spawn.assignSpawnPoints();
         MapGeneration map = new MapGeneration(velvetDawn, config);
         this.map = map.generate();
-    }
-
-    public List<TileInstanceUpdate> getUpdatesBroadcast(boolean fullState) {
-        // todo needs implememtning
-        return List.of();
     }
 }

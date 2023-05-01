@@ -18,13 +18,14 @@ export class Datapacks {
 
             const imageIds: string[] = []
             data.resources.forEach(resource => {
-                this.resources[resource.id] = resource
-                if (resource.type === ResourceType.Audio) {  // Menu audio is loaded before here so it auto plays
-                    VelvetDawn.audioPlayers[resource.id] = new Audio(getResourceUrl(resource.id));
+                this.resources[resource.resourceId] = resource
+                if (resource.resourceType === ResourceType.Audio) {  // Menu audio is loaded before here so it auto plays
+                    VelvetDawn.audioPlayers[resource.resourceId] = new Audio(getResourceUrl(resource.resourceId));
                 }
-                if (resource.type === ResourceType.Image)
-                    imageIds.push(resource.id)
+                if (resource.resourceType === ResourceType.Image)
+                    imageIds.push(resource.resourceId)
             })
+
             Textures.load(imageIds)
         })
     }

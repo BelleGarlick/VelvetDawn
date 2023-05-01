@@ -36,10 +36,10 @@ const setupMap = async (): Promise<VelvetDawnMap> => {
 
     map.updateState({
         ...VelvetDawn.getState(),
-        attrChanges: [
-            {id: "0:1", type: 'tile', attribute: "movement.weight", value: 3},
-            {id: "1:0", type: 'tile', attribute: "movement.weight", value: 3},
-            {id: "1:1", type: 'tile', attribute: "movement.traversable", value: false}
+        attributeUpdates: [
+            {instanceId: "0:1", type: 'tile', attribute: "movement.weight", value: 3},
+            {instanceId: "1:0", type: 'tile', attribute: "movement.weight", value: 3},
+            {instanceId: "1:1", type: 'tile', attribute: "movement.traversable", value: false}
         ]
     })
 

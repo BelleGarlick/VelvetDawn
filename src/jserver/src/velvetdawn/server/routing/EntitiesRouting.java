@@ -15,10 +15,10 @@ import java.util.List;
 public class EntitiesRouting {
 
     public static void init(Javalin app) {
-        app.post("/units/move/", EntitiesRouting::moveEntity);
-        app.get("/units/available-upgrades-and-abilities/", EntitiesRouting::getEntityUpgradeAndAbilities);
-        app.post("/units/upgrade/", EntitiesRouting::performEntityUpgrade);
-        app.post("/units/ability/", EntitiesRouting::performEntityAbility);
+        app.post("/entities/move/", EntitiesRouting::moveEntity);
+        app.get("/entities/available-upgrades-and-abilities/", EntitiesRouting::getEntityUpgradeAndAbilities);
+        app.post("/entities/upgrade/", EntitiesRouting::performEntityUpgrade);
+        app.post("/entities/ability/", EntitiesRouting::performEntityAbility);
     }
 
     private static void moveEntity(io.javalin.http.Context ctx) throws Exception {
@@ -26,7 +26,7 @@ public class EntitiesRouting {
 
         var velvetDawn = VelvetDawnServerInstance.getInstance();
 
-        var entity = velvetDawn.entities.getById(ctx.formParam("attackerId"));
+        var entity = velvetDawn.entities.getById(ctx.formParam("instanceId"));
 
         // Parse json list
         List<Coordinate> path = new ArrayList<>();
@@ -44,7 +44,7 @@ public class EntitiesRouting {
     private static void getEntityUpgradeAndAbilities(io.javalin.http.Context ctx) throws Exception {
         Authenticator.authenticate(ctx);
 
-        var entity = VelvetDawnServerInstance.getInstance().entities.getById(ctx.formParam("instanceId"));
+        var entity = VelvetDawnServerInstance.getInstance().entities.getById(ctx.queryParam("instanceId"));
 
         // Return entity update states
         ctx.json(EntityUpgradeAbilitiesResponse.from(entity));
@@ -56,7 +56,7 @@ public class EntitiesRouting {
         var entity = VelvetDawnServerInstance.getInstance().entities.getById(ctx.formParam("instanceId"));
 
         // Perform Upgrade
-        entity.upgrades.upgrade(ctx.formParam("updateId"));
+        entity.upgrades.upgrade(ctx.formParam("upgradeId"));
 
         // Return entity update states
         ctx.json(EntityUpgradeAbilitiesResponse.from(entity));

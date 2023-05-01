@@ -23,3 +23,24 @@ export function ServerResourceLoadingScreen({ children }: { children: React.Reac
 
     return children
 }
+
+
+export function ServerMapLoadingScreen({ children }: { children: React.ReactElement }) {
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        VelvetDawn.initMap()
+            .then(() => {
+                setLoading(false)
+            })
+            .catch((e) => {
+                console.log(e)
+                alert('Unable to load')
+            })
+    }, [])
+
+    if (loading)
+        return <div>Loading</div>
+
+    return children
+}

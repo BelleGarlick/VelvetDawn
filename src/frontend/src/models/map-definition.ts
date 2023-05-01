@@ -12,7 +12,7 @@ export interface TileInstance {
 
 
 export interface MapDefinition {
-    width: number
-    height: number
+    width: number;
+    height: number;
     tiles: TileInstance[]
 }

@@ -12,12 +12,14 @@ public abstract class Instance {
     public Coordinate position;
     public final String instanceId;
 
-    public final Attributes attributes = new Attributes();
+    public final Attributes attributes;
     public final Set<String> tags = new HashSet<>();
 
     protected Instance(String datapackId, String instanceId, Coordinate position) {
         this.datapackId = datapackId;
         this.instanceId = instanceId;
         this.position = position;
+
+        this.attributes = new Attributes(this);
     }
 }

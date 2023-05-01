@@ -61,13 +61,15 @@ export class TileEntity extends Entity {
         const backgroundTexture = this.attributes['texture.background']
         if (backgroundTexture) {
             const texture = Textures.get(backgroundTexture)
-            facade.ctx.drawImage(
-                texture,
-                0, 0,
-                texture.width, texture.height,
-                imageStart, imageEnd,
-                imageWidth, imageHeight
-            )
+            if (texture != null) {
+                facade.ctx.drawImage(
+                    texture,
+                    0, 0,
+                    texture.width, texture.height,
+                    imageStart, imageEnd,
+                    imageWidth, imageHeight
+                )
+            }
         }
         facade.ctx.globalAlpha = 1
 

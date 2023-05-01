@@ -1,44 +1,53 @@
 package velvetdawn.server.models;
 
 import com.google.gson.JsonObject;
-import velvetdawn.core.models.GameSetup;
+import lombok.Builder;
 import velvetdawn.core.models.Phase;
-import velvetdawn.core.models.Team;
-import velvetdawn.core.models.TurnData;
-import velvetdawn.core.models.instances.TileInstanceUpdate;
-import velvetdawn.core.models.instances.entities.EntityInstanceUpdate;
+import velvetdawn.core.models.instances.attributes.Attributes;
 import velvetdawn.core.players.Player;
 import velvetdawn.server.VelvetDawnServerInstance;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Builder
 public class GameState {
 
     public Phase phase;
     public List<JsonObject> spawnArea;
-    public TurnData turnData;
+    public APITurnData turn;
 
-    public Collection<Player> players;
-    public List<Team> teams;
+    public List<APIPlayer> players;
+    public List<APITeam> teams;
 
-    public List<EntityInstanceUpdate> entityChanges;
-    public List<TileInstanceUpdate> tileChanges;
+    public List<APIEntityUpdate> entityUpdates;
+    public List<String> entityRemovals;
+    public List<JsonObject> attributeUpdates;
 
-    public JsonObject setup;
+    public APIGameSetup setup;
 
     public static GameState from(Player player) {
+        return GameState.from(player, false);
+    }
+
+    public static GameState from(Player player, boolean fullState) {
         var velvetDawn = VelvetDawnServerInstance.getInstance();
 
-        var gameState = new GameState();
-        gameState.phase = velvetDawn.game.phase;
-        gameState.spawnArea = velvetDawn.game.phase == Phase.Setup
-                ? velvetDawn.map.spawn.getSpawnCoordinatesForPlayer(player).stream()
-                    .map(coord -> coord.json().toGson())
-                    .collect(Collectors.toList())
-                : List.of();
-        gameState.setup = velvetDawn.game.setup.getSetup(player).json().toGson();
+        return GameState.builder()
+                .phase(velvetDawn.game.phase)
+                .spawnArea(velvetDawn.game.phase == Phase.Setup
+                        ? velvetDawn.map.spawn.getSpawnCoordinatesForPlayer(player).stream()
+                            .map(coord -> coord.json().toGson())
+                            .collect(Collectors.toList())
+                        : List.of())
+                .setup(APIGameSetup.from(player))
+                .teams(APITeam.fromTeams(velvetDawn.teams.list()))
+                .players(APIPlayer.fromPlayers(velvetDawn.players.list()))
+                .entityUpdates(APIEntityUpdate.fromUpdates(velvetDawn.entities.getUpdatesBroadcast(fullState)))
+                .entityRemovals(velvetDawn.entities.getRemovalsBroadcast())
+                .attributeUpdates(APIAttributeUpdate.fromUpdates(Attributes.getUpdates(velvetDawn, fullState)))
+                .turn(new APITurnData())
+                .build();
 
 
 //        /** Get the update state of the game
@@ -55,17 +64,9 @@ public class GameState {
 //                    : Set.of();
 //
 //            return GameState.builder()
-//                    .phase(this.phase)
-//                    .setup(this.setup.getSetup(player))
-//                    .turnData(this.turns.currentTurnData())
-//                    .teams(velvetDawn.teams.list())
-//                    .players(velvetDawn.players.list())
-//                    .entityChanges(velvetDawn.entities.getUpdatesBroadcast(fullState))
-//                    .tileChanges(velvetDawn.map.getUpdatesBroadcast(fullState))
 //                    .spawnArea(spawnPoints)
 //                    .build();
 //        }
 
-        return gameState;
     }
 }

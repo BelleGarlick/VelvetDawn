@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class AttributesDefinition {
 
-    private final ArrayList<Attribute> attributes = new ArrayList<>();
+    public final ArrayList<AttributeDefinition> attributes = new ArrayList<>();
 
     /** Parse the data to create the attributes */
     public void load(VelvetDawn velvetDawn, String parentId, AnyJson json) throws Exception {
@@ -19,21 +19,26 @@ public class AttributesDefinition {
                     "Attributes in '%s' are invalid. Attributes must be a list of json objects.", parentId));
 
         for (Any item: data.items) {
-            var attr = Attribute.load(velvetDawn, parentId, item.validateInstanceIsJson(String.format(
+            var attr = AttributeDefinition.load(velvetDawn, parentId, item.validateInstanceIsJson(String.format(
                     "Attributes in '%s' are invalid. Attributes must be a list of json objects.", parentId)));
             attributes.add(attr);
         }
     }
 
     public void instantiateInstanceAttributes(Instance instance) {
-        this.attributes.forEach(attribute -> instance.attributes.set(attribute.id, attribute.name, attribute.icon, attribute.value));
+        this.attributes.forEach(attribute -> instance.attributes.set(attribute.id, attribute.value));
     }
 
-    public void add(Attribute attr) {
-        this.attributes.add(attr);
+    public void set(String id, Any value) {
+        this.set(id, null, null, value);
     }
 
-    public Attribute get(String key) {
+    public void set(String id, String name, String icon, Any value) {
+        attributes.removeIf(x -> x.id.equals(id));
+        attributes.add(new AttributeDefinition(id, name, icon, value));
+    }
+
+    public AttributeDefinition get(String key) {
         return this.attributes.stream().filter(x -> x.id.equals(key)).findFirst().orElse(null);
     }
 }

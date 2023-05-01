@@ -53,7 +53,6 @@ public class Game {
 
         this.turns.beginNextTurn();
 
-
         // TODO if players haven't got a commander, move them to spectators
 
         // TODO Trigger entities on game start

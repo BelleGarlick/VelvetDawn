@@ -42,11 +42,11 @@ function AdminView({ setup, setSetup }: { setup: GameSetup, setSetup: (x: GameSe
                     <Text style={{ paddingLeft: '12px' }}>{VelvetDawn.datapacks.entities[entity].name}</Text>
                     <div style={{display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center'}}>
                         <Button style={{padding: ButtonPadding}} onClick={() => {
-                            Api.setup.updateGameSetup(entity, (setup.units[entity] ?? 0) - 1).then(setSetup)
+                            Api.setup.updateGameSetup(entity, (setup.entities[entity] ?? 0) - 1).then(setSetup)
                         }}>-</Button>
-                        <Text>{setup.units[entity] ?? 0}</Text>
+                        <Text>{setup.entities[entity] ?? 0}</Text>
                         <Button style={{padding: ButtonPadding}} onClick={() => {
-                            Api.setup.updateGameSetup(entity, (setup.units[entity] ?? 0) + 1).then(setSetup)
+                            Api.setup.updateGameSetup(entity, (setup.entities[entity] ?? 0) + 1).then(setSetup)
                         }}>+</Button>
                     </div>
                 </div>
@@ -69,10 +69,10 @@ function NonAdminView({ setup }: { setup: GameSetup }) {
 
         <Text style={{ fontSize: '20px' }}>Units</Text>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            {Object.keys(setup.units).map((unit) => {
+            {Object.keys(setup.entities).map((unit) => {
                 return <div style={{ display: 'flex', justifyContent: 'space-between' }} key={unit}>
                     <Text style={{ paddingLeft: '12px' }}>{VelvetDawn.datapacks.entities[unit].name}</Text>
-                    <Text>{setup.units[unit]}</Text>
+                    <Text>{setup.entities[unit]}</Text>
                 </div>
             })}
         </div>

@@ -4,7 +4,6 @@ import velvetdawn.core.models.config.Config;
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.models.Phase;
 import velvetdawn.core.models.Team;
-import velvetdawn.core.models.TurnData;
 import velvetdawn.core.models.anytype.AnyFloat;
 import velvetdawn.core.models.instances.entities.EntityInstance;
 import velvetdawn.core.models.instances.TileInstance;
@@ -41,28 +40,6 @@ public class Turns {
             return null;
 
         return this.activeTurn;
-    }
-
-    /** Get the current turn data returned to the user
-     *
-     * Args:
-     *     config: To get the current turn time
-     *     current_phase: The current phase of the game
-     *
-     * Returns:
-     *     TurnData to include the current turn number, player's turn
-     *     when the turn started and how long the turn is
-     */
-    public TurnData currentTurnData() {
-        if (this.turnStartTime == null)
-            this.updateTurnStartTime();
-
-        return TurnData
-                .builder()
-                .activeTurn(this.getActiveTurn())
-                .currentTurnTime(this.currentTurnTime())
-                .turnStart(this.turnStartTime)
-                .build();
     }
 
     /** Ready a player but if the phase is setup then check they've placed a commander */
@@ -106,7 +83,7 @@ public class Turns {
 
         var currentTime = System.currentTimeMillis();
         var startTime = this.turnStartTime != null ? this.turnStartTime : this.updateTurnStartTime();
-        var allowedTurnTime = this.currentTurnTime();
+        var allowedTurnTime = this.currentTurnTime() * 1000;
 
         if (currentTime > startTime + allowedTurnTime) {
             System.out.printf("%s has elapsed in setup, moving to next turn%n", allowedTurnTime);
@@ -258,5 +235,9 @@ public class Turns {
         return velvetDawn.game.phase == Phase.Setup
                 ? config.setupTime
                 : config.turnTime;
+    }
+
+    public Long getTurnStart() {
+        return turnStartTime;
     }
 }

@@ -3,40 +3,42 @@ import {Player, UnitUpdate} from "models/index";
 import {Attribute} from "models/attribute";
 
 export enum GamePhase {
-    Lobby = 'lobby',
-    Setup = 'setup',
-    Game = 'game',
-    GameOver = 'over'
+    Lobby = 'Lobby',
+    Setup = 'Setup',
+    Game = 'Game',
+    GameOver = 'Over'
 }
 
 export interface GameSetup {
     commanders: string[]
-    units: { [key: string]: number }
+    entities: { [key: string]: number }
     placedCommander: boolean
-    remainingUnits: { [key: string]: number }
+    remainingEntities: { [key: string]: number }
 }
 
 export interface TurnData {
     team: string | undefined  // current team whos turn it is
-    start: number  // The unix epoch time the turn started
-    seconds: number  // The current length of the turn in seconds
+    start: number | undefined  // The unix epoch time the turn started
+    seconds: number | undefined  // The current length of the turn in seconds
 }
 
 export interface GameState {
     phase: GamePhase,
     turn: TurnData,
     teams: Team[],
-    players: { [key: string]: Player },
+    players: Player[],
     setup: GameSetup,
-    unitChanges: {
-        updates: UnitUpdate[],
-        removed: UnitUpdate[],
-    },
+    entityUpdates: UnitUpdate[],
+    entityRemovals: string[],
+    //
+    //     updates: UnitUpdate[],
+    //     removed: UnitUpdate[],
+    // },
     spawnArea: {
         x: number,
         y: number
     }[],
-    attrChanges: Attribute[]
+    attributeUpdates: Attribute[]
 }
 
 
@@ -49,18 +51,16 @@ export const createBlankState = (): GameState => {
             seconds: -1
         },
         teams: [],
-        players: {},
+        players: [],
         setup: {
             commanders: [],
-            units: {},
+            entities: {},
             placedCommander: false,
-            remainingUnits: {}
+            remainingEntities: {}
         },
-        unitChanges: {
-            updates: [],
-            removed: [],
-        },
+        entityUpdates: [],
+        entityRemovals: [],
         spawnArea: [],
-        attrChanges: []
+        attributeUpdates: []
     }
 }

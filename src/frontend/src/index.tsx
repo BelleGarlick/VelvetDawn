@@ -2,7 +2,7 @@ import * as React from "react";
 import {Login} from "ui/Login";
 import {LoginDetails} from "models";
 import {InitialResourceLoadingScreen} from "ui/ResourceLoaders/InitialResourceLoadingScreen";
-import {ServerResourceLoadingScreen} from "ui/ResourceLoaders/ServerResourceLoadingScreen";
+import {ServerMapLoadingScreen, ServerResourceLoadingScreen} from "ui/ResourceLoaders/ServerResourceLoadingScreen";
 import {Lobby} from "ui/Lobby";
 import {ViewContainer} from "ui/ViewContainer";
 import {ViewState} from "models";
@@ -29,7 +29,10 @@ export default function App() {
                     <Lobby setView={setView} />
                 </ServerResourceLoadingScreen>
             </ViewContainer>}
-            {view === ViewState.Game && <GameView />}
+
+            {view === ViewState.Game && <ServerMapLoadingScreen>
+                <GameView />
+            </ServerMapLoadingScreen>}
         </>
     </InitialResourceLoadingScreen>
 }

@@ -38,13 +38,13 @@ export class VelvetDawnMap {
      */
     init() {
         return Api.map.getMap().then(mapDef => {
-            this.width = mapDef.width
-            this.height = mapDef.height
+            this.width = mapDef.width;
+            this.height = mapDef.height;
 
             this.map = []
-            for (let i = 0; i < this.width; i++) {
+            for (let i = 0; i < mapDef.width; i++) {
                 const col = []
-                for (let j = 0; j < this.height; j++) {
+                for (let j = 0; j < mapDef.height; j++) {
                     col.push(null);
                 }
                 this.map.push(col)
@@ -214,7 +214,7 @@ export class VelvetDawnMap {
      */
     updateState(state: GameState) {
         // Update / create updates entities
-        state.unitChanges.updates.forEach(entity => {
+        state.entityUpdates.forEach(entity => {
             let currentInstance = this.units[entity.instanceId];
 
             // Remove current instant from current position
@@ -233,16 +233,30 @@ export class VelvetDawnMap {
         });
 
         // Clear up old units if they've been removed
-        state.unitChanges.removed.forEach(removed => {
-            delete this.units[removed.instanceId]
-            delete this.unitInstanceMap[VelvetDawnMap.hashCoordinate(removed.position)]
+        state.entityRemovals.forEach(instanceId => {
+            let unit = this.units[instanceId];
+            delete this.unitInstanceMap[VelvetDawnMap.hashCoordinate(unit.position)]
+            delete this.units[instanceId]
         })
 
-        state.attrChanges.forEach((attrUpdate) => {
+        state.attributeUpdates.forEach((attrUpdate) => {
             if (attrUpdate.type === "tile") {
-                this.tilesById[attrUpdate.id].attributes[attrUpdate.attribute] = attrUpdate.value
-            } else if (attrUpdate.type === "unit")
-                this.units[attrUpdate.id].attributes[attrUpdate.attribute] = attrUpdate.value
+                let instance = this.tilesById[attrUpdate.instanceId];
+                if (instance == null) {
+
+                } else {
+                    // console.log("---")
+                    // console.log(this.tilesById[attrUpdate.instanceId].attributes[attrUpdate.attribute])
+                    // console.log(attrUpdate.instanceId)
+                    // console.log(attrUpdate.attribute)
+                    // console.log(attrUpdate.value)
+
+                    this.tilesById[attrUpdate.instanceId].attributes[attrUpdate.attribute] = attrUpdate.value
+                }
+
+
+            } else if (attrUpdate.type === "entity")
+                this.units[attrUpdate.instanceId].attributes[attrUpdate.attribute] = attrUpdate.value
             else
                 console.error("Unknown attribute upgrade " + attrUpdate.type)
         });
