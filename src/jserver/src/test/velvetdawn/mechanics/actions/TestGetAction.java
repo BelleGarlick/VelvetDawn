@@ -2,15 +2,13 @@ package test.velvetdawn.mechanics.actions;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.mechanics.actions.ActionModify;
-import velvetdawn.mechanics.actions.Actions;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.anytype.Any;
-import velvetdawn.models.anytype.AnyJson;
-import velvetdawn.models.anytype.AnyList;
-import velvetdawn.models.instances.entities.EntityInstance;
-
-import java.util.List;
+import velvetdawn.core.mechanics.actions.ActionModify;
+import velvetdawn.core.mechanics.actions.Actions;
+import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.anytype.Any;
+import velvetdawn.core.models.anytype.AnyJson;
+import velvetdawn.core.models.anytype.AnyList;
+import velvetdawn.core.models.instances.entities.EntityInstance;
 
 import static junit.framework.TestCase.*;
 import static org.junit.Assert.assertThrows;

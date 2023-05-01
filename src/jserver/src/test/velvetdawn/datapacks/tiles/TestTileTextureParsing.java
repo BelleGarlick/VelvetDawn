@@ -2,10 +2,10 @@ package test.velvetdawn.datapacks.tiles;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.models.anytype.AnyJson;
-import velvetdawn.models.anytype.AnyList;
-import velvetdawn.models.anytype.AnyNull;
-import velvetdawn.models.datapacks.tiles.TileTextures;
+import velvetdawn.core.models.anytype.AnyJson;
+import velvetdawn.core.models.anytype.AnyList;
+import velvetdawn.core.models.anytype.AnyNull;
+import velvetdawn.core.models.datapacks.tiles.TileTextures;
 
 import java.util.List;
 

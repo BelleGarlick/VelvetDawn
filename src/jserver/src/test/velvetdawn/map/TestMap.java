@@ -2,12 +2,8 @@ package test.velvetdawn.map;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.VelvetDawn;
-import velvetdawn.map.MapManager;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.config.Config;
-
-import java.util.List;
+import velvetdawn.core.map.MapManager;
+import velvetdawn.core.models.Coordinate;
 
 import static junit.framework.TestCase.assertEquals;
 

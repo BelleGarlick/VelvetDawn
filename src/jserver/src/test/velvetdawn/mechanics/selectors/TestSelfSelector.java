@@ -2,13 +2,9 @@ package test.velvetdawn.mechanics.selectors;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.mechanics.selectors.SelectorEntities;
-import velvetdawn.mechanics.selectors.SelectorSelf;
-import velvetdawn.mechanics.selectors.Selectors;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.anytype.Any;
-import velvetdawn.models.anytype.AnyNull;
-import velvetdawn.models.instances.WorldInstance;
+import velvetdawn.core.mechanics.selectors.Selectors;
+import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.instances.WorldInstance;
 
 import java.util.ArrayList;
 

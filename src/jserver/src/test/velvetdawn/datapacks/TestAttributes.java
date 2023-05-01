@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.VelvetDawn;
-import velvetdawn.models.anytype.AnyJson;
-import velvetdawn.models.instances.attributes.Attribute;
+import velvetdawn.core.VelvetDawn;
+import velvetdawn.core.models.anytype.AnyJson;
+import velvetdawn.core.models.instances.attributes.Attribute;
 
 
 public class TestAttributes extends BaseTest {

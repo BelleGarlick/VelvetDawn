@@ -2,10 +2,10 @@ package test.velvetdawn.mechanics.selectors;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.mechanics.selectors.SelectorUnit;
-import velvetdawn.mechanics.selectors.Selectors;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.instances.WorldInstance;
+import velvetdawn.core.mechanics.selectors.SelectorUnit;
+import velvetdawn.core.mechanics.selectors.Selectors;
+import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.instances.WorldInstance;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;

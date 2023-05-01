@@ -2,9 +2,9 @@ package test.velvetdawn.datapacks.tiles;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.models.anytype.AnyJson;
-import velvetdawn.models.datapacks.tiles.TileDefinition;
-import velvetdawn.models.instances.attributes.AttributesDefinition;
+import velvetdawn.core.models.anytype.AnyJson;
+import velvetdawn.core.models.datapacks.tiles.TileDefinition;
+import velvetdawn.core.models.instances.attributes.AttributesDefinition;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThrows;

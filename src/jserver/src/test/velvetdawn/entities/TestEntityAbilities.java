@@ -2,7 +2,7 @@ package test.velvetdawn.entities;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.models.Coordinate;
+import velvetdawn.core.models.Coordinate;
 
 import java.util.ArrayList;
 

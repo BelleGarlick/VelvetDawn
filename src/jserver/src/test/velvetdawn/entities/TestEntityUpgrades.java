@@ -2,9 +2,8 @@ package test.velvetdawn.entities;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.mechanics.upgrades.Upgrade;
-import velvetdawn.mechanics.upgrades.Upgrades;
-import velvetdawn.models.Coordinate;
+import velvetdawn.core.mechanics.upgrades.Upgrade;
+import velvetdawn.core.models.Coordinate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +69,7 @@ public class TestEntityUpgrades extends BaseTest {
 
         var upgradable_unit = velvetDawn.entities.getAtPosition(new Coordinate(4, 0)).get(0);
 
-        var upgrades = upgradable_unit.upgrades.getEntityUpgrades();
+        var upgrades = upgradable_unit.upgrades.getUpgradeUpdates();
         assertEquals(0, upgrades.upgraded.size());
         assertEquals(1, upgrades.upgrades.size());
         assertEquals(1, upgrades.missingRequirements.size());
@@ -79,7 +78,7 @@ public class TestEntityUpgrades extends BaseTest {
 
         upgradable_unit.upgrades.upgrade("health_1");
         upgradable_unit.tags.add("visible");
-        upgrades = upgradable_unit.upgrades.getEntityUpgrades();
+        upgrades = upgradable_unit.upgrades.getUpgradeUpdates();
         assertEquals(1, upgrades.upgraded.size());
         assertEquals(1, upgrades.upgrades.size());
         assertEquals(1, upgrades.missingRequirements.size());
@@ -88,7 +87,7 @@ public class TestEntityUpgrades extends BaseTest {
 
         upgradable_unit.upgrades.upgrade("health_2");
         upgradable_unit.tags.add("enabled");
-        upgrades = upgradable_unit.upgrades.getEntityUpgrades();
+        upgrades = upgradable_unit.upgrades.getUpgradeUpdates();
         assertEquals(2, upgrades.upgraded.size());
         assertEquals(1, upgrades.upgrades.size());
         assertEquals(1, upgrades.missingRequirements.size());
@@ -96,7 +95,7 @@ public class TestEntityUpgrades extends BaseTest {
         assertEquals(0, upgrades.disabled.size());
 
         upgradable_unit.upgrades.upgrade("movement");
-        upgrades = upgradable_unit.upgrades.getEntityUpgrades();
+        upgrades = upgradable_unit.upgrades.getUpgradeUpdates();
         assertEquals(3, upgrades.upgraded.size());
         assertEquals(1, upgrades.upgrades.size());
         assertEquals(0, upgrades.missingRequirements.size());
@@ -104,7 +103,7 @@ public class TestEntityUpgrades extends BaseTest {
         assertEquals(0, upgrades.disabled.size());
 
         upgradable_unit.upgrades.upgrade("testing:upgradable-upgrade-3");
-        upgrades = upgradable_unit.upgrades.getEntityUpgrades();
+        upgrades = upgradable_unit.upgrades.getUpgradeUpdates();
         assertEquals(4, upgrades.upgraded.size());
         assertEquals(0, upgrades.upgrades.size());
         assertEquals(0, upgrades.missingRequirements.size());

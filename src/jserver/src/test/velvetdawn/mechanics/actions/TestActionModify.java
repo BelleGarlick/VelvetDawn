@@ -2,12 +2,10 @@ package test.velvetdawn.mechanics.actions;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.VelvetDawn;
-import velvetdawn.mechanics.actions.ActionModify;
-import velvetdawn.models.anytype.Any;
-import velvetdawn.models.anytype.AnyJson;
-
-import java.util.ArrayList;
+import velvetdawn.core.VelvetDawn;
+import velvetdawn.core.mechanics.actions.ActionModify;
+import velvetdawn.core.models.anytype.Any;
+import velvetdawn.core.models.anytype.AnyJson;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;

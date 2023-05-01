@@ -2,14 +2,12 @@ package test.velvetdawn.mechanics.selectors;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.mechanics.selectors.SelectorEntities;
-import velvetdawn.mechanics.selectors.SelectorSelf;
-import velvetdawn.mechanics.selectors.Selectors;
-import velvetdawn.models.anytype.Any;
-import velvetdawn.models.anytype.AnyNull;
-import velvetdawn.models.instances.WorldInstance;
-
-import java.util.ArrayList;
+import velvetdawn.core.mechanics.selectors.SelectorEntities;
+import velvetdawn.core.mechanics.selectors.SelectorSelf;
+import velvetdawn.core.mechanics.selectors.Selectors;
+import velvetdawn.core.models.anytype.Any;
+import velvetdawn.core.models.anytype.AnyNull;
+import velvetdawn.core.models.instances.WorldInstance;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

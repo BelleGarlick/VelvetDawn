@@ -2,13 +2,13 @@ package test.velvetdawn.datapacks;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.VelvetDawn;
-import velvetdawn.datapacks.DatapackManager;
-import velvetdawn.models.anytype.Any;
-import velvetdawn.models.anytype.AnyJson;
-import velvetdawn.models.anytype.AnyList;
-import velvetdawn.models.config.Config;
-import velvetdawn.utils.Path;
+import velvetdawn.core.VelvetDawn;
+import velvetdawn.core.datapacks.DatapackManager;
+import velvetdawn.core.models.anytype.Any;
+import velvetdawn.core.models.anytype.AnyJson;
+import velvetdawn.core.models.anytype.AnyList;
+import velvetdawn.core.models.config.Config;
+import velvetdawn.core.utils.Path;
 
 import java.util.stream.Collectors;
 

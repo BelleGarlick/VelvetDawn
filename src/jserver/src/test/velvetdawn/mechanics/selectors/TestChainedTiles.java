@@ -2,11 +2,11 @@ package test.velvetdawn.mechanics.selectors;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.mechanics.selectors.Selectors;
-import velvetdawn.mechanics.selectors.tiles.SelectorTile;
-import velvetdawn.mechanics.selectors.tiles.SelectorTiles;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.instances.WorldInstance;
+import velvetdawn.core.mechanics.selectors.Selectors;
+import velvetdawn.core.mechanics.selectors.tiles.SelectorTile;
+import velvetdawn.core.mechanics.selectors.tiles.SelectorTiles;
+import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.instances.WorldInstance;
 
 import java.util.ArrayList;
 

@@ -4,11 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.mechanics.FunctionValue;
-import velvetdawn.mechanics.selectors.Selector;
-import velvetdawn.models.anytype.Any;
-
-import java.util.ArrayList;
+import velvetdawn.core.mechanics.FunctionValue;
+import velvetdawn.core.mechanics.selectors.Selector;
+import velvetdawn.core.models.anytype.Any;
 
 
 public class TestFunctionValue extends BaseTest {

@@ -2,14 +2,13 @@ package test.velvetdawn.mechanics;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.VelvetDawn;
-import velvetdawn.mechanics.actions.Actions;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.anytype.AnyJson;
-import velvetdawn.models.instances.WorldInstance;
-import velvetdawn.models.instances.entities.EntityInstance;
+import velvetdawn.core.VelvetDawn;
+import velvetdawn.core.mechanics.actions.Actions;
+import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.anytype.AnyJson;
+import velvetdawn.core.models.instances.WorldInstance;
+import velvetdawn.core.models.instances.entities.EntityInstance;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertFalse;

@@ -2,9 +2,8 @@ package test.velvetdawn.datapacks.entities;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.models.anytype.AnyJson;
-import velvetdawn.models.datapacks.entities.EntityDefinition;
-import velvetdawn.models.instances.attributes.Attributes;
+import velvetdawn.core.models.anytype.AnyJson;
+import velvetdawn.core.models.datapacks.entities.EntityDefinition;
 
 import java.util.List;
 

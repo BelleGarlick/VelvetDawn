@@ -2,11 +2,11 @@ package test.velvetdawn.mechanics.conditionals;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.mechanics.conditionals.Comparison;
-import velvetdawn.mechanics.conditionals.Conditionals;
-import velvetdawn.mechanics.conditionals.CountConditional;
-import velvetdawn.mechanics.conditionals.StandardConditional;
-import velvetdawn.models.anytype.AnyJson;
+import velvetdawn.core.mechanics.conditionals.Comparison;
+import velvetdawn.core.mechanics.conditionals.Conditionals;
+import velvetdawn.core.mechanics.conditionals.CountConditional;
+import velvetdawn.core.mechanics.conditionals.StandardConditional;
+import velvetdawn.core.models.anytype.AnyJson;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;

@@ -2,9 +2,8 @@ package test.velvetdawn.map;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.VelvetDawn;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.config.Config;
+import velvetdawn.core.VelvetDawn;
+import velvetdawn.core.models.config.Config;
 
 import java.util.List;
 

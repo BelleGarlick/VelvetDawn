@@ -2,11 +2,9 @@ package test.velvetdawn.datapacks.entities;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.mechanics.abilities.Abilities;
-import velvetdawn.models.anytype.AnyJson;
-import velvetdawn.models.anytype.AnyList;
-
-import java.util.List;
+import velvetdawn.core.mechanics.abilities.Abilities;
+import velvetdawn.core.models.anytype.AnyJson;
+import velvetdawn.core.models.anytype.AnyList;
 
 import static org.junit.Assert.assertThrows;
 

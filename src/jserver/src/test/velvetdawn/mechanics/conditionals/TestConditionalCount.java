@@ -2,12 +2,10 @@ package test.velvetdawn.mechanics.conditionals;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.mechanics.conditionals.Conditionals;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.anytype.Any;
-import velvetdawn.models.anytype.AnyJson;
-
-import java.util.ArrayList;
+import velvetdawn.core.mechanics.conditionals.Conditionals;
+import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.anytype.Any;
+import velvetdawn.core.models.anytype.AnyJson;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertThrows;

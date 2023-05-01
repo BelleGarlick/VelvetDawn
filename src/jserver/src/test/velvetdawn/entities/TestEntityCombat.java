@@ -2,10 +2,8 @@ package test.velvetdawn.entities;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.anytype.Any;
-
-import java.util.ArrayList;
+import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.anytype.Any;
 
 import static org.junit.Assert.assertEquals;
 

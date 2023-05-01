@@ -4,10 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.VelvetDawn;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.Phase;
-import velvetdawn.models.config.Config;
+import velvetdawn.core.VelvetDawn;
+import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.Phase;
+import velvetdawn.core.models.config.Config;
 
 
 public class TestSetup extends BaseTest {

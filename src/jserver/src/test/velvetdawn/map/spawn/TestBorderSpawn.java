@@ -2,11 +2,11 @@ package test.velvetdawn.map.spawn;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.VelvetDawn;
-import velvetdawn.map.spawn.BorderSpawnMode;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.config.Config;
-import velvetdawn.models.config.SpawnConfig;
+import velvetdawn.core.VelvetDawn;
+import velvetdawn.core.map.spawn.BorderSpawnMode;
+import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.config.Config;
+import velvetdawn.core.models.config.SpawnConfig;
 
 import java.util.List;
 

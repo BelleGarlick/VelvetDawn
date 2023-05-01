@@ -2,11 +2,10 @@ package test.velvetdawn.entities;
 
 import org.junit.Test;
 import test.BaseTest;
-import velvetdawn.VelvetDawn;
-import velvetdawn.constants.AttributeKeys;
-import velvetdawn.models.Coordinate;
-import velvetdawn.models.Phase;
-import velvetdawn.models.anytype.Any;
+import velvetdawn.core.constants.AttributeKeys;
+import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.Phase;
+import velvetdawn.core.models.anytype.Any;
 
 import java.util.ArrayList;
 import java.util.List;
