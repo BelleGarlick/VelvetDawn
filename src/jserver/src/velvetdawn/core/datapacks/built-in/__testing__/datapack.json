@@ -1,9 +1,0 @@
-{
-  "id": "testing",
-  "triggers": {
-    "game": [{"modify": "self", "add-tag": "game-trigger-ran"}],
-    "round": [{"modify": "self", "add-tag": "round-trigger-ran"}],
-    "turn": [{"modify": "self", "add-tag": "turn-trigger-ran"}],
-    "turn-end": [{"modify": "self", "add-tag": "turn-end-trigger-ran"}]
-  }
-}

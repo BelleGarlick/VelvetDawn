@@ -1,4 +1,0 @@
-Flask
-pathlib
-flask_sqlalchemy
-py-redis
