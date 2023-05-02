@@ -120,7 +120,7 @@ describe("Test update from state", () => {
         const unit = map.getUnit('0')
         expect(map.allUnits().length).toBe(1)
         expect(unit.instanceId).toBe("0")
-        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe('0')
+        expect(map.getUnitsAtPosition({x: 0, y: 0})[0].instanceId).toBe('0')
 
         map.updateState({
             ...VelvetDawn.getState(),
@@ -138,19 +138,19 @@ describe("Test update from state", () => {
         })
 
         expect(map.allUnits().length).toBe(2)
-        expect(map.getUnitAtPosition({x: 1, y: 0}).instanceId).toBe('0')
-        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe('1')
+        expect(map.getUnitsAtPosition({x: 1, y: 0})[0].instanceId).toBe('0')
+        expect(map.getUnitsAtPosition({x: 0, y: 0})[0].instanceId).toBe('1')
 
         map.updateState({
             ...VelvetDawn.getState(),
             entityUpdates: [
-                {...blankEntity, instanceId: "1", datapackId: "a", position: {x: 0, y: 0}}
+                {...blankEntity, instanceId: "1", datapackId: "a", position: {x: 1, y: 0}}
             ],
-            entityRemovals: ["1"],
+            entityRemovals: ["0"],
         })
 
-        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe('1')
-        expect(map.getUnitAtPosition({x: 1, y: 0})).toBeUndefined()
+        expect(map.getUnitsAtPosition({x: 1, y: 0})[0].instanceId).toBe('1')
+        expect(map.getUnitsAtPosition({x: 0, y: 0}).length).toBe(0)
         expect(map.allUnits().length).toBe(1)
     })
 })
@@ -162,10 +162,10 @@ describe("Test move entity", () => {
         const unit = map.getUnit('0')
         expect(map.allUnits().length).toBe(1)
         expect(unit.instanceId).toBe('0')
-        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe('0')
+        expect(map.getUnitsAtPosition({x: 0, y: 0})[0].instanceId).toBe('0')
 
         map.move("0", [{x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2}])
-        expect(map.getUnitAtPosition({x: 2, y: 2}).instanceId).toBe('0')
+        expect(map.getUnitsAtPosition({x: 2, y: 2})[0].instanceId).toBe('0')
         expect(unit.getPosition()).toStrictEqual({x: 2, y: 2})
     })
 })
@@ -178,7 +178,7 @@ describe("Test remove entity in setup", () => {
         const unit = map.getUnit('0')
         expect(map.allUnits().length).toBe(1)
         expect(unit.instanceId).toBe('0')
-        expect(map.getUnitAtPosition({x: 0, y: 0}).instanceId).toBe('0')
+        expect(map.getUnitsAtPosition({x: 0, y: 0})[0].instanceId).toBe('0')
 
         // Didn't remove as not in setup
         map.removeEntityDuringSetup({x: 0, y: 0})

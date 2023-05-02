@@ -46,11 +46,11 @@ export class GameScene extends Scene {
             this.clickedTile.selected = true;
 
             // TODO Check if can move to the tile or should fight it
-            const mapEntity = VelvetDawn.map.getUnitAtPosition(this.clickedTile.position)
-            if (mapEntity && mapEntity.player === VelvetDawn.loginDetails.username && VelvetDawn.isPlayersTurn()) {
+            const mapEntity = VelvetDawn.map.getUnitsAtPosition(this.clickedTile.position)
+            if (mapEntity.length > 0 && mapEntity[0].player === VelvetDawn.loginDetails.username && VelvetDawn.isPlayersTurn()) {
                 // This is for own clause, will need another clause for non-player owned entities
-                this.selectedEntity = mapEntity;
-                this.pathPlanning.computePaths(this.clickedTile.position, mapEntity.attributes['movement.remaining'] ?? 0)
+                this.selectedEntity = mapEntity[0];
+                this.pathPlanning.computePaths(this.clickedTile.position, mapEntity[0].attributes['movement.remaining'] ?? 0)
 
                 const combatRange = this.selectedEntity.attributes['combat.range'] ?? 1
                 this.combat.getTargetablePositions(this.selectedEntity.getPosition(), combatRange)
@@ -61,8 +61,8 @@ export class GameScene extends Scene {
                 && this.combat.isPointInRange(this.clickedTile.position)) {
                 this.combat.attack(this.selectedEntity.instanceId, this.clickedTile.position)
             }
-            else if (mapEntity) {
-                this.selectedEntity = mapEntity;
+            else if (mapEntity.length > 0) {
+                this.selectedEntity = mapEntity[0];
                 this.combat.clear()
                 this.pathPlanning.clear()
             }

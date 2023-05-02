@@ -121,14 +121,16 @@ export class SetupSceneSidebar extends Renderable {
                     .render(facade)
             })
 
-            const selectedEntity = VelvetDawn.map.getUnitAtPosition(this.clickedTile.position)
-            if (selectedEntity && selectedEntity.player === VelvetDawn.loginDetails.username) {
-                const {x, y} = this.getButtonPosition(buttons.length, facade.constants)
-                this.removeEntityButton
-                    .hovered(this.removeEntityButton.isHovered(facade.mousePosition))
-                    .setPos(x, y)
-                    .render(facade)
-            }
+            const selectedEntities = VelvetDawn.map.getUnitsAtPosition(this.clickedTile.position)
+            selectedEntities.forEach(selectedEntity => {
+                if (selectedEntity.player === VelvetDawn.loginDetails.username) {
+                    const {x, y} = this.getButtonPosition(buttons.length, facade.constants)
+                    this.removeEntityButton
+                        .hovered(this.removeEntityButton.isHovered(facade.mousePosition))
+                        .setPos(x, y)
+                        .render(facade)
+                }
+            })
         }
 
         let topLineHeight = facade.constants.tabHeight + 2 * facade.constants.sidebarPadding

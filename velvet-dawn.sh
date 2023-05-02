@@ -32,12 +32,6 @@ then
   # Start the server in prod mode
   python src/server/src/velvet_dawn/server/app.py
 
-elif [ $1 = "dev" ]
-then
-  # Start the server in dev mode
-  export DEV=true
-  python src/server/src/velvet_dawn/server/app.py
-
 elif [ $1 = "dev-fe" ]
 then
   # Run the FE server for developing the front end
@@ -53,14 +47,14 @@ then
 elif [ $1 = "test" ]
 then
   # Test all
-  python -m pytest
+  mvn test
   cd src/frontend
   npm run test
 
 elif [ $1 = "test-server" ]
 then
   # Test server
-  python -m pytest
+  mvn test
 
 elif [ $1 = "test-frontend" ]
 then

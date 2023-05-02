@@ -31,7 +31,8 @@ export class VelvetDawnMap {
 
     // Unit Entities
     private units: { [key: string]: UnitEntity } = {}
-    private unitInstanceMap: { [key: string]: UnitEntity } = {}  // Entities stored by hashed coordinate
+    // TODO Encapsulate map
+    private unitInstanceMap: { [key: string]: UnitEntity[] } = {}  // Entities stored by hashed coordinate
 
     /** Initialise the map by loading it from the server
      * and instantiating all the tile entities.
@@ -75,8 +76,8 @@ export class VelvetDawnMap {
     }
 
     /** Get a unit at a given position using the hashed coordinate */
-    getUnitAtPosition(position: Position): UnitEntity | undefined {
-        return this.unitInstanceMap[VelvetDawnMap.hashCoordinate(position)];
+    getUnitsAtPosition(position: Position): UnitEntity[] {
+        return this.unitInstanceMap[VelvetDawnMap.hashCoordinate(position)] ?? [];
     }
 
     /** Get the neighbours around a tile ordinate
@@ -159,7 +160,7 @@ export class VelvetDawnMap {
                     const movementWeight = tile.attributes['movement.weight'] ?? 1
 
                     const isNew = !checkedCoordinates.has(tileHash) && !uncheckedCoordinates.has(tileHash)
-                        && this.getUnitAtPosition(tile.position) === undefined
+                        && this.getUnitsAtPosition(tile.position).length == 0;
 
                     if (isNew && isTraversable) {
                         uncheckedCoordinates.add(tileHash)
@@ -192,9 +193,16 @@ export class VelvetDawnMap {
         const unit = this.units[entityId];
         const newPosition = path[path.length - 1]
 
-        delete this.unitInstanceMap[VelvetDawnMap.hashCoordinate(unit.getPosition())]
+        let hashedOldPos = VelvetDawnMap.hashCoordinate(unit.getPosition());
+        this.unitInstanceMap[hashedOldPos] = this.unitInstanceMap[hashedOldPos].filter(x => x.instanceId != unit.instanceId)
+        if (this.unitInstanceMap[hashedOldPos].length == 0)
+            delete this.unitInstanceMap[hashedOldPos]
+
         unit.setPosition(newPosition)
-        this.unitInstanceMap[VelvetDawnMap.hashCoordinate(newPosition)] = unit;
+        let hashedNewPos = VelvetDawnMap.hashCoordinate(newPosition);
+        if (!this.unitInstanceMap.hasOwnProperty(hashedNewPos))
+            this.unitInstanceMap[hashedNewPos] = []
+        this.unitInstanceMap[hashedNewPos].push(unit);
 
         Api.units.move(entityId, path)
             .then(x => VelvetDawn.setState(x))
@@ -220,7 +228,9 @@ export class VelvetDawnMap {
             // Remove current instant from current position
             if (currentInstance) {
                 const key = VelvetDawnMap.hashCoordinate(currentInstance.getPosition())
-                delete this.unitInstanceMap[key]
+                this.unitInstanceMap[key] = this.unitInstanceMap[key].filter(x => x.instanceId != entity.instanceId)
+                if (this.unitInstanceMap[key].length == 0)
+                    delete this.unitInstanceMap[key]
             }
             else {
                 currentInstance = new UnitEntity(entity.instanceId, entity.datapackId, entity.player);
@@ -229,13 +239,21 @@ export class VelvetDawnMap {
 
             // Update the entity and entity map position
             this.units[entity.instanceId] = currentInstance
-            this.unitInstanceMap[VelvetDawnMap.hashCoordinate(entity.position)] = currentInstance;
+
+            let hashedNewPos = VelvetDawnMap.hashCoordinate(entity.position);
+            if (!this.unitInstanceMap.hasOwnProperty(hashedNewPos))
+                this.unitInstanceMap[hashedNewPos] = []
+            this.unitInstanceMap[hashedNewPos].push(currentInstance);
         });
 
         // Clear up old units if they've been removed
         state.entityRemovals.forEach(instanceId => {
             let unit = this.units[instanceId];
-            delete this.unitInstanceMap[VelvetDawnMap.hashCoordinate(unit.position)]
+            const key = VelvetDawnMap.hashCoordinate(unit.getPosition())
+            this.unitInstanceMap[key] = this.unitInstanceMap[key].filter(x => x.instanceId != unit.instanceId)
+            if (this.unitInstanceMap[key].length == 0)
+                delete this.unitInstanceMap[key]
+
             delete this.units[instanceId]
         })
 
@@ -282,11 +300,11 @@ export class VelvetDawnMap {
      */
     removeEntityDuringSetup(position: Position) {
         if (VelvetDawn.getState().phase === GamePhase.Setup) {
-            const selectedEntity = this.getUnitAtPosition(position)
-            if (selectedEntity) {
+            const selectedEntities = this.getUnitsAtPosition(position)
+            selectedEntities.forEach(selectedEntity => {
                 delete this.units[selectedEntity.instanceId]
                 delete this.unitInstanceMap[VelvetDawnMap.hashCoordinate(selectedEntity.getPosition())]
-            }
+            });
 
             Api.setup.removeEntity(position)
                 .then(x => {
