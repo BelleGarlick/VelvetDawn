@@ -14,3 +14,4 @@ pyvenv.cfg
 include/*
 var/*
 data.json
+target/*

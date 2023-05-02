@@ -88,7 +88,7 @@ public class Setup {
             this.setup.put(datapackId, count);
     }
 
-    /** Check the setup definitions must contains commander and is
+    /** Check the setup definitions must contain commander and is
      * value for the game to start
      */
     public boolean isSetupValid() {

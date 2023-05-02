@@ -15,7 +15,7 @@ public class Config {
     public Integer seed = null;
 
     public Path getDatapackPath() {
-        return new Path("../../datapacks");
+        return new Path("datapacks");
     }
 
     public Path getWorldSavePath() {

@@ -46,10 +46,10 @@ public class DatapackManager {
 
         if (datapackId.equals("__testing__")) {
             packId = "testing";
-            path = new Path("./src/velvetdawn/core/datapacks/built-in/__testing__");
+            path = new Path("./src/server/src/velvetdawn/core/datapacks/built-in/__testing__");
         }
         if (datapackId.equals("base"))
-            path = new Path("./src/velvetdawn/core/datapacks/built-in/base");
+            path = new Path("./src/server/src/velvetdawn/core/datapacks/built-in/base");
 
         // TODO
 //        if (!datapackPath.exists())
