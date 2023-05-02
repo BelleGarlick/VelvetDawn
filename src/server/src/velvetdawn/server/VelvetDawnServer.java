@@ -85,7 +85,7 @@ public class VelvetDawnServer {
     }
 
     private static void loadWebpage(Context ctx) throws IOException {
-        var path = new Path("./../")
+        var path = new Path("./src/")
                 .getChild("frontend")
                 .getChild("dist")
                 .getChild("index.html");
@@ -94,7 +94,7 @@ public class VelvetDawnServer {
     }
 
     private static void loadApp(Context ctx) throws IOException {
-        var path = new Path("./../")
+        var path = new Path("./src/")
                 .getChild("frontend")
                 .getChild("dist")
                 .getChild("app.js");

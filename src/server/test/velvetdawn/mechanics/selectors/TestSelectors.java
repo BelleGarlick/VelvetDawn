@@ -5,7 +5,7 @@ import velvetdawn.BaseTest;
 import velvetdawn.core.mechanics.selectors.SelectorEntities;
 import velvetdawn.core.mechanics.selectors.Selectors;
 import velvetdawn.core.mechanics.selectors.WorldSelector;
-import velvetdawn.core.mechanics.selectors.closest.SelectorClosest;
+import velvetdawn.core.mechanics.selectors.tiles.SelectorTile;
 import velvetdawn.core.models.Coordinate;
 
 import java.util.ArrayList;
@@ -18,11 +18,11 @@ public class TestSelectors extends BaseTest {
 
     @Test
     public void test_selector_parsing() throws Exception {
-        var selector = Selectors.get(this.prepareGame(), "0", "world>entities[commander]>closest.max.health.example");
+        var selector = Selectors.get(this.prepareGame(), "0", "world>entities[commander]>tile.max.health.example");
 
         assertTrue(selector instanceof WorldSelector);
         assertTrue(selector.chainedSelector instanceof SelectorEntities);
-        assertTrue(selector.chainedSelector.chainedSelector instanceof SelectorClosest);
+        assertTrue(selector.chainedSelector.chainedSelector instanceof SelectorTile);
 
         assertEquals(selector.attribute, "max.health.example");
     }

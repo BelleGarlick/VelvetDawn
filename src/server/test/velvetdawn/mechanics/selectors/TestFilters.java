@@ -7,8 +7,11 @@ import velvetdawn.core.mechanics.selectors.Selectors;
 import velvetdawn.core.models.Coordinate;
 import velvetdawn.core.models.instances.WorldInstance;
 
+import java.util.ArrayList;
+
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -105,5 +108,27 @@ public class TestFilters extends BaseTest {
 
         assertEquals(0, selector_self.getChainedSelection(unit).size());
         assertEquals(3, selector_units.getChainedSelection(unit).size());  // only 3 of 4 units returned
+    }
+
+    @Test
+    public void test_selector_unit() throws Exception {
+        var velvetDawn = this.prepareGame();
+
+        var unit = velvetDawn.entities.getAtPosition(new Coordinate(5, 0)).get(0);
+
+        var selectorClosestUnit = Selectors.get(velvetDawn, "0", "entities[closest]");
+        var selectorClosestEnemy = Selectors.get(velvetDawn, "0", "enemies[closest]");
+        var selectorClosestFriendly = Selectors.get(velvetDawn, "0", "friendlies[closest]");
+
+        var closest_unit = selectorClosestUnit.getChainedSelection(unit);
+        var closest_enemy = selectorClosestEnemy.getChainedSelection(unit);
+        var closest_friendly = selectorClosestFriendly.getChainedSelection(unit);
+
+        assertEquals(1, closest_unit.size());
+        assertEquals(1, closest_enemy.size());
+        assertEquals(1, closest_friendly.size());
+
+        // Test that self is excluded
+        assertNotEquals(new ArrayList<>(closest_unit).get(0).instanceId, unit.instanceId);
     }
 }

@@ -3,12 +3,14 @@ package velvetdawn.core.mechanics.selectors;
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.map.MapManager;
 import velvetdawn.core.models.anytype.AnyString;
+import velvetdawn.core.models.instances.TileInstance;
 import velvetdawn.core.models.instances.entities.EntityInstance;
 import velvetdawn.core.models.instances.Instance;
 import velvetdawn.core.models.instances.WorldInstance;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,7 @@ public class Filters {
     public Float maxRange = null;
     public boolean excludeSelf = false;
     public boolean commanderOnly = false;
+    public boolean closest = false;
 
     public Filters(VelvetDawn velvetDawn) {
         this.velvetDawn = velvetDawn;
@@ -46,6 +49,9 @@ public class Filters {
                 break;
             case "commander":
                 this.commanderOnly = true;
+                break;
+            case "closest":
+                this.closest = true;
                 break;
             case "tag":
                 this.allowedTags.add(value);
@@ -78,7 +84,7 @@ public class Filters {
      * @return The filtered instances
      */
     public Collection<Instance> filter(Instance instance, Collection<? extends Instance> instances) {
-        return instances.stream()
+        Collection<Instance> filteredInstances = instances.stream()
                 .filter(item -> {
                     // If missing tag, filter out the item
                     if (!this.allowedTags.isEmpty()) {
@@ -134,5 +140,37 @@ public class Filters {
                     return true;
                 })
                 .collect(Collectors.toList());
+
+        if (this.closest)
+            filteredInstances = getClosest(instance, filteredInstances);
+
+        return filteredInstances;
+    }
+
+    private Collection<Instance> getClosest(Instance to, Collection<Instance> instances) {
+        Instance closest = null;
+        float bestDistance = 0;
+
+        if (to instanceof TileInstance || to instanceof EntityInstance) {
+            for (Instance item: instances) {
+                // Don't want to include itself otherwise this will always return self
+                if (item.instanceId.equals(to.instanceId) && to.getClass().equals(item.getClass()))
+                    continue;
+
+                int distance = velvetDawn.map.getDistance(to.position, item.position);
+
+                if (closest == null) {
+                    closest = item;
+                    bestDistance = distance;
+                } else if (distance < bestDistance) {
+                    closest = item;
+                    bestDistance = distance;
+                }
+            }
+        }
+
+        return closest == null
+                ? List.of()
+                : List.of(closest);
     }
 }

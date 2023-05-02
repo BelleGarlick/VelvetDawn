@@ -1,9 +1,6 @@
 package velvetdawn.core.mechanics.selectors;
 
 import velvetdawn.core.VelvetDawn;
-import velvetdawn.core.mechanics.selectors.closest.SelectorClosest;
-import velvetdawn.core.mechanics.selectors.closest.SelectorClosestEnemy;
-import velvetdawn.core.mechanics.selectors.closest.SelectorClosestFriendly;
 import velvetdawn.core.mechanics.selectors.tiles.SelectorTile;
 import velvetdawn.core.mechanics.selectors.tiles.SelectorTiles;
 
@@ -86,12 +83,6 @@ public class Selectors {
                 return new SelectorTile(velvetDawn);
             case "tiles":
                 return new SelectorTiles(velvetDawn);
-            case "closest":
-                return new SelectorClosest(velvetDawn);
-            case "closest-enemy":
-                return new SelectorClosestEnemy(velvetDawn);
-            case "closest-friendly":
-                return new SelectorClosestFriendly(velvetDawn);
             case "entity":
                 return new SelectorUnit(velvetDawn);
             case "entities":
