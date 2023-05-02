@@ -11,10 +11,12 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-
-        <sourceDirectory>${project.basedir}/src/server/src</sourceDirectory>
-        <testDirectory>${project.basedir}/src/server/test</testDirectory>
     </properties>
+
+    <build>
+        <sourceDirectory>${project.basedir}/src/server/src</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/server/test</testSourceDirectory>
+    </build>
 
     <dependencies>
         <dependency>

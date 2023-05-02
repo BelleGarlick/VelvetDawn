@@ -47,14 +47,14 @@ then
 elif [ $1 = "test" ]
 then
   # Test all
-  mvn test --file pom.xml
+  mvn test
   cd src/frontend
   npm run test
 
 elif [ $1 = "test-server" ]
 then
   # Test server
-  mvn test --file pom.xml
+  mvn test
 
 elif [ $1 = "test-frontend" ]
 then
