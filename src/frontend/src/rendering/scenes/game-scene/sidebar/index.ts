@@ -74,7 +74,7 @@ export class GameViewSidebar {
             if (this.tab === 1)
                 this.unitAbilities.render(facade, remainingTop)
             if (this.tab === 2) {
-                const unitDef = VelvetDawn.datapacks.entities[this.selectedEntity.entityId]
+                const unitDef = VelvetDawn.datapacks.entities[this.selectedEntity.datapackId]
                 facade.ctx.textBaseline = "top"
                 facade.ctx.textAlign = "center"
                 facade.ctx.fillStyle = "#ffffff"
@@ -99,7 +99,7 @@ export class GameViewSidebar {
     renderUnitBanner(facade: RenderingFacade): number {
         const { ctx, sidebarInnerStart } = facade;
 
-        const unit = VelvetDawn.datapacks.entities[this.selectedEntity.entityId]
+        const unit = VelvetDawn.datapacks.entities[this.selectedEntity.datapackId]
         const texture = Textures.get(unit.textures.background)
         const size = facade.constants.buttonHeight;
 
@@ -138,7 +138,7 @@ export class GameViewSidebar {
         const sidebarInnerLeft = facade.constants.sidebarStart + facade.constants.sidebarPadding
         const attributeCols = 3
 
-        const unit = VelvetDawn.datapacks.entities[this.selectedEntity.entityId]
+        const unit = VelvetDawn.datapacks.entities[this.selectedEntity.datapackId]
         const attributes = unit.attributes.filter(x => x.icon !== null)
 
         const attributeWidth = (facade.constants.sidebar - 2 * facade.constants.sidebarPadding) / attributeCols
@@ -188,7 +188,9 @@ export class GameViewSidebar {
     setSelectedUnit(unit: UnitEntity | undefined) {
         if (this.selectedEntity !== unit && unit !== undefined && unit !== null) {
             // Unit has changed
-            const unitDef = VelvetDawn.datapacks.entities[unit.entityId]
+            const unitDef = VelvetDawn.datapacks.entities[unit.datapackId]
+            console.log(unitDef)
+            console.log(VelvetDawn.datapacks.entities)
             this.unitUpgrades.setEntity(unit.instanceId, unitDef)
             this.unitAbilities.setEntity(unit.instanceId, unitDef)
 

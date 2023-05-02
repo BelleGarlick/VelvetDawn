@@ -67,7 +67,7 @@ public class VelvetDawnServer {
 
         VelvetDawnServerInstance.getInstance().game.turns.checkEndTurnCase();
 
-        ctx.json(GameState.from(player, true));
+        ctx.json(GameState.from(player, Boolean.parseBoolean(ctx.queryParam("full-state"))));
     }
 
     private static void join(Context ctx) throws Exception {

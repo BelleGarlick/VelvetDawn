@@ -8,8 +8,8 @@ import velvetdawn.server.models.GameState;
 public class TurnRouting {
 
     public static void init(Javalin app) {
-        app.post("/turn/ready/", TurnRouting::ready);
-        app.post("/turn/unready/", TurnRouting::unready);
+        app.post("/turns/ready/", TurnRouting::ready);
+        app.post("/turns/unready/", TurnRouting::unready);
     }
 
     private static void ready(io.javalin.http.Context ctx) throws Exception {

@@ -21,8 +21,6 @@ export class GameScene extends Scene {
         this.sidebar = new GameViewSidebar(facade.constants)
         this.turnBanner.title("Game Phase")
 
-        VelvetDawn.map.tiles.forEach(x => x.isSpawnArea = false)
-
         return null
     }
 

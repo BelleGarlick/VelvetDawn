@@ -15,6 +15,10 @@ import java.util.stream.Collectors;
 
 public class EntityManager {
 
+    private static final List<EntityInstanceUpdate> updates = new ArrayList<>();
+    private static final List<EntityInstanceUpdate> deaths = new ArrayList<>();
+    private static final long EntityBroadcastTTL = 10 * 1000;
+
     private final VelvetDawn velvetDawn;
 
     private final Set<EntityInstance> entities = new HashSet<>();
@@ -62,10 +66,8 @@ public class EntityManager {
         // Trigger on spawn
         definition.triggers.onSpawn(entity);
 
-        //    # Add to updates
-        //                submission_data = instance.json()
-        //        submission_data['time'] = time.time()
-        //        db.sadd(UNIT_UPDATES_UPDATED, [json.dumps(submission_data)])
+        // Add to updates
+        updates.add(EntityInstanceUpdate.from(entity));
 
         return entity;
     }
@@ -73,6 +75,7 @@ public class EntityManager {
     public void kill(EntityInstance entity) {
         this.entities.remove(entity);
         entity.player.entities.remove(entity);
+        deaths.add(EntityInstanceUpdate.from(entity));
     }
 
     public void removeForPlayer(Player player) {
@@ -86,13 +89,29 @@ public class EntityManager {
     }
 
     public List<EntityInstanceUpdate> getUpdatesBroadcast(boolean fullState) {
-        // todo needs implementing
-        return List.of();
+        // TODO Needs testing as does attr update
+        if (fullState)
+            return this.entities.stream().map(EntityInstanceUpdate::from).collect(Collectors.toList());
+
+        long now = System.currentTimeMillis() - EntityBroadcastTTL;
+        while (!updates.isEmpty()) {
+            if (updates.get(0).time < now)
+                updates.remove(0);
+            else
+                break;
+        }
+        return updates;
     }
 
     public List<String> getRemovalsBroadcast() {
-        // todo needs implementing
-        return List.of();
+        while (!deaths.isEmpty()) {
+            if (deaths.get(0).time < System.currentTimeMillis() - EntityBroadcastTTL)
+                deaths.remove(0);
+            else
+                break;
+        }
+
+        return deaths.stream().map(x -> x.instanceId).collect(Collectors.toList());
     }
 
     public List<EntityInstance> getAtPosition(Coordinate position) {
@@ -103,6 +122,7 @@ public class EntityManager {
     public void setPosition(EntityInstance instance, Coordinate coordinate) {
         // TODO Store in map - remove item from map
         instance.position = coordinate;
+        updates.add(EntityInstanceUpdate.from(instance));
         // TODO Store in map - add item to new position in hashmap
     }
 

@@ -1,7 +1,7 @@
 
 
-export interface Entity {
-    id: string
+export interface EntityDefinition {
+    datapackId: string
     name: string
     description: string
     commander: boolean,
@@ -16,7 +16,7 @@ export interface Entity {
     abilities: { id: string, icon: string, name: string, description: string }[],
     upgrades: { id: string, icon: string, name: string, description: string }[]
 }
-export type UnitDefinition = Entity;
+export type UnitDefinition = EntityDefinition;
 
 
 export interface AvailableUpgrades {

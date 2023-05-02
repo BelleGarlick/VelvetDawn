@@ -223,7 +223,7 @@ export class VelvetDawnMap {
                 delete this.unitInstanceMap[key]
             }
             else {
-                currentInstance = new UnitEntity(entity.instanceId, entity.unit, entity.player);
+                currentInstance = new UnitEntity(entity.instanceId, entity.datapackId, entity.player);
             }
             currentInstance.setPosition(entity.position)
 
@@ -255,9 +255,11 @@ export class VelvetDawnMap {
                 }
 
 
-            } else if (attrUpdate.type === "entity")
-                this.units[attrUpdate.instanceId].attributes[attrUpdate.attribute] = attrUpdate.value
-            else
+            } else if (attrUpdate.type === "entity") {
+                var entity = this.units[attrUpdate.instanceId];
+                if (entity)
+                    entity.attributes[attrUpdate.attribute] = attrUpdate.value
+            } else
                 console.error("Unknown attribute upgrade " + attrUpdate.type)
         });
     }

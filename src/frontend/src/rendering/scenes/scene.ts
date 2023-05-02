@@ -6,6 +6,7 @@ import {RenderingFacade} from "../facade";
 
 
 export interface RenderingConstants {
+
     tabHeight: number;
     resolution: number
 

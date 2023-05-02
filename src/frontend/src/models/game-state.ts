@@ -34,10 +34,7 @@ export interface GameState {
     //     updates: UnitUpdate[],
     //     removed: UnitUpdate[],
     // },
-    spawnArea: {
-        x: number,
-        y: number
-    }[],
+    spawnArea: { x: number, y: number }[],
     attributeUpdates: Attribute[]
 }
 

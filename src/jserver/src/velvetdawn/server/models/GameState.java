@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class GameState {
 
     public Phase phase;
-    public List<JsonObject> spawnArea;
+    public List<APICoordinate> spawnArea;
     public APITurnData turn;
 
     public List<APIPlayer> players;
@@ -33,13 +33,15 @@ public class GameState {
     public static GameState from(Player player, boolean fullState) {
         var velvetDawn = VelvetDawnServerInstance.getInstance();
 
+        List<APICoordinate> spawnArea = velvetDawn.game.phase == Phase.Setup
+                ? velvetDawn.map.spawn.getSpawnCoordinatesForPlayer(player).stream()
+                .map(APICoordinate::fromCoordinate)
+                .collect(Collectors.toList())
+                : List.of();
+
         return GameState.builder()
                 .phase(velvetDawn.game.phase)
-                .spawnArea(velvetDawn.game.phase == Phase.Setup
-                        ? velvetDawn.map.spawn.getSpawnCoordinatesForPlayer(player).stream()
-                            .map(coord -> coord.json().toGson())
-                            .collect(Collectors.toList())
-                        : List.of())
+                .spawnArea(spawnArea)
                 .setup(APIGameSetup.from(player))
                 .teams(APITeam.fromTeams(velvetDawn.teams.list()))
                 .players(APIPlayer.fromPlayers(velvetDawn.players.list()))
@@ -48,7 +50,6 @@ public class GameState {
                 .attributeUpdates(APIAttributeUpdate.fromUpdates(Attributes.getUpdates(velvetDawn, fullState)))
                 .turn(new APITurnData())
                 .build();
-
 
 //        /** Get the update state of the game
 //         *

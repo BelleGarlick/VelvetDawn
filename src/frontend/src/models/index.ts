@@ -1,4 +1,4 @@
-export * from "./entity"
+export * from "./entityDefinition"
 export * from "./resource"
 export * from "./tile"
 export * from "./game-state"

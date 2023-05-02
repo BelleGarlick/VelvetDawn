@@ -11,7 +11,7 @@ public class EntityTextures {
     // TODO Movement particles
     // TODO Add proper validation
 
-    private String sprite = null;
+    public String sprite = null;
 
     public void fromJson(String parentId, AnyJson parentJson) throws Exception {
         var json = parentJson.get("textures", new AnyJson())
@@ -22,12 +22,5 @@ public class EntityTextures {
                 this.sprite = sprite
                         .validateInstanceIsString(String.format("Entity sprite %s textures.background must be a string.", parentId))
                         .value;
-    }
-
-    public AnyJson toJson() {
-        var json = new AnyJson();
-        json.set("background", this.sprite);
-
-        return json;
     }
 }

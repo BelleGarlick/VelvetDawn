@@ -3,7 +3,7 @@ package velvetdawn.server.routing;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import velvetdawn.server.VelvetDawnServerInstance;
-import velvetdawn.server.models.DatapackDefinition;
+import velvetdawn.server.models.datapacks.DatapackDefinition;
 
 public class DatapackRouting {
 

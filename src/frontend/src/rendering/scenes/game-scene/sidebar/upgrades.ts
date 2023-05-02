@@ -1,4 +1,4 @@
-import {AvailableUpgrades, UnitDefinition} from "models/entity";
+import {AvailableUpgrades, UnitDefinition} from "models/entityDefinition";
 import {ActionButton} from "./actionButton";
 import * as Api from "api/index";
 import {RenderingFacade} from "../../../facade";

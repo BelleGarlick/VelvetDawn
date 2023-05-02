@@ -2,6 +2,7 @@ import {Textures} from "../Textures";
 import {Entity} from "./entity";
 import {Position} from "models";
 import {RenderingFacade} from "../facade";
+import {VelvetDawn} from "../../velvet-dawn/velvet-dawn";
 
 
 export enum Highlight {
@@ -18,8 +19,6 @@ export class TileEntity extends Entity {
 
     public hovered = false
     public selected = false;
-
-    public isSpawnArea: boolean = false
 
     public attributes: { [key: string]: any } = {}
 
@@ -48,12 +47,14 @@ export class TileEntity extends Entity {
         facade.ctx.closePath();
         facade.ctx.clip();
 
-        if (this.isSpawnArea) {
-            facade.ctx.fillStyle = "#00ff00"
+        let isSpawnArea = VelvetDawn.spawnArea.has(`${this.position.x}-${this.position.y}`)
+
+        if (isSpawnArea) {
+            facade.ctx.fillStyle = "#ff0000"
             facade.ctx.fillRect(imageStart, imageEnd, imageHeight, imageHeight)
         }
 
-        facade.ctx.globalAlpha = this.isSpawnArea ? 0.5 : 1
+        facade.ctx.globalAlpha = isSpawnArea ? 0.5 : 1
         facade.ctx.fillStyle = this.attributes['texture.color'] ?? "#ff6699"
         facade.ctx.fillRect(imageStart, imageEnd, imageHeight, imageHeight)
 

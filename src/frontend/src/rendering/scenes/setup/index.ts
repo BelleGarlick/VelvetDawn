@@ -24,10 +24,6 @@ export class SetupPhase extends Scene {
         this.sidebar = new SetupSceneSidebar(facade);
         this.turnBanner.title("Setup Phase")
 
-        VelvetDawn.getState().spawnArea.forEach((position) => {
-            VelvetDawn.map.getTile(position).isSpawnArea = true
-        })
-
         return null
     }
 

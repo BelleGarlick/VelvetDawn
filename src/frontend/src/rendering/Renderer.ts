@@ -139,7 +139,7 @@ export class Renderer {
             this.scene.onStart(this.facade)
         }
 
-        else if (phase === GamePhase.Setup && !(this.scene instanceof GameScene)) {
+        else if (phase === GamePhase.Game && !(this.scene instanceof GameScene)) {
             this.scene = new GameScene()
             this.scene.onStart(this.facade)
         }

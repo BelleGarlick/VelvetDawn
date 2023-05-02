@@ -77,6 +77,8 @@ export class VelvetDawn {
 
     public static refreshTimer: number = -1
 
+    public static spawnArea: Set<string> = new Set();
+
     public static init() {
         VelvetDawn.map = new VelvetDawnMap();
 
@@ -114,6 +116,9 @@ export class VelvetDawn {
 
     public static setState(state: GameState) {
         state.players.forEach(player => VelvetDawn.players[player.name] = player);
+
+        VelvetDawn.spawnArea.clear()
+        state.spawnArea.forEach(({x, y}) => VelvetDawn.spawnArea.add(`${x}-${y}`));
 
         VelvetDawn.state = state
         VelvetDawn.map.updateState(state)

@@ -11,7 +11,6 @@ import velvetdawn.core.models.anytype.AnyFloat;
 import velvetdawn.core.models.anytype.AnyJson;
 import velvetdawn.core.models.anytype.AnyList;
 import velvetdawn.core.models.anytype.AnyString;
-import velvetdawn.core.models.instances.attributes.Attributes;
 import velvetdawn.core.models.instances.attributes.AttributesDefinition;
 
 import java.util.HashSet;
@@ -28,7 +27,7 @@ public class EntityDefinition {
     private static final Set<String> ValidCombatKeys = Set.of("range", "attack", "defense", "reload", "notes");
     private static final Set<String> ValidMovementKeys = Set.of("range", "notes");
 
-    public final String id;
+    public final String datapackId;
     public final String name;
     public final boolean commander;
     public final String description;
@@ -42,7 +41,7 @@ public class EntityDefinition {
     public final Abilities abilities = new Abilities();
 
     public EntityDefinition(String id, String name, boolean commander, String description) {
-        this.id = id;
+        this.datapackId = id;
         this.name = name;
         this.commander = commander;
         this.description = description;
@@ -51,22 +50,22 @@ public class EntityDefinition {
     /** Parse the entity health data, see wiki for more information. */
     public void parseHealth(AnyJson parentJson) throws Exception {
         AnyJson data = parentJson.get("health", new AnyJson())
-                .validateInstanceIsJson(String.format("%s health must be a json object", this.id));
+                .validateInstanceIsJson(String.format("%s health must be a json object", this.datapackId));
 
         if (data == null)
             return;
 
         for (String key: data.keys()) {
             if (!ValidHealthKeys.contains(key))
-                throw new Exception(String.format("Invalid health key '%s' on '%s'", key, this.id));
+                throw new Exception(String.format("Invalid health key '%s' on '%s'", key, this.datapackId));
         }
         // Extract and validate
         AnyFloat max = data.get("max", new AnyFloat(AttributeValues.DefaultEntityHealthMax))
-                .validateInstanceIsFloat(String.format("%s max health must be a number", this.id))
-                .validateMinimum(0, String.format("%s max health must be at least 0", this.id));
+                .validateInstanceIsFloat(String.format("%s max health must be a number", this.datapackId))
+                .validateMinimum(0, String.format("%s max health must be at least 0", this.datapackId));
 
         if (max.lte(new AnyFloat(0f)))
-            throw new Exception(String.format("%s max health must be greater than 0", this.id));
+            throw new Exception(String.format("%s max health must be greater than 0", this.datapackId));
 
         // Set values
         attributes.set("health", "Health", "base:textures.ui.icons.health.png", max);
@@ -76,32 +75,32 @@ public class EntityDefinition {
     /** Parse the entity combat data, see wiki for more information. */
     public void parseCombat(AnyJson json) throws Exception {
         var data = json.get("combat", new AnyJson())
-            .validateInstanceIsJson(String.format("%s combat must be a json object", this.id));
+            .validateInstanceIsJson(String.format("%s combat must be a json object", this.datapackId));
 
         if (data == null)
             return;
 
         for (String key: data.keys()) {
             if (!ValidCombatKeys.contains(key))
-                throw new Exception(String.format("Invalid combat key '%s' on '%s'", key, this.id));
+                throw new Exception(String.format("Invalid combat key '%s' on '%s'", key, this.datapackId));
         }
 
         // Extract and validate
         AnyFloat range = data.get("range", new AnyFloat(AttributeValues.DefaultEntityCombatRange))
-                .validateInstanceIsFloat(String.format("%s combat range must be a number", this.id))
-                .validateMinimum(0, String.format("%s combat range must be at least 0", this.id));
+                .validateInstanceIsFloat(String.format("%s combat range must be a number", this.datapackId))
+                .validateMinimum(0, String.format("%s combat range must be at least 0", this.datapackId));
 
         AnyFloat attack = data.get("attack", new AnyFloat(AttributeValues.DefaultEntityCombatAttack))
-                .validateInstanceIsFloat(String.format("%s combat attack must be a number", this.id))
-                .validateMinimum(0, String.format("%s combat attack must be at least 0", this.id));
+                .validateInstanceIsFloat(String.format("%s combat attack must be a number", this.datapackId))
+                .validateMinimum(0, String.format("%s combat attack must be at least 0", this.datapackId));
 
         AnyFloat defense = data.get("defense", new AnyFloat(AttributeValues.DefaultEntityCombatDefense))
-                .validateInstanceIsFloat(String.format("%s combat defence must be a number", this.id))
-                .validateMinimum(0, String.format("%s combat defence must be at least 0", this.id));
+                .validateInstanceIsFloat(String.format("%s combat defence must be a number", this.datapackId))
+                .validateMinimum(0, String.format("%s combat defence must be at least 0", this.datapackId));
 
         AnyFloat reload = data.get("reload", new AnyFloat(AttributeValues.DefaultEntityCombatReload))
-                .validateInstanceIsFloat(String.format("%s combat reload must be a number", this.id))
-                .validateMinimum(0, String.format("%s combat reload must be at least 0", this.id));
+                .validateInstanceIsFloat(String.format("%s combat reload must be a number", this.datapackId))
+                .validateMinimum(0, String.format("%s combat reload must be at least 0", this.datapackId));
 
         // Set
         attributes.set("combat.attack", "Attack", "base:textures.ui.icons.attack.png", attack);
@@ -115,20 +114,20 @@ public class EntityDefinition {
     /** Parse the entity movement data, see wiki for more information.*/
     public void parseMovement(AnyJson json) throws Exception {
         var data = json.get("movement", new AnyJson())
-                .validateInstanceIsJson(String.format("%s movement must be a json object", this.id));
+                .validateInstanceIsJson(String.format("%s movement must be a json object", this.datapackId));
 
         if (data == null)
             return;
 
         for (String key: data.keys()) {
             if (!ValidMovementKeys.contains(key))
-               throw new Exception(String.format("Invalid movement key '%s' on '%s'", key, this.id));
+               throw new Exception(String.format("Invalid movement key '%s' on '%s'", key, this.datapackId));
         }
 
         // Extract and validate
         AnyFloat range = data.get("range", new AnyFloat(AttributeValues.DefaultEntityMovementRange))
-                .validateInstanceIsFloat(String.format("%s movement range must be a number", this.id))
-                .validateMinimum(0, String.format("%s movement range must be at least 0", this.id));
+                .validateInstanceIsFloat(String.format("%s movement range must be a number", this.datapackId))
+                .validateMinimum(0, String.format("%s movement range must be at least 0", this.datapackId));
 
         // Set
         attributes.set("movement.remaining", new AnyFloat(0));
@@ -190,13 +189,5 @@ public class EntityDefinition {
                 "Upgrades in '%s' are invalid. Upgrades must be a list of json objects.", datapackId)));
 
         return entity;
-    }
-    public AnyJson json() {
-        return new AnyJson()
-                .set("id", this.id)
-                .set("name", this.name)
-                .set("commander", this.commander)
-                .set("description", this.description)
-                .set("textures", this.textures.toJson());
     }
 }

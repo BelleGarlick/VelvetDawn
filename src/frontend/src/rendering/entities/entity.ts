@@ -3,11 +3,11 @@ import {Renderable} from "./renderable";
 export abstract class Entity extends Renderable {
 
     public readonly instanceId: string;
-    public readonly entityId: string
+    public readonly datapackId: string
 
-    protected constructor(id: string, entityId: string) {
+    protected constructor(id: string, datapackId: string) {
         super();
         this.instanceId = id;
-        this.entityId = entityId;
+        this.datapackId = datapackId;
     }
 }

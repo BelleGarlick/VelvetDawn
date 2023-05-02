@@ -5,7 +5,7 @@ import {AvailableUnitUpgradesAndAbilities, GameState, Position} from "models";
 export function move(entityPk: string, path: Position[]): Promise<GameState> {
     return post("/entities/move/", {
         "instanceId": entityPk,
-        "path": JSON.stringify(path)
+        "path": JSON.stringify({path: path})
     })
 }
 

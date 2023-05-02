@@ -22,7 +22,7 @@ export class UnitEntity extends Entity {
     }
 
     render(facade: RenderingFacade): null {
-        const entity = VelvetDawn.datapacks.entities[this.entityId]
+        const entity = VelvetDawn.datapacks.entities[this.datapackId]
         const texture = Textures.get(entity.textures.background)
 
         facade.ctx.fillStyle = "#000000"

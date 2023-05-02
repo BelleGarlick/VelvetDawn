@@ -25,7 +25,7 @@ public class APIPlayer {
                 .admin(player.admin)
                 .ready(player.ready)
                 .spectating(player.spectating)
-                .team(player.team != null ? player.team.teamName : null)
+                .team(player.team != null ? player.team.teamId : null)
                 .build();
     }
 

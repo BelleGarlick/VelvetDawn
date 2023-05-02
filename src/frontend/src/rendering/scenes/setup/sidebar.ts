@@ -109,8 +109,8 @@ export class SetupSceneSidebar extends Renderable {
                 if (entity.commander) {
                     placedUnits = setup.placedCommander ? 1 : 0
                 } else {
-                    placedUnits = setup.entities[entity.id] - setup.remainingEntities[entity.id]
-                    availableUnits = setup.entities[entity.id]
+                    placedUnits = setup.entities[entity.datapackId] - setup.remainingEntities[entity.datapackId]
+                    availableUnits = setup.entities[entity.datapackId]
                 }
 
                 button

@@ -3,7 +3,9 @@ package velvetdawn.core.mechanics.upgrades;
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.models.anytype.AnyList;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,5 +32,9 @@ public class Upgrades {
                     .validateInstanceIsJson(String.format("Error in %s. Upgrades must be a list of json objects.", parentId)));
             this.upgrades.put(upgrade.id, upgrade);
         }
+    }
+
+    public Collection<Upgrade> list() {
+        return this.upgrades.values();
     }
 }

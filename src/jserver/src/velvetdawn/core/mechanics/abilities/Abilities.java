@@ -3,6 +3,7 @@ package velvetdawn.core.mechanics.abilities;
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.models.anytype.AnyList;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -28,5 +29,10 @@ public class Abilities {
                     .validateInstanceIsJson(String.format("Error in %s. Abilities should be a list of json objects.", parentId)));
             this.abilities.put(ability.id, ability);
         }
+    }
+
+
+    public Collection<Ability> list() {
+        return this.abilities.values();
     }
 }

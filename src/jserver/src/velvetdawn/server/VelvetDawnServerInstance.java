@@ -13,6 +13,8 @@ public class VelvetDawnServerInstance {
 
     public static void init() throws Exception {
         Config config = new Config();
+        config.spawn.spawnRadiusMultiplier = 2;
+        config.spawn.baseSpawnRadius = 2;
         VelvetDawnServerInstance.velvetDawn = new VelvetDawn(config);
     }
 }

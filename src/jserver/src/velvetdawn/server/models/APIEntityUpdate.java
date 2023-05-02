@@ -12,15 +12,15 @@ public class APIEntityUpdate {
 
     public String instanceId;
     public APICoordinate position;
-    public JsonObject attrUpdate;
-    public long time;
+    public String datapackId;
+    public String player;
 
     public static APIEntityUpdate fromUpdate(EntityInstanceUpdate update) {
         return APIEntityUpdate.builder()
                 .instanceId(update.instanceId)
+                .datapackId(update.datapackId)
+                .player(update.player)
                 .position(APICoordinate.fromCoordinate(update.position))
-                .attrUpdate(update.attrUpdate.toGson())
-                .time(update.time)
                 .build();
     }
 
