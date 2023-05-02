@@ -4,7 +4,7 @@ import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.models.Coordinate;
 import velvetdawn.core.models.GameSetup;
 import velvetdawn.core.models.Phase;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 import velvetdawn.core.players.Player;
 
 import java.util.HashMap;

@@ -4,7 +4,7 @@ import velvetdawn.core.models.anytype.Any;
 import velvetdawn.core.models.instances.Instance;
 import velvetdawn.core.models.instances.TileInstance;
 import velvetdawn.core.models.instances.WorldInstance;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 
 public class AttributeUpdate {
 

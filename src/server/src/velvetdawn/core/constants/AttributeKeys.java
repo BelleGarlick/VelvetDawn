@@ -6,5 +6,8 @@ public class AttributeKeys {
     public static String TileMovementWeight = "movement.weight";
 
     public static final String EntityRemainingMoves = "movement.remaining";
-    public static String EntityAttack = "combat.attack";
+
+    public static String EntityCombatDamage = "combat.attack";
+    public static String EntityCombatBlastRadius = "combat.blast-radius";
+    public static String EntityCombatCooldown = "combat.cooldown";
 }

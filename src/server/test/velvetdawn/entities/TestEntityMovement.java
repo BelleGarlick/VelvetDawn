@@ -23,8 +23,8 @@ public class TestEntityMovement extends BaseTest {
     public void test_move() throws Exception {
         var velvetDawn = this.prepareGame();
 
-        var entity = velvetDawn.entities.list().get(0);
-        var player2entity = velvetDawn.entities.list().get(1);
+        var entity = velvetDawn.entities.getAtPosition(new Coordinate(5, 0)).get(0);
+        var player2entity = velvetDawn.entities.getAtPosition(new Coordinate(5, 2)).get(0);
 
         var firstPos = entity.position;
 

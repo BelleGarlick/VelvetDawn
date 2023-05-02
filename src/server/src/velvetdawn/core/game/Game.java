@@ -3,7 +3,7 @@ package velvetdawn.core.game;
 import velvetdawn.core.models.config.Config;
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.models.Phase;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 import velvetdawn.core.models.instances.TileInstance;
 import velvetdawn.core.models.instances.WorldInstance;
 

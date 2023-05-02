@@ -6,7 +6,6 @@ import velvetdawn.core.models.Coordinate;
 import velvetdawn.core.models.Phase;
 import velvetdawn.core.models.anytype.Any;
 import velvetdawn.core.models.instances.TileInstance;
-import velvetdawn.core.models.instances.entities.EntityInstance;
 
 import java.util.List;
 import java.util.stream.Collectors;

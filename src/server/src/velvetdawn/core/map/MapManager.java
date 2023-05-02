@@ -8,12 +8,14 @@ import velvetdawn.core.models.config.Config;
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.map.spawn.Spawn;
 import velvetdawn.core.models.Coordinate;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 import velvetdawn.core.models.instances.TileInstance;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -126,5 +128,31 @@ public class MapManager {
         this.spawn.assignSpawnPoints();
         MapGeneration map = new MapGeneration(velvetDawn, config);
         this.map = map.generate();
+    }
+
+    /** Get all tiles within a range from a target coordinate
+     *
+     * @param target Target coordinate
+     * @param range Number of ranks to search
+     * @return All neighbours within range of the target
+     */
+    public Set<Coordinate> getNeighboursInRange(Coordinate target, int range) {
+        Set<Coordinate> neighbours = new HashSet<>();
+        var previousRank = Set.of(target);
+
+        neighbours.add(target);
+
+        for (int n = 0; n < range; n++) {
+            var rankNeighbours = previousRank.stream()
+                    .map(this::getNeighbours)
+                    .flatMap(Collection::stream)
+                    .filter(x -> !neighbours.contains(x))
+                    .collect(Collectors.toSet());
+
+            neighbours.addAll(rankNeighbours);
+            previousRank = rankNeighbours;
+        }
+
+        return neighbours;
     }
 }

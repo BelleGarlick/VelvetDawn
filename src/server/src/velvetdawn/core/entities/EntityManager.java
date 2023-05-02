@@ -2,8 +2,6 @@ package velvetdawn.core.entities;
 
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.models.Coordinate;
-import velvetdawn.core.models.instances.entities.EntityInstance;
-import velvetdawn.core.models.instances.entities.EntityInstanceUpdate;
 import velvetdawn.core.players.Player;
 
 import java.util.ArrayList;

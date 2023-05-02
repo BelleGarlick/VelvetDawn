@@ -4,7 +4,7 @@ import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.map.MapManager;
 import velvetdawn.core.models.anytype.AnyString;
 import velvetdawn.core.models.instances.TileInstance;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 import velvetdawn.core.models.instances.Instance;
 import velvetdawn.core.models.instances.WorldInstance;
 

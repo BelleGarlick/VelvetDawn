@@ -1,4 +1,4 @@
-package velvetdawn.core.models.instances.entities;
+package velvetdawn.core.entities;
 
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.models.Coordinate;

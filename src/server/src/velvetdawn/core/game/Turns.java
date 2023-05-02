@@ -5,7 +5,7 @@ import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.models.Phase;
 import velvetdawn.core.models.Team;
 import velvetdawn.core.models.anytype.AnyFloat;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 import velvetdawn.core.models.instances.TileInstance;
 import velvetdawn.core.models.instances.WorldInstance;
 import velvetdawn.core.players.Player;

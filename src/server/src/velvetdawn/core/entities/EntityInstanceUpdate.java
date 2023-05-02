@@ -1,10 +1,7 @@
-package velvetdawn.core.models.instances.entities;
+package velvetdawn.core.entities;
 
-import com.google.gson.JsonObject;
 import lombok.Builder;
 import velvetdawn.core.models.Coordinate;
-import velvetdawn.core.models.anytype.Any;
-import velvetdawn.core.models.anytype.AnyJson;
 
 @Builder
 public class EntityInstanceUpdate {

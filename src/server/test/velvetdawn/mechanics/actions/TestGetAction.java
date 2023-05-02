@@ -8,7 +8,7 @@ import velvetdawn.core.models.Coordinate;
 import velvetdawn.core.models.anytype.Any;
 import velvetdawn.core.models.anytype.AnyJson;
 import velvetdawn.core.models.anytype.AnyList;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 
 import static junit.framework.TestCase.*;
 import static org.junit.Assert.assertThrows;

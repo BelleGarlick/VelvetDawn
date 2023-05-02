@@ -7,7 +7,7 @@ import velvetdawn.core.mechanics.actions.Actions;
 import velvetdawn.core.models.Coordinate;
 import velvetdawn.core.models.anytype.AnyJson;
 import velvetdawn.core.models.instances.WorldInstance;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 
 import java.util.List;
 

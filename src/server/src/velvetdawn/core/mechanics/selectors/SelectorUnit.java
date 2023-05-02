@@ -1,7 +1,7 @@
 package velvetdawn.core.mechanics.selectors;
 
 import velvetdawn.core.VelvetDawn;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 import velvetdawn.core.models.instances.Instance;
 import velvetdawn.core.models.instances.TileInstance;
 

@@ -1,8 +1,7 @@
 package velvetdawn.server.models;
 
-import com.google.gson.JsonObject;
 import lombok.Builder;
-import velvetdawn.core.models.instances.entities.EntityInstanceUpdate;
+import velvetdawn.core.entities.EntityInstanceUpdate;
 
 import java.util.List;
 import java.util.stream.Collectors;

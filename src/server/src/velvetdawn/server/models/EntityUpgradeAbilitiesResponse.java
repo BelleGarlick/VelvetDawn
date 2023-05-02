@@ -1,9 +1,7 @@
 package velvetdawn.server.models;
 
 import com.google.gson.JsonObject;
-import velvetdawn.core.models.instances.entities.Abilities;
-import velvetdawn.core.models.instances.entities.EntityInstance;
-import velvetdawn.core.models.instances.entities.Upgrades;
+import velvetdawn.core.entities.EntityInstance;
 
 public class EntityUpgradeAbilitiesResponse {
 

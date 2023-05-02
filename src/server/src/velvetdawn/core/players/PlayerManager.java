@@ -5,7 +5,7 @@ import velvetdawn.core.models.anytype.AnyJson;
 import velvetdawn.core.models.config.Config;
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.models.Team;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 import velvetdawn.core.models.instances.Instance;
 
 import java.util.Collection;

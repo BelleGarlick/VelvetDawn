@@ -8,7 +8,7 @@ import velvetdawn.core.mechanics.conditionals.Conditionals;
 import velvetdawn.core.models.ActionRunnableReason;
 import velvetdawn.core.models.anytype.Any;
 import velvetdawn.core.models.anytype.AnyJson;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 import velvetdawn.core.models.instances.Instance;
 
 import java.util.ArrayList;

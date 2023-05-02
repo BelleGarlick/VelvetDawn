@@ -1,9 +1,8 @@
 package velvetdawn.core.players;
 
-import com.google.gson.JsonObject;
 import velvetdawn.core.models.Team;
 import velvetdawn.core.models.anytype.AnyJson;
-import velvetdawn.core.models.instances.entities.EntityInstance;
+import velvetdawn.core.entities.EntityInstance;
 
 import java.util.HashSet;
 import java.util.Set;
