@@ -5,9 +5,12 @@ import velvetdawn.BaseTest;
 import velvetdawn.core.mechanics.selectors.SelectorUnit;
 import velvetdawn.core.mechanics.selectors.Selectors;
 import velvetdawn.core.models.Coordinate;
+import velvetdawn.core.models.instances.Instance;
 import velvetdawn.core.models.instances.WorldInstance;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -130,5 +133,31 @@ public class TestFilters extends BaseTest {
 
         // Test that self is excluded
         assertNotEquals(new ArrayList<>(closest_unit).get(0).instanceId, unit.instanceId);
+    }
+
+    @Test
+    public void testRandomFilter() throws Exception {
+        var velvetDawn = this.prepareGame();
+
+        var random0 = Selectors.get(velvetDawn, "0", "entities[random=0]");
+        var random1 = Selectors.get(velvetDawn, "0", "entities[random=1]");
+        var random2 = Selectors.get(velvetDawn, "0", "entities[random=2]");
+        var random1000 = Selectors.get(velvetDawn, "0", "entities[random=1000]");
+
+        assertEquals(0, random0.filters.random.intValue());
+        assertEquals(1, random1.filters.random.intValue());
+        assertEquals(2, random2.filters.random.intValue());
+
+        assertEquals(0, random0.getChainedSelection(WorldInstance.getInstance()).size());
+        assertEquals(1, random1.getChainedSelection(WorldInstance.getInstance()).size());
+        assertEquals(2, random2.getChainedSelection(WorldInstance.getInstance()).size());
+        assertEquals(4, random1000.getChainedSelection(WorldInstance.getInstance()).size());
+
+        // Test that, after trying 100 times, you don't always get the same one item
+        Set<Instance> items = new HashSet<>();
+        for (int i = 0; i < 100; i++) {
+            items.addAll(random1.getChainedSelection(WorldInstance.getInstance()));
+        }
+        assertNotEquals(1, items.size());
     }
 }

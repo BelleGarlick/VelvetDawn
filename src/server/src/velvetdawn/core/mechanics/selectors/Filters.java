@@ -2,15 +2,19 @@ package velvetdawn.core.mechanics.selectors;
 
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.map.MapManager;
+import velvetdawn.core.models.anytype.AnyFloat;
 import velvetdawn.core.models.anytype.AnyString;
 import velvetdawn.core.models.instances.TileInstance;
 import velvetdawn.core.entities.EntityInstance;
 import velvetdawn.core.models.instances.Instance;
 import velvetdawn.core.models.instances.WorldInstance;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +30,7 @@ public class Filters {
     public final Set<String> allowedTags = new HashSet<>();
     public Float minRange = null;
     public Float maxRange = null;
+    public Integer random = null;
     public boolean excludeSelf = false;
     public boolean commanderOnly = false;
     public boolean closest = false;
@@ -68,6 +73,12 @@ public class Filters {
                         .validateMinimum(0, "Min-range filter must be at least 0")
                         .value;
                 break;
+            case "random":
+                this.random = (int) new AnyString(value)
+                        .castToFloat()
+                        .validateMinimum(0, "Random filter must be at least 0")
+                        .value;
+                break;
             default:
                 throw new Exception(String.format("Unknown filter: '%s'.", key));
         }
@@ -84,7 +95,7 @@ public class Filters {
      * @return The filtered instances
      */
     public Collection<Instance> filter(Instance instance, Collection<? extends Instance> instances) {
-        Collection<Instance> filteredInstances = instances.stream()
+        List<Instance> filteredInstances = instances.stream()
                 .filter(item -> {
                     // If missing tag, filter out the item
                     if (!this.allowedTags.isEmpty()) {
@@ -141,13 +152,29 @@ public class Filters {
                 })
                 .collect(Collectors.toList());
 
+        // If there is a random value and it's smaller than the sample.
+        // We compare the sample size since we don't want to repeat instances
+        if (this.random != null && this.random < filteredInstances.size()) {
+            // Create list of indexes and shuffle
+            var indexes = new ArrayList<Integer>();
+            for (int i = 0; i < filteredInstances.size(); i++)
+                indexes.add(i);
+            Collections.shuffle(indexes);
+
+            // Sample from items
+            var randomItems = new ArrayList<Instance>(this.random);
+            for (int i = 0; i < this.random; i++)
+                randomItems.add(filteredInstances.get(indexes.get(i)));
+            filteredInstances = randomItems;
+        }
+
         if (this.closest)
             filteredInstances = getClosest(instance, filteredInstances);
 
         return filteredInstances;
     }
 
-    private Collection<Instance> getClosest(Instance to, Collection<Instance> instances) {
+    private List<Instance> getClosest(Instance to, List<Instance> instances) {
         Instance closest = null;
         float bestDistance = 0;
 
