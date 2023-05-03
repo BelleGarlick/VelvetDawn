@@ -2,6 +2,8 @@ import {Position} from "models";
 import {VelvetDawn} from "../../../velvet-dawn/velvet-dawn";
 import {RenderingFacade} from "../../facade";
 import * as Api from "api";
+import {UnitEntity} from "../../entities/unit-entity";
+import {PositionSet} from "../../../velvet-dawn/position-set";
 
 /** Combats class for getting the list of positions
  * the selected unit can attack and calling the api
@@ -12,7 +14,7 @@ export class Combat {
 
     private currentPosition: Position | undefined
     private currentRange: number = -1
-    private targetablePosition: Set<Position> = new Set();
+    private targetablePosition = new PositionSet();
 
     /** Get all positions in targetable range
      *
@@ -22,7 +24,7 @@ export class Combat {
      * @param position The position to get units surrounding
      * @param range The maximum distance away.
      */
-    getTargetablePositions(position: Position, range: number): Set<Position> {
+    getTargetablePositions(position: Position, range: number): Position[] {
         if (this.currentPosition?.x !== position.x || this.currentPosition?.x !== position.y || range !== this.currentRange) {
             this.clear()
 
@@ -35,7 +37,7 @@ export class Combat {
                 })
         }
 
-        return this.targetablePosition;
+        return this.targetablePosition.items();
     }
 
     /** Clear the combat targets cache */
@@ -45,38 +47,33 @@ export class Combat {
         this.targetablePosition.clear()
     }
 
-    render(facade: RenderingFacade, hoveredTilePosition: Position) {
-        const { ctx, constants } = facade;
-        this.targetablePosition.forEach(position => {
-            const {
-                visible, clipPoints
-            } = facade.perspective.getTileRenderingConstants(position, facade.constants);
+    render(facade: RenderingFacade, hoveredTilePosition: Position, instance: UnitEntity) {
+        this.targetablePosition.items().forEach(position => {
+            if (position.x == hoveredTilePosition.x && position.y == hoveredTilePosition.y) {
+                var positions = VelvetDawn.map.getTilesInRange(position, instance.attributes['combat.blast-radius'] ?? 0);
 
-            if (!visible)
-                return
+                positions.forEach(pos => {
+                    facade.renderHexagon(pos, {
+                        color: '#ff0000',
+                        opacity: 0.3
+                    })
+                })
+            }
 
-            ctx.beginPath()
-            ctx.strokeStyle = "#dd0000"
-            ctx.fillStyle = "#dd0000"
-            ctx.lineWidth = 3 * constants.resolution
-            ctx.moveTo(clipPoints[clipPoints.length - 1].x, clipPoints[clipPoints.length - 1].y)
-            clipPoints.forEach(pos => ctx.lineTo(pos.x, pos.y))
-            ctx.stroke()
-
-            ctx.globalAlpha = (hoveredTilePosition?.x === position.x && hoveredTilePosition?.y === position.y)
-                ? 0.3
-                : 0.15;
-            ctx.fill()
-            ctx.globalAlpha = 1
-
-            ctx.closePath()
+            facade.renderHexagon(position, {
+                color: "#dd0000",
+                stroke: {color: "#dd0000", width: 3},
+                opacity: (hoveredTilePosition?.x === position.x && hoveredTilePosition?.y === position.y)
+                    ? 0.3
+                    : 0.15
+            })
         })
     }
 
     isPointInRange(position: Position) {
         let found = false;
 
-        this.targetablePosition.forEach(pos => {
+        this.targetablePosition.items().forEach(pos => {
             if (pos.x === position.x && pos.y === position.y)
                 found = true
         })
@@ -86,6 +83,7 @@ export class Combat {
 
     attack(instanceId: string, position: Position) {
         // TODO Catch error and show in chat
-        Api.combat.attack(instanceId, position).then(VelvetDawn.setState)
+        Api.combat.attack(instanceId, position)
+            .then(VelvetDawn.setState)
     }
 }

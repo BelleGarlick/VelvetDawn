@@ -80,7 +80,7 @@ export class GameViewSidebar {
                 facade.ctx.fillStyle = "#ffffff"
                 facade.ctx.fillText(
                     unitDef.description,
-                    facade.sidebarStart + facade.sidebarWidth / 2,
+                    facade.constants.sidebarStart + facade.constants.sidebar / 2,
                     remainingTop
                 );
             }

@@ -1,6 +1,7 @@
 package velvetdawn.core.models.datapacks.entities;
 
 import velvetdawn.core.VelvetDawn;
+import velvetdawn.core.constants.AttributeKeys;
 import velvetdawn.core.constants.AttributeValues;
 import velvetdawn.core.mechanics.Triggers;
 import velvetdawn.core.mechanics.abilities.Abilities;
@@ -24,7 +25,7 @@ public class EntityDefinition {
             "commander", "influence", "attributes", "description", "abilities"
     );
     private static final Set<String> ValidHealthKeys = Set.of("max", "notes");
-    private static final Set<String> ValidCombatKeys = Set.of("range", "attack", "defense", "reload", "notes");
+    private static final Set<String> ValidCombatKeys = Set.of("range", "attack", "defense", "reload", "blast-radius", "notes");
     private static final Set<String> ValidMovementKeys = Set.of("range", "notes");
 
     public final String datapackId;
@@ -102,11 +103,16 @@ public class EntityDefinition {
                 .validateInstanceIsFloat(String.format("%s combat reload must be a number", this.datapackId))
                 .validateMinimum(0, String.format("%s combat reload must be at least 0", this.datapackId));
 
+        AnyFloat blastRadius = data.get("blast-radius", new AnyFloat(AttributeValues.DefaultEntityCombatBlastRadius))
+                .validateInstanceIsFloat(String.format("%s combat blast-radius must be a number", this.datapackId))
+                .validateMinimum(0, String.format("%s combat blast-radius must be at least 0", this.datapackId));
+
         // Set
-        attributes.set("combat.attack", "Attack", "base:textures.ui.icons.attack.png", attack);
-        attributes.set("combat.defense", "Defense", "base:textures.ui.icons.defense.png", defense);
-        attributes.set("combat.range", range);
+        attributes.set(AttributeKeys.EntityCombatDamage, "Attack", "base:textures.ui.icons.attack.png", attack);
+        attributes.set(AttributeKeys.EntityCombatDefense, "Defense", "base:textures.ui.icons.defense.png", defense);
+        attributes.set(AttributeKeys.EntityCombatRange, range);
         attributes.set("combat.reload", reload);
+        attributes.set(AttributeKeys.EntityCombatBlastRadius, blastRadius);  // set to 0 so that can-attack will be trigger to on
         attributes.set("combat.can-attack", new AnyBool(false));
         attributes.set("combat.cooldown", new AnyFloat(0));  // set to 0 so that can-attack will be trigger to on
     }

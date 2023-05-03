@@ -3,7 +3,7 @@
   "description": "A long range weapon. This unit gains range with elevation",
   "extends": ["civil-war:_max-health-upgrades"],
   "attributes": [
-    {"id": "blast-radius", "name": "Blast Radius", "icon": "ui.attributes.blast-radius.png", "default": 0}
+    {"id": "combat.blast-radius", "name": "Blast Radius", "icon": "base:textures.ui.icons.blast-radius.png", "default": 0}
   ],
   "health": {"max": 50},
   "movement": {"range": 1},
@@ -39,14 +39,23 @@
       "id": "blast-radius-1",
       "name": "Blast Radius I",
       "enabled": [{"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
-      "actions": [{"modify": "self.blast-radius", "add": 1}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}],
+      "actions": [{"modify": "self.combat.blast-radius", "add": 1}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}],
       "description": "Increase the blast radius."
     },
     {
-      "id": "blast-radius-1",
+      "id": "blast-radius-2",
       "name": "Blast Radius II",
+      "requires": ["blast-radius-1"],
       "enabled": [{"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
-      "actions": [{"modify": "self.blast-radius", "add": 1}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}],
+      "actions": [{"modify": "self.combat.blast-radius", "add": 1}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}],
+      "description": "Increase the blast radius."
+    },
+    {
+      "id": "blast-radius-3",
+      "name": "Blast Radius III",
+      "requires": ["blast-radius-2"],
+      "enabled": [{"if": "friendlies[commander]", "notes": "Change to own team commander", "not-tagged": "tag:used-upgrade", "reason": "One upgrade per turn."}],
+      "actions": [{"modify": "self.combat.blast-radius", "add": 1}, {"modify": "friendlies[commander]", "notes": "Change to own team commander", "add-tag": "tag:used-upgrade"}],
       "description": "Increase the blast radius."
     }
   ],

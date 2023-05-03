@@ -6,6 +6,16 @@ import {Position} from "models/position";
 const RESOLUTION = 2;
 
 
+export interface RenderHexagonOptions {
+    color?: string
+    stroke?: {
+        color: string,
+        width: number
+    }
+    opacity?: number
+}
+
+
 export class RenderingFacade {
 
     ctx: CanvasRenderingContext2D;
@@ -15,23 +25,15 @@ export class RenderingFacade {
     mousePosition: undefined | Position
 
     /** Constants */
-    public resolution = RESOLUTION
-    public width = 0
     public height = 0;
-
-    public sidebarStart = 0
-    public sidebarWidth = 300 * RESOLUTION
-    public sidebarPadding = 10 * RESOLUTION
     public sidebarInnerStart = 0
 
     public recalculateConstants() {
         this.constants = this.getConstants()
 
-        this.width = window.innerWidth * RESOLUTION
         this.height = window.innerHeight * RESOLUTION
 
-        this.sidebarStart = this.width - this.sidebarWidth
-        this.sidebarInnerStart = this.sidebarStart + this.sidebarPadding
+        this.sidebarInnerStart = this.constants.sidebarStart + this.constants.sidebarPadding
 
         return this
     }
@@ -59,8 +61,33 @@ export class RenderingFacade {
             buttonSpacing: 10 * RESOLUTION,
             buttonHeight: buttonHeight,
             buttonWidth: sidebarWidth - sidebarPadding - sidebarPadding,
+
             nextTurnButtonStartX: sidebarStart + sidebarPadding,
             nextTurnButtonStartY: height - buttonHeight - sidebarPadding
         }
+    }
+
+    renderHexagon(pos: Position, options?: RenderHexagonOptions) {
+        const {
+            visible, clipPoints
+        } = this.perspective.getTileRenderingConstants(pos, this.constants);
+
+        if (!visible)
+            return
+
+        this.ctx.beginPath()
+        this.ctx.strokeStyle = options.stroke.color ?? "#000000"
+        this.ctx.fillStyle = options.color ?? "#000000"
+
+        this.ctx.lineWidth = (options.stroke.width ?? 0) * this.constants.resolution
+        this.ctx.moveTo(clipPoints[clipPoints.length - 1].x, clipPoints[clipPoints.length - 1].y)
+        clipPoints.forEach(pos => this.ctx.lineTo(pos.x, pos.y))
+
+        this.ctx.globalAlpha = options.opacity ?? 1;
+        this.ctx.stroke()
+        this.ctx.fill()
+        this.ctx.globalAlpha = 1
+
+        this.ctx.closePath()
     }
 }

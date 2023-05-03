@@ -9,4 +9,5 @@ public class AttributeValues {
     public static final float DefaultEntityCombatAttack = 10;
     public static final float DefaultEntityCombatDefense = 0;
     public static final float DefaultEntityCombatReload = 0;
+    public static final float DefaultEntityCombatBlastRadius = 0;
 }

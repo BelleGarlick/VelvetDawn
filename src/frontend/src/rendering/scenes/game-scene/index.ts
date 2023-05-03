@@ -27,7 +27,7 @@ export class GameScene extends Scene {
     render(facade: RenderingFacade): undefined {
         this.renderTiles(facade)
         this.pathPlanning.render(facade, this.hoveredTile?.position)
-        this.combat.render(facade, this.hoveredTile?.position)
+        this.combat.render(facade, this.hoveredTile?.position, this.selectedEntity)
         this.renderUnits(facade)
 
         this.turnBanner.render(facade)

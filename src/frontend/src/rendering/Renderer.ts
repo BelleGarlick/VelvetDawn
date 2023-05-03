@@ -48,7 +48,7 @@ export class Renderer {
         this.facade.recalculateConstants()
 
         ctx.fillStyle = "#66d9e8"
-        ctx.fillRect(0, 0, this.facade.width, this.facade.height)
+        ctx.fillRect(0, 0, this.facade.constants.width, this.facade.height)
 
 
         this.scene.render(this.facade)

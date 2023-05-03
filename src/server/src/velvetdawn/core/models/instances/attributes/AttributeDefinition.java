@@ -40,7 +40,7 @@ public class AttributeDefinition {
         Any rawAttrId = data.get("id");
         AnyString attrId = rawAttrId.validateInstanceIsString(String.format(
                 "Attribute ids must be strings. Found incorrect type '%s' in %s", rawAttrId.toString(), parentId))
-                .validateRegex("^[a-z][a-z0-9-]{0,32}$", String.format("Object '{parent_id}' attribute id '{custom_attribute.id}' is not valid. Id must be at least 1 and smaller than 33 chars long and contain only letters, numbers or hyphens and begin in a letter. All letters must be lowercase.", parentId, rawAttrId.toString()));
+                .validateRegex("^[a-z][a-z0-9-.]{0,64}$", String.format("Object '%s' attribute id '%s' is not valid. Id must be at least 1 and smaller than 64 chars long and contain only letters, numbers or hyphens and begin in a letter. All letters must be lowercase.", parentId, rawAttrId.toString()));
 
         AnyString attrName = data.get("name")
                 .validateInstanceIsString(String.format("Object '%s' attribute name in '%s' is not valid. Must be a string.", parentId, attrId))

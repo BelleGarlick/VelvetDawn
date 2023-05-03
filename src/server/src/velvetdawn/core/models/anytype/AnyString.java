@@ -59,7 +59,7 @@ public class AnyString extends Any {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(this.value);
         if (!matcher.find()) {
-            throw new Exception("Names must be 3-8 characters long and letters & numbers only");
+            throw new Exception(error);
         }
 
         return this;

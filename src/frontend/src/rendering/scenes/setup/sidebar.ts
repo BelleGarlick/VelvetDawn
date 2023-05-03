@@ -134,8 +134,8 @@ export class SetupSceneSidebar extends Renderable {
         }
 
         let topLineHeight = facade.constants.tabHeight + 2 * facade.constants.sidebarPadding
-        facade.ctx.moveTo(facade.sidebarStart + facade.sidebarPadding, topLineHeight)
-        facade.ctx.lineTo(facade.constants.width - facade.sidebarPadding, topLineHeight)
+        facade.ctx.moveTo(facade.constants.sidebarStart + facade.constants.sidebarPadding, topLineHeight)
+        facade.ctx.lineTo(facade.constants.width - facade.constants.sidebarPadding, topLineHeight)
         facade.ctx.stroke()
 
         const lineHeight = facade.constants.height - facade.constants.buttonHeight - 2 * facade.constants.sidebarPadding

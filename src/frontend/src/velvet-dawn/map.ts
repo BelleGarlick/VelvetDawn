@@ -3,6 +3,7 @@ import * as Api from "api";
 import {Position, GameState, GamePhase} from "models";
 import {VelvetDawn} from "./velvet-dawn";
 import {UnitEntity} from "../rendering/entities/unit-entity";
+import {PositionSet} from "./position-set";
 
 
 /** This module handles the map state for the game. This includes
@@ -85,7 +86,7 @@ export class VelvetDawnMap {
      * @param position: The position to get tiles around
      * @returns The list of neighbouring tile entities
      */
-    getNeighbours({x, y}: Position): TileEntity[] {
+    getNeighbourTiles({x, y}: Position): TileEntity[] {
         const isOdd = x % 2 === 1
 
         return [
@@ -102,6 +103,23 @@ export class VelvetDawnMap {
             })
             .map((position) => {
                 return this.getTile(position)
+            })
+    }
+
+    getNeighbours({x, y}: Position): Position[] {
+        const isOdd = x % 2 === 1
+
+        return [
+            {x: x - 1, y: isOdd ? y : y - 1},
+            {x: x - 1, y: isOdd ? y + 1 : y},
+            {x: x, y: y - 1},
+            {x: x, y: y + 1},
+            {x: x + 1, y: isOdd ? y : y - 1},
+            {x: x + 1, y: isOdd ? y + 1 : y}
+        ]
+            .filter(({ x, y }) => {
+                // Check the tile is within the map boundaries
+                return x >= 0 && y >= 0 && x < this.width && y < this.height
             })
     }
 
@@ -153,7 +171,7 @@ export class VelvetDawnMap {
 
             // Find next cells
             if (nextCell.weight > 0) {
-                const neighbours = this.getNeighbours(nextCell.position)
+                const neighbours = this.getNeighbourTiles(nextCell.position)
                 neighbours.forEach((tile) => {
                     const tileHash = hashPosition(tile.position)
                     const isTraversable = tile.attributes['movement.traversable'] ?? true
@@ -360,5 +378,26 @@ export class VelvetDawnMap {
         });
 
         return inRangeUnits;
+    }
+
+    // TODO Test
+    getTilesInRange(target: Position, range: number): Position[] {
+        let neighbours = new PositionSet().addAll([target]);
+        let previousRank = new PositionSet().addAll([target]);
+
+        for (let n = 0; n < range; n++) {
+            var rankNeighbours =  new PositionSet();
+            previousRank.items().forEach(x => {
+                this.getNeighbours(x).forEach(x => {
+                    if (!neighbours.has(x))
+                        rankNeighbours.add(x)
+                });
+            })
+
+            rankNeighbours.items().forEach(x => neighbours.add(x));
+            previousRank = rankNeighbours;
+        }
+
+        return neighbours.items();
     }
 }
