@@ -61,12 +61,15 @@ public class TestEntityParsing extends BaseTest {
                         .set("range", 5)
                         .set("attack", 10)
                         .set("defense", 20)
-                        .set("reload", 0)
+                        .set("cooldown", 9)
+                        .set("blast-radius", 11)
                         .set("notes", "Example")));
+
         assertEquals(5.0, entityDef.attributes.get("combat.range").value.toNumber(), 0.001);
         assertEquals(10.0, entityDef.attributes.get("combat.attack").value.toNumber(), 0.001);
         assertEquals(20.0, entityDef.attributes.get("combat.defense").value.toNumber(), 0.001);
-        assertEquals(0.0, entityDef.attributes.get("combat.reload").value.toNumber(), 0.001);
+        assertEquals(9, entityDef.attributes.get("combat.cooldown").value.toNumber(), 0.001);
+        assertEquals(11, entityDef.attributes.get("combat.blast-radius").value.toNumber(), 0.001);
     }
 
     @Test

@@ -4,7 +4,10 @@
   "commander": true,
   "health": {"max": 200},
   "movement": {"range": 3},
-  "combat": {"attack": 100},
+  "combat": {
+    "attack": 200,
+    "cooldown": 5
+  },
   "triggers": {
     "turn": [
       {"modify": "self.health", "add": 10},

@@ -6,9 +6,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.json.JsonMapper;
 import org.jetbrains.annotations.NotNull;
-import velvetdawn.core.constants.AttributeKeys;
 import velvetdawn.core.models.Coordinate;
-import velvetdawn.core.models.anytype.Any;
 import velvetdawn.core.utils.Path;
 import velvetdawn.server.auth.Authenticator;
 import velvetdawn.server.models.GameState;
@@ -26,7 +24,6 @@ public class VelvetDawnServer {
 
     public static void main(String[] args) throws Exception {
         VelvetDawnServerInstance.init();
-
 
         var vd = VelvetDawnServerInstance.getInstance();
         var p1 = vd.players.join("sam", "bananana");
@@ -129,25 +126,3 @@ public class VelvetDawnServer {
         ctx.result(path.readString());
     }
 }
-
-//@app.after_request
-//def add_cors_headers(response):
-//    if request.referrer is not None:
-//    response.headers.add('Access-Control-Allow-Origin', request.referrer[:-1])
-//    else:
-//    response.headers.add('Access-Control-Allow-Origin', "*")
-//    response.headers.add('Access-Control-Allow-Credentials', 'true')
-//    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-//    response.headers.add('Access-Control-Allow-Headers', 'Cache-Control')
-//    response.headers.add('Access-Control-Allow-Headers', 'X-Requested-With')
-//    response.headers.add('Access-Control-Allow-Headers', 'Authorization')
-//    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
-//
-//    return response
-//
-//
-//    if not os.environ.get("DEV") == "true":
-//    import logging
-//    log = logging.getLogger('werkzeug')
-//    log.setLevel(logging.ERROR)
-

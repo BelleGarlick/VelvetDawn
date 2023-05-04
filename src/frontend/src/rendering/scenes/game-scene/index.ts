@@ -59,7 +59,7 @@ export class GameScene extends Scene {
                 && VelvetDawn.isPlayersTurn()
                 && this.selectedEntity.player === VelvetDawn.loginDetails.username
                 && this.combat.isPointInRange(this.clickedTile.position)) {
-                this.combat.attack(this.selectedEntity.instanceId, this.clickedTile.position)
+                this.combat.attack(this.selectedEntity, this.clickedTile.position)
             }
             else if (mapEntity.length > 0) {
                 this.selectedEntity = mapEntity[0];

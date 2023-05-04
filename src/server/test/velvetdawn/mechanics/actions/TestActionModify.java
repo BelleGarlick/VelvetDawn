@@ -43,7 +43,7 @@ public class TestActionModify extends BaseTest {
         var action = ActionModify.fromJson(velvetDawn, "id", new AnyJson()
                 .set("modify", "self.health")
                 .set("sub", 0));
-        assertEquals(action.function, ActionModify.ActionModifierFunction.SUB);
+        assertEquals(action.function, ActionModify.ActionModifierFunction.Sub);
     }
 
     @Test

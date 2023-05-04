@@ -24,13 +24,13 @@ public class Triggers {
 
     // TODO implement attack and attacked, spawn, death and kill
     // TODO Add validation for this
-    Set<String> WORLD_TRIGGERS = Set.of("game", "turn", "turn-end", "round");
-    Set<String> TILE_TRIGGERS = Stream.concat(
+    Set<String> WorldTriggers = Set.of("game", "turn", "turn-end", "round");
+    Set<String> TileTriggers = Stream.concat(
             Stream.of("enter", "leave", "target", "targeted", "death", "kill", "attack", "attacked"),
-            WORLD_TRIGGERS.stream()).collect(Collectors.toSet());
-    Set<String> UNIT_TRIGGERS = Stream.concat(
+            WorldTriggers.stream()).collect(Collectors.toSet());
+    Set<String> UnitTriggers = Stream.concat(
             Stream.of("friendly-turn", "friendly-turn-end", "enemy-turn", "enemy-turn-end", "spawn"),
-            TILE_TRIGGERS.stream()).collect(Collectors.toSet());
+            TileTriggers.stream()).collect(Collectors.toSet());
 
     public final Map<String, List<Action>> triggers = new HashMap<>();
 
@@ -46,7 +46,7 @@ public class Triggers {
             if (key.equals("notes"))
                 continue;
 
-            if (!UNIT_TRIGGERS.contains(key))
+            if (!UnitTriggers.contains(key))
                 throw new Exception(String.format("Invalid trigger key '%s'", key));
 
             var errorMessage = String.format("Trigger '%s' must be a list of actions", key);

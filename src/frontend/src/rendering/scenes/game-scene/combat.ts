@@ -48,6 +48,12 @@ export class Combat {
     }
 
     render(facade: RenderingFacade, hoveredTilePosition: Position, instance: UnitEntity) {
+        if (!instance)
+            return;
+
+        if (instance.attributes['combat.cooldown.remaining'] > 0)
+            return
+
         this.targetablePosition.items().forEach(position => {
             if (position.x == hoveredTilePosition.x && position.y == hoveredTilePosition.y) {
                 var positions = VelvetDawn.map.getTilesInRange(position, instance.attributes['combat.blast-radius'] ?? 0);
@@ -62,7 +68,8 @@ export class Combat {
 
             facade.renderHexagon(position, {
                 color: "#dd0000",
-                stroke: {color: "#dd0000", width: 3},
+                stroke: "#dd0000",
+                strokeWidth: 3,
                 opacity: (hoveredTilePosition?.x === position.x && hoveredTilePosition?.y === position.y)
                     ? 0.3
                     : 0.15
@@ -81,9 +88,13 @@ export class Combat {
         return found
     }
 
-    attack(instanceId: string, position: Position) {
+    attack(instance: UnitEntity, position: Position) {
+        if (instance.attributes['combat.cooldown.remaining'] > 0)
+            // TODO Print error in chat
+            return
+
         // TODO Catch error and show in chat
-        Api.combat.attack(instanceId, position)
+        Api.combat.attack(instance.instanceId, position)
             .then(VelvetDawn.setState)
     }
 }

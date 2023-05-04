@@ -1,5 +1,7 @@
 package velvetdawn.core.game;
 
+import velvetdawn.core.constants.AttributeKeys;
+import velvetdawn.core.models.anytype.Any;
 import velvetdawn.core.models.config.Config;
 import velvetdawn.core.VelvetDawn;
 import velvetdawn.core.models.Phase;
@@ -145,8 +147,14 @@ public class Turns {
 
     /** Trigger all entity/tile round being actions */
     public void triggerOnRoundBeginActions() throws Exception {
-        for (EntityInstance entity: velvetDawn.entities.list())
+        for (EntityInstance entity: velvetDawn.entities.list()) {
+            // Lower cooldown by one
+            var remainingCooldown = Math.max(0, entity.attributes.get(AttributeKeys.EntityCombatCooldownRemaining).toNumber() - 1);
+            entity.attributes.set(AttributeKeys.EntityCombatCooldownRemaining, Any.from(remainingCooldown));
+
+            // Execute triggers
             velvetDawn.datapacks.entities.get(entity.datapackId).triggers.onRound(entity);
+        }
 
         for (TileInstance tile: velvetDawn.map.listTiles())
             velvetDawn.datapacks.tiles.get(tile.datapackId).triggers.onRound(tile);

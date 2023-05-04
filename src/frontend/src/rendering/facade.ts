@@ -8,10 +8,8 @@ const RESOLUTION = 2;
 
 export interface RenderHexagonOptions {
     color?: string
-    stroke?: {
-        color: string,
-        width: number
-    }
+    stroke?: string
+    strokeWidth?: number
     opacity?: number
 }
 
@@ -76,10 +74,10 @@ export class RenderingFacade {
             return
 
         this.ctx.beginPath()
-        this.ctx.strokeStyle = options.stroke.color ?? "#000000"
+        this.ctx.strokeStyle = options.stroke ?? "#000000"
         this.ctx.fillStyle = options.color ?? "#000000"
 
-        this.ctx.lineWidth = (options.stroke.width ?? 0) * this.constants.resolution
+        this.ctx.lineWidth = (options.strokeWidth ?? 0) * this.constants.resolution
         this.ctx.moveTo(clipPoints[clipPoints.length - 1].x, clipPoints[clipPoints.length - 1].y)
         clipPoints.forEach(pos => this.ctx.lineTo(pos.x, pos.y))
 

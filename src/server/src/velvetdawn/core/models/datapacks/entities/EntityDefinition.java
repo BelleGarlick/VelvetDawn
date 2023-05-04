@@ -25,7 +25,7 @@ public class EntityDefinition {
             "commander", "influence", "attributes", "description", "abilities"
     );
     private static final Set<String> ValidHealthKeys = Set.of("max", "notes");
-    private static final Set<String> ValidCombatKeys = Set.of("range", "attack", "defense", "reload", "blast-radius", "notes");
+    private static final Set<String> ValidCombatKeys = Set.of("range", "attack", "defense", "cooldown", "blast-radius", "notes");
     private static final Set<String> ValidMovementKeys = Set.of("range", "notes");
 
     public final String datapackId;
@@ -99,22 +99,21 @@ public class EntityDefinition {
                 .validateInstanceIsFloat(String.format("%s combat defence must be a number", this.datapackId))
                 .validateMinimum(0, String.format("%s combat defence must be at least 0", this.datapackId));
 
-        AnyFloat reload = data.get("reload", new AnyFloat(AttributeValues.DefaultEntityCombatReload))
-                .validateInstanceIsFloat(String.format("%s combat reload must be a number", this.datapackId))
-                .validateMinimum(0, String.format("%s combat reload must be at least 0", this.datapackId));
+        AnyFloat cooldown = data.get("cooldown", new AnyFloat(AttributeValues.DefaultEntityCombatCooldown))
+                .validateInstanceIsFloat(String.format("%s combat cooldown must be a number", this.datapackId))
+                .validateMinimum(0, String.format("%s combat cooldown must be at least 0", this.datapackId));
 
         AnyFloat blastRadius = data.get("blast-radius", new AnyFloat(AttributeValues.DefaultEntityCombatBlastRadius))
                 .validateInstanceIsFloat(String.format("%s combat blast-radius must be a number", this.datapackId))
                 .validateMinimum(0, String.format("%s combat blast-radius must be at least 0", this.datapackId));
 
         // Set
+        attributes.set(AttributeKeys.EntityCombatCooldownRemaining, "Cooldown", "base:textures.ui.icons.cooldown.png", Any.from(0));
         attributes.set(AttributeKeys.EntityCombatDamage, "Attack", "base:textures.ui.icons.attack.png", attack);
         attributes.set(AttributeKeys.EntityCombatDefense, "Defense", "base:textures.ui.icons.defense.png", defense);
+        attributes.set(AttributeKeys.EntityCombatCooldown, cooldown);
         attributes.set(AttributeKeys.EntityCombatRange, range);
-        attributes.set("combat.reload", reload);
-        attributes.set(AttributeKeys.EntityCombatBlastRadius, blastRadius);  // set to 0 so that can-attack will be trigger to on
-        attributes.set("combat.can-attack", new AnyBool(false));
-        attributes.set("combat.cooldown", new AnyFloat(0));  // set to 0 so that can-attack will be trigger to on
+        attributes.set(AttributeKeys.EntityCombatBlastRadius, blastRadius);  // set to 0 so that can-attack will be trigger
     }
 
     /** Parse the entity movement data, see wiki for more information.*/

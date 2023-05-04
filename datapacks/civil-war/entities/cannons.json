@@ -10,7 +10,7 @@
   "combat": {
       "attack": 200,
       "range": 6,
-      "reload": 4
+      "cooldown": 4
   },
   "upgrades": [
     {

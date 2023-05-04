@@ -6,7 +6,8 @@
   },
   "combat": {
       "attack": 25,
-      "range": 2
+      "range": 2,
+      "cooldown": 2
   },
   "textures": {
     "background": "civil-war:musket.png"

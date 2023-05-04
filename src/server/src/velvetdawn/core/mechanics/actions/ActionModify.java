@@ -18,34 +18,34 @@ public class ActionModify extends Action {
     */
 
     public enum ActionModifierFunction {
-        SET,
-        ADD,
-        SUB,
-        MUL,
-        RESET,
-        ADD_TAG,
-        REMOVE_TAG
+        Set,
+        Add,
+        Sub,
+        Mul,
+        Reset,
+        AddTag,
+        RemoveTag
     }
 
     /** The key:function map defined in the datapack dictionary */
     public static Map<String, ActionModifierFunction> KeyMap = Map.of(
-            "set", ActionModifierFunction.SET,
-            "add", ActionModifierFunction.ADD,
-            "sub", ActionModifierFunction.SUB,
-            "subtract", ActionModifierFunction.SUB,
-            "mul", ActionModifierFunction.MUL,
-            "multiply", ActionModifierFunction.MUL,
-            "reset", ActionModifierFunction.RESET,
-            "add-tag", ActionModifierFunction.ADD_TAG,
-            "remove-tag", ActionModifierFunction.REMOVE_TAG
+            "set", ActionModifierFunction.Set,
+            "add", ActionModifierFunction.Add,
+            "sub", ActionModifierFunction.Sub,
+            "subtract", ActionModifierFunction.Sub,
+            "mul", ActionModifierFunction.Mul,
+            "multiply", ActionModifierFunction.Mul,
+            "reset", ActionModifierFunction.Reset,
+            "add-tag", ActionModifierFunction.AddTag,
+            "remove-tag", ActionModifierFunction.RemoveTag
     );
 
     public static Set<ActionModifierFunction> NON_ATTRIBUTE_MODIFIERS = Set.of(
-            ActionModifierFunction.ADD_TAG, ActionModifierFunction.REMOVE_TAG
+            ActionModifierFunction.AddTag, ActionModifierFunction.RemoveTag
     );
 
     private Selector selector;
-    public ActionModifierFunction function = ActionModifierFunction.SET;
+    public ActionModifierFunction function = ActionModifierFunction.Set;
     private FunctionValue functionValue = null;
 
     /** Parse the dict of tile/unit data to construct this action */
@@ -111,25 +111,25 @@ public class ActionModify extends Action {
     /** Execute the attribute */
     public void run(Instance instance) throws Exception {
         switch (this.function) {
-            case SET:
+            case Set:
                 this.selector.funcSet(instance, this.functionValue.value(instance));
                 break;
-            case ADD:
+            case Add:
                 this.selector.funcAdd(instance, this.functionValue.value(instance));
                 break;
-            case MUL:
+            case Mul:
                 this.selector.funcMul(instance, this.functionValue.value(instance));
                 break;
-            case SUB:
+            case Sub:
                 this.selector.funcSub(instance, this.functionValue.value(instance));
                 break;
-            case RESET:
+            case Reset:
                 this.selector.funcReset(instance, this.functionValue.value(instance));
                 break;
-            case ADD_TAG:
+            case AddTag:
                 this.selector.funcAddTag(instance, this.functionValue.value(instance));
                 break;
-            case REMOVE_TAG:
+            case RemoveTag:
                 this.selector.funcRemoveTag(instance, this.functionValue.value(instance));
                 break;
             default:

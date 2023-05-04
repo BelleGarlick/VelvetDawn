@@ -10,6 +10,7 @@ public class AttributeKeys {
     public static String EntityCombatDamage = "combat.attack";
     public static String EntityCombatBlastRadius = "combat.blast-radius";
     public static String EntityCombatCooldown = "combat.cooldown";
+    public static String EntityCombatCooldownRemaining = "combat.cooldown.remaining";
     public static String EntityCombatRange = "combat.range";
     public static String EntityCombatDefense = "combat.defense";
 }

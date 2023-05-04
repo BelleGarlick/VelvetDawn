@@ -1,5 +1,8 @@
 {
   "name": "Testing Commander",
   "commander": true,
-  "tags": ["test-tag1"]
+  "tags": ["test-tag1"],
+  "combat": {
+    "cooldown": 5
+  }
 }

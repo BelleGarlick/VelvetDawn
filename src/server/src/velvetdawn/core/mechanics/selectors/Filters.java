@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 public class Filters {
 
-    // TODO Add closest filter
     // TODO Add friendly/enemy filter
     // TODO Add not current turn/is current turn
 
