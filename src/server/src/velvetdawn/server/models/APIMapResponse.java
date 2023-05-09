@@ -5,13 +5,13 @@ import velvetdawn.server.VelvetDawnServerInstance;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MapResponse {
+public class APIMapResponse {
 
     public int width;
     public int height;
     public List<APITileInstance> tiles;
 
-    public MapResponse() {
+    public APIMapResponse() {
         var velvetDawn = VelvetDawnServerInstance.getInstance();
 
         this.width = velvetDawn.map.width;

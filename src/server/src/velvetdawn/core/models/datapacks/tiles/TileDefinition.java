@@ -95,11 +95,4 @@ public class TileDefinition {
 
         return tile;
     }
-
-    public AnyJson json() {
-        return new AnyJson()
-                .set("id", this.id)
-                .set("name", this.name)
-                .set("textures", textures.json());
-    }
 }

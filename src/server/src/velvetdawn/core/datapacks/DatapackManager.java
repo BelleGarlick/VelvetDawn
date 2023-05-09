@@ -12,6 +12,9 @@ import velvetdawn.core.models.datapacks.tiles.TileDefinition;
 import velvetdawn.core.models.datapacks.WorldDefinition;
 import velvetdawn.core.utils.Path;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -153,7 +156,19 @@ public class DatapackManager {
                             .validateInstanceIsString(String.format("Override values must be strings (%s)", resourceId))
                             .value;
 
-                resources.put(resourceId, new ResourceDefinition(resourceId, path, type));
+                var resource = ResourceDefinition.builder()
+                        .path(path)
+                        .resourceId(resourceId)
+                        .type(type);
+
+                if (type == ResourceDefinition.ResourceType.Image) {
+                    BufferedImage image = ImageIO.read(new File(path.toPath().toAbsolutePath().toUri()));
+                    resource = resource
+                            .imWidth(image.getWidth())
+                            .imHeight(image.getHeight());
+                }
+
+                resources.put(resourceId, resource.build());
             }
         }
     }

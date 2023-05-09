@@ -26,6 +26,8 @@ public class GameState {
 
     public APIGameSetup setup;
 
+    public APIMapResponse map;
+
     public static GameState from(Player player) {
         return GameState.from(player, false);
     }
@@ -49,25 +51,7 @@ public class GameState {
                 .entityRemovals(velvetDawn.entities.getRemovalsBroadcast())
                 .attributeUpdates(APIAttributeUpdate.fromUpdates(Attributes.getUpdates(velvetDawn, fullState)))
                 .turn(new APITurnData())
+                .map(fullState ? new APIMapResponse() : null)
                 .build();
-
-//        /** Get the update state of the game
-//         *
-//         * @param velvetDawn VelvetDawn object
-//         * @param config The game config
-//         * @param player The player requesting the update
-//         * @param fullState Whether the player wants the full state
-//         * @return The game state
-//         */
-//        public GameState getState(VelvetDawn velvetDawn, Config config, Player player, boolean fullState) {
-//            Set<Coordinate> spawnPoints = this.phase == Phase.Setup
-//                    ? velvetDawn.map.spawn.getSpawnCoordinatesForPlayer(player)
-//                    : Set.of();
-//
-//            return GameState.builder()
-//                    .spawnArea(spawnPoints)
-//                    .build();
-//        }
-
     }
 }

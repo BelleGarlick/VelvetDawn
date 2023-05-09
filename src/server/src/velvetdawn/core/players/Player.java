@@ -35,13 +35,4 @@ public class Player {
 
         return player;
     }
-
-    public AnyJson toJson() {
-        return new AnyJson()
-                .set("name", this.name)
-                .set("password", this.password)
-                .set("admin", this.admin)
-                .set("ready", this.ready)
-                .set("spectating", this.spectating);
-    }
 }

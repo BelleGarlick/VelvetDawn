@@ -3,7 +3,7 @@ package velvetdawn.server.routing;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import velvetdawn.server.VelvetDawnServerInstance;
-import velvetdawn.server.models.datapacks.DatapackDefinition;
+import velvetdawn.server.models.datapacks.APIDatapackDefinition;
 
 public class DatapackRouting {
 
@@ -13,8 +13,7 @@ public class DatapackRouting {
     }
 
     private static void getDatapack(Context ctx) throws Exception {
-
-        ctx.json(new DatapackDefinition());
+        ctx.json(new APIDatapackDefinition());
     }
 
     private static void getResource(Context ctx) throws Exception {

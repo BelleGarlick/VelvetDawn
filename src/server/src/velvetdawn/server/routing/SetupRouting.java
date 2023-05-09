@@ -19,13 +19,13 @@ public class SetupRouting {
     }
 
     private static void updateGameSetup(Context ctx) throws Exception {
+        System.out.println("Updating setup");
         var player = Authenticator.authenticate(ctx);
 
         var velvetDawn = VelvetDawnServerInstance.getInstance();
         velvetDawn.game.setup.updateSetup(
                 ctx.formParam("datapackId"),
-                Integer.parseInt(ctx.formParam("count"))
-        );
+                Integer.parseInt(ctx.formParam("count")));
 
         ctx.json(APIGameSetup.from(player));
     }

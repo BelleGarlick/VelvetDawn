@@ -95,10 +95,4 @@ public class TileTextures {
 
         throw new Exception(String.format("Malformed %s tag in %s", key, parentId));
     }
-
-    public AnyJson json() {
-        return new AnyJson()
-                .set("colors", AnyList.of(this.colors))
-                .set("images", AnyList.of(this.images));
-    }
 }

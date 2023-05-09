@@ -111,8 +111,9 @@ public class PlayerManager {
     }
 
     public void save(Config config, Player player) throws Exception {
-        var json = player.toJson();
-        config.getWorldSavePath().getChild("players").getChild(player.name + ".json").writeJson(json);
+        // TODO
+//        var json = player.toJson();
+//        config.getWorldSavePath().getChild("players").getChild(player.name + ".json").writeJson(json);
     }
 
     public void load(Config config, String playerName) throws Exception {

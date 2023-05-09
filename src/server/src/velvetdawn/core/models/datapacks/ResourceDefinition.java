@@ -1,8 +1,9 @@
 package velvetdawn.core.models.datapacks;
 
-import velvetdawn.core.models.anytype.AnyJson;
+import lombok.Builder;
 import velvetdawn.core.utils.Path;
 
+@Builder
 public class ResourceDefinition {
 
     public enum ResourceType {
@@ -22,19 +23,10 @@ public class ResourceDefinition {
         }
     }
 
-    public final String resourceId;
-    public final Path path;
-    public final ResourceType type;
+    public String resourceId;
+    public Path path;
+    public ResourceType type;
 
-    public ResourceDefinition(String resourceId, Path path, ResourceType type) {
-        this.resourceId = resourceId;
-        this.path = path;
-        this.type = type;
-    }
-
-    public AnyJson json() {
-        return new AnyJson()
-                .set("resourceId", this.resourceId)
-                .set("resourceType", this.type.toString());
-    }
+    public Integer imWidth;
+    public Integer imHeight;
 }
